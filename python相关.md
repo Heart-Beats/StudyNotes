@@ -1,4 +1,4 @@
-### python相关
+## python相关
 
 
 
@@ -13,6 +13,12 @@
     - `print()`函数也可以接受多个字符串，用逗号“,”隔开，这样它则会依次打印每个字符串，中间以空格隔开；
 
     - `print()`也可以打印其他类型的数据，或者表达式结果。
+
+    - `print()`函数不换行：
+
+        只需传入`end = ‘’`这个参数即可，end表示打印以什么结束，可以给他指定不同的值，如：`end = ‘\t’`是以制表符结束，`end = ‘a’`则是以a结尾等等。
+
+        **注意：**`end`只接受`str`类型的值，若给它赋值为其它类型则会报错。
 
 - **input()**
 
@@ -110,7 +116,7 @@
         line3
         ```
 
-        **注意：**`...`是提示符，交互式命令行内输入`'''`，在输入多行内容时，提示符就会由`>>>`变为`...`
+        **注意：**`...`是提示符，表示可以多行输入，在交互式命令行下按下**`Ctrl` + `Enter`**，提示符就会由`>>>`变为`...`
 
 - 布尔值
 
@@ -164,7 +170,7 @@
 
 > 由于Python源代码也是一个文本文件，所以，**当源代码中包含中文的时候，保存源代码就需要指定保存为`UTF-8`编码。当Python解释器读取源代码时，为了让它按`UTF-8`编码读取，我们通常需要在文件开头加上这两行：**
 >
-> ```
+> ```python
 > #!/usr/bin/env python3
 > # -*- coding: utf-8 -*-
 > ```
@@ -174,11 +180,13 @@
 
 
 
+##### 2.2.1 字符集
+
 - `ASCII`编码：主要对大小写英文字母、数字和一些符号进行编码，大小为1B；
 
-- `Unicode`编码：Unicode把所有语言都统一到一套编码里，因此也叫万国码，Unicode标准也在不断发展，但最常用的是用两个字节表示一个字符（如果要用到非常偏僻的字符，就需要4个字节）。
+- `Unicode`编码：Unicode把所有语言都统一到一套编码里，因此也叫万国码，Unicode标准也在不断发展，但最常用的是用2B表示一个字符（如果要用到非常偏僻的字符，就需要4B）。
 
-- `UTF-8`编码：可变长编码，UTF-8编码把一个Unicode字符根据不同的数字大小编码成1-6个字节，常用的英文字母被编码成1个字节，汉字通常是3个字节，只有很生僻的字符才会被编码成4-6个字节。如果你要传输的文本包含大量英文字符，用UTF-8编码就能节省很多空间。
+- `UTF-8`编码：可变长编码，UTF-8编码把一个Unicode字符根据不同的数字大小编码成1-6B，常用的英文字母被编码成1B，汉字通常是3B，只有很生僻的字符才会被编码成4-6B。如果你要传输的文本包含大量英文字符，用UTF-8编码就能节省很多空间。
 
     **注意：ASCII编码实际上可以被看成是UTF-8编码的一部分。**
 
@@ -188,254 +196,419 @@
 
 
 
-- **Python的字符串：在最新的Python 3版本中，字符串是以Unicode编码的**
+##### 2.2.2 Python的字符串
 
-    - **字符的编码与解码：**Python提供了**`ord()`**函数获取字符的整数表示，**`chr()`**函数把编码转换为对应的字符：
+**在最新的Python 3版本中，字符串是以Unicode编码的。**
 
-        ```python
-        >>> ord('A')
-        65
-        >>> ord('中')
-        20013
-        >>> chr(66)
-        'B'
-        >>> chr(25991)
-        '文'
-        ```
+- **字符的编码与解码：**Python提供了**`ord()`**函数来获取字符的对应Unicode码，**`chr()`**函数则把Unicode码转换为对应的字符：
 
-        如果知道字符的整数编码，还可以用十六进制这么写`str`：
+    ```python
+    >>> ord('A')
+    65
+    >>> ord('中')
+    20013
+    >>> chr(66)
+    'B'
+    >>> chr(25991)
+    '文'
+    ```
 
-        ```python
-        #\u表示Unicode码
-        >>> '\u4e2d\u6587'
-        '中文'
-        ```
+    如果知道字符的整数编码，还可以用十六进制这么写`str`：
 
-    - **二进制数据：**由于Python的`str`在内存中以Unicode表示，一个字符对应若干个字节。为了方便传输和保存，通常将`str`变为以字节为单位的`bytes`类型。Python对`bytes`类型的数据用**带`b`前缀的单引号或双引号**表示，相当于强制类型转换成`bytes`：
+    ```python
+    #\u表示Unicode码
+    >>> '\u4e2d\u6587'
+    '中文'
+    ```
 
-        ```python
-        x = b'ABC'
-        ```
+- **数据二进制化：**由于Python的`str`在内存中以Unicode表示，一个字符对应若干个字节。为了方便传输和保存，通常将`str`变为以字节为单位的`bytes`类型。Python对`bytes`类型的数据用**带`b`前缀的单引号或双引号**表示，相当于强制类型转换成`bytes`：
 
-    - **编码：**以Unicode表示的`str`通过**`encode()`**方法编码为指定的`bytes`类型： str --> byte
+    ```python
+    x = b'ABC'
+    ```
 
-        ```python
-        >>> 'ABC'.encode('ascii')
-        b'ABC'
-        >>> '中文'.encode('utf-8')
-        b'\xe4\xb8\xad\xe6\x96\x87'
-        ```
+- **编码：**以Unicode表示的`str`通过**`encode()`**方法编码为指定的`bytes`类型： str --> byte
 
-    - **解码：**如果我们从网络或磁盘上读取了字节流，那么读到的数据就是`bytes`。要把`bytes`变为`str`，就需要用**`decode()`**方法：byte --> str
+    ```python
+    >>> 'ABC'.encode('ascii')
+    b'ABC'
+    >>> '中文'.encode('utf-8')
+    b'\xe4\xb8\xad\xe6\x96\x87'
+    ```
 
-        ```python
-        >>> b'\xe4\xb8\xad\xe6\x96\x87'.decode('utf-8')
-        '中文'
-        ```
+- **解码：**如果我们从网络或磁盘上读取了字节流，那么读到的数据就是`bytes`。要把`bytes`变为`str`，就需要用**`decode()`**方法：byte --> str
 
-        - 如果`bytes`中包含无法解码的字节，`decode()`方法会报错：
+    ```python
+    >>> b'\xe4\xb8\xad\xe6\x96\x87'.decode('utf-8')
+    '中文'
+    ```
 
-            ```python
-            >>> b'\xe4\xb8\xad\xff'.decode('utf-8')
-            Traceback (most recent call last):
-              ...
-            UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 3: invalid start byte
-            ```
-
-        - 如果`bytes`中只有一小部分无效的字节，可以传入`errors='ignore'`忽略错误的字节：
-
-            ```python
-            >>> b'\xe4\xb8\xad\xff'.decode('utf-8', errors='ignore')
-            '中'
-            ```
-
-    - **字符长度：**可以用**`len()`**函数计算`str`包含多少个字符：
+    - 如果`bytes`中包含无法解码的字节，`decode()`方法会报错：
 
         ```python
-        >>> len('ABC')
-        3
-        >>> len('中文')
-        2
+        >>> b'\xe4\xb8\xad\xff'.decode('utf-8')
+        Traceback (most recent call last):
+          ...
+        UnicodeDecodeError: 'utf-8' codec can't decode byte 0xff in position 3: invalid start byte
         ```
 
-    - **字节个数：**可以用**`len()`**函数计算`bytes`的字节数：
+    - 如果`bytes`中只有一小部分无效的字节，可以传入`errors='ignore'`忽略错误的字节：
 
         ```python
-        >>> len(b'ABC')
-        3
-        >>> len(b'\xe4\xb8\xad\xe6\x96\x87')
-        6
-        >>> len('中文'.encode('utf-8'))
-        6
+        >>> b'\xe4\xb8\xad\xff'.decode('utf-8', errors='ignore')
+        '中'
         ```
 
+- **字符长度：**可以用**`len()`**函数计算`str`包含多少个字符：
 
-    ​**注意：**
+    ```python
+    >>> len('ABC')
+    3
+    >>> len('中文')
+    2
+    ```
 
-    ​	在操作字符串时，我们经常遇到`str`和`bytes`的互相转换。**为了避免乱码问题，应当始终坚持使用UTF-8编码对`str`和`bytes`进行转换**。
+- **字节个数：**可以用**`len()`**函数计算`bytes`的字节数：
+
+    ```python
+    >>> len(b'ABC')
+    3
+    >>> len(b'\xe4\xb8\xad\xe6\x96\x87')
+    6
+    >>> len('中文'.encode('utf-8'))
+    6
+    ```
+
+    **注意：**
+    ​    在操作字符串时，我们经常遇到`str`和`bytes`的互相转换。**为了避免乱码问题，应当始终坚持使用UTF-8编码对`str`和`bytes`进行转换**。
 
 
+##### 2.2.3  字符串格式化
 
-    - **格式化**
+- 占位符：在Python中，采用的格式化方式和C语言是一致的，用`%`实现，举例如下：
 
-        - 占位符：在Python中，采用的格式化方式和C语言是一致的，用`%`实现，举例如下：
+    ```python
+    >>> 'Hello, %s' % 'world'
+    'Hello, world'
+    >>> 'Hi, %s, you have $%d.' % ('Michael', 1000000)
+    'Hi, Michael, you have $1000000.'
+    ```
 
-            ```python
-            >>> 'Hello, %s' % 'world'
-            'Hello, world'
-            >>> 'Hi, %s, you have $%d.' % ('Michael', 1000000)
-            'Hi, Michael, you have $1000000.'
-            ```
+    你可能猜到了，`%`运算符就是用来格式化字符串的。在字符串内部，`%s`表示用字符串替换，`%d`表示用整数替换，有几个`%?`占位符，后面就跟几个变量或者值，顺序要对应好。如果只有一个`%?`，括号可以省略。
 
-            你可能猜到了，`%`运算符就是用来格式化字符串的。在字符串内部，`%s`表示用字符串替换，`%d`表示用整数替换，有几个`%?`占位符，后面就跟几个变量或者值，顺序要对应好。如果只有一个`%?`，括号可以省略。
+    常见的占位符有：
 
-            常见的占位符有：
+    | 占位符 | 替换内容     |
+    | ------ | ------------ |
+    | %d     | 整数         |
+    | %f     | 浮点数       |
+    | %s     | 字符串       |
+    | %x     | 十六进制整数 |
 
-            | 占位符 | 替换内容     |
-            | ------ | ------------ |
-            | %d     | 整数         |
-            | %f     | 浮点数       |
-            | %s     | 字符串       |
-            | %x     | 十六进制整数 |
+    其中，格式化整数和浮点数还可以指定是否补0和整数与小数的位数：
 
-            其中，格式化整数和浮点数还可以指定是否补0和整数与小数的位数：
+    ```python
+    >>> print('%2d-%02d' % (3, 1))
+     3-01
+    >>> print('%.2f' % 3.1415926)
+    3.14
+    ```
 
-            ```python
-            >>> print('%2d-%02d' % (3, 1))
-             3-01
-            >>> print('%.2f' % 3.1415926)
-            3.14
-            ```
+    **注意：**
 
-            如果你不太确定应该用什么，`%s`永远起作用，它会把任何数据类型转换为字符串：
+    - `%2d`中间的数字表示数的位数，默认不显示高位0，若想显示则只需在它的前面加0即可，如：
 
-            ```python
-            >>> 'Age: %s. Gender: %s' % (25, True)
-            'Age: 25. Gender: True'
-            ```
+        ```python
+        >>> print('%05d' %(100))
+        00100
+        >>> print('%5d' %(100))
+          100
+        >>> 
+        ```
 
-            有些时候，字符串里面的`%`是一个普通字符怎么办？这个时候就需要转义，用`%%`来表示一个`%`：
+    - `%.2f`中间的小数点加数字表示指定小数的位数，如果仅有小数点则表示只显示整数，与`%.0f`意义相同。
 
-            ```python
-            >>> 'growth rate: %d %%' % 7
-            'growth rate: 7 %'
-            ```
+    如果你不太确定应该用什么，`%s`永远起作用，它会把任何数据类型转换为字符串：
 
-        - format()
+    ```python
+    >>> 'Age: %s. Gender: %s' % (25, True)
+    'Age: 25. Gender: True'
+    ```
 
-            另一种格式化字符串的方法是使用字符串的`format()`方法，它会用传入的参数依次替换字符串内的占位符`{0}`、`{1}`……，不过这种方式写起来比%要麻烦得多：
+    有些时候，字符串里面的`%`是一个普通字符怎么办？这个时候就需要转义，用**`%%`**来表示一个`%`：
 
-            ```python
-            >>> 'Hello, {0}, 成绩提升了 {1:.1f}%'.format('小明', 17.125)
-            'Hello, 小明, 成绩提升了 17.1%'
-            ```
+    ```python
+    >>> 'growth rate: %d %%' % 7
+    'growth rate: 7 %'
+    ```
+
+- format()
+
+    另一种格式化字符串的方法是使用字符串的`format()`方法，它会用传入的参数依次替换字符串内的占位符`{0}`、`{1}`……，不过这种方式写起来比%要麻烦得多：
+
+    ```python
+    >>> 'Hello, {0}, 成绩提升了 {1:.1f}%'.format('小明', 17.125)
+    'Hello, 小明, 成绩提升了 17.1%'
+    ```
 
 
 
 #### 2.3 list和tuple
 
-- **list：**Python内置的一种数据类型，**list是一种有序的可变大小的集合**，可以随时添加和删除其中的元素，相当于java中的**List容器**。
 
-    - **初始化：**如下，classmates就是一个list：
 
-        ```python
-        >>> classmates = ['Michael', 'Bob', 'Tracy']
-        >>> classmates
-        ['Michael', 'Bob', 'Tracy']
-        ```
+##### 2.3.1  list
 
-    - **获取元素个数：**`len()`函数可以获得list元素的个数：
+> Python内置的一种数据类型，**list是一种有序的可变大小的集合**，可以随时添加和删除其中的元素，类似于java中的**List容器**。
 
-        ```python
-        >>> len(classmates)
-        3
-        ```
+- **初始化：**如下，classmates就是一个list：
 
-    - **获取指定位置的值：**通过索引访问元素，索引是从`0`开始的：
+    ```python
+    >>> classmates = ['Michael', 'Bob', 'Tracy']
+    >>> classmates
+    ['Michael', 'Bob', 'Tracy']
+    ```
 
-        ```python
-        >>> classmates[1]
-        'Bob'
-        >>> classmates[2]
-        'Tracy'
-        ```
+- **获取元素个数：**`len()`函数可以获得list元素的个数：
 
-        当索引超出了范围时，Python同样也会报一个`IndexError`错误，表示越界。
+    ```python
+    >>> len(classmates)
+    3
+    ```
 
-        如果要取最后一个元素，除了计算索引位置外，还可以用`-1`做索引，直接获取最后一个元素：
+- **获取指定位置的值：**通过索引访问元素，索引是从`0`开始的：
 
-        ```python
-        >>> classmates[-1]
-        'Tracy'
-        ```
+    ```python
+    >>> classmates[1]
+    'Bob'
+    >>> classmates[2]
+    'Tracy'
+    ```
 
-        以此类推，也可以获取倒数第2个、倒数第3个.
+    当索引超出了范围时，Python同样也会报一个`IndexError`错误，表示越界。
 
-    - **尾部追加元素：** **`append()`**函数可以往list中追加元素：
+    如果要取最后一个元素，除了计算索引位置外，还可以用`-1`做索引，直接获取最后一个元素：
 
-        ```python
-        >>> classmates.append('Adam')
-        >>> classmates
-        ['Michael', 'Bob', 'Tracy', 'Adam']
-        ```
+    ```python
+    >>> classmates[-1]
+    'Tracy'
+    ```
 
-    - **插入元素到指定位置：** **`insert()`**函数可以向list指定位置插入元素：
+    以此类推，也可以获取倒数第2个、倒数第3个.
 
-        ```python
-        >>> classmates.insert(1, 'Jack')
-        >>> classmates
-        ['Michael', 'Jack', 'Bob', 'Tracy', 'Adam']
-        ```
+- **尾部追加元素：** **`append()`**函数可以往list中追加元素：
 
-    - **尾部删除元素：** **`pop()`**函数可以删除list末尾的元素：
+    ```python
+    >>> classmates.append('Adam')
+    >>> classmates
+    ['Michael', 'Bob', 'Tracy', 'Adam']
+    ```
 
-        ```python
-        >>> classmates.pop()
-        'Adam'
-        >>> classmates
-        ['Michael', 'Jack', 'Bob', 'Tracy']
-        ```
+- **插入元素到指定位置：** **`insert()`**函数可以向list指定位置插入元素：
 
-    - **删除指定位置元素：  ** **`pop(i)`**方法可以删除list指定位置的元素：
+    ```python
+    >>> classmates.insert(1, 'Jack')
+    >>> classmates
+    ['Michael', 'Jack', 'Bob', 'Tracy', 'Adam']
+    ```
 
-        ```python
-        >>> classmates.pop(1)
-        'Jack'
-        >>> classmates
-        ['Michael', 'Bob', 'Tracy']
-        ```
+- **尾部删除元素：** **`pop()`**函数可以删除list末尾的元素：
 
-    - **替换指定位置元素：**要把某个元素替换成别的元素，可以直接给对应的索引位置赋值：
+    ```python
+    >>> classmates.pop()
+    'Adam'
+    >>> classmates
+    ['Michael', 'Jack', 'Bob', 'Tracy']
+    ```
 
-        ```python
-        >>> classmates[1] = 'Sarah'
-        >>> classmates
-        ['Michael', 'Sarah', 'Tracy']
-        ```
+- **删除指定位置元素：  ** **`pop(i)`**方法可以删除list指定位置的元素：
 
-    **注意：**
+    ```python
+    >>> classmates.pop(1)
+    'Jack'
+    >>> classmates
+    ['Michael', 'Bob', 'Tracy']
+    ```
 
-    1. **list里面的元素的数据类型可以不同**，比如：
+- **替换指定位置元素：**要把某个元素替换成别的元素，可以直接给对应的索引位置赋值：
 
-        ```python
-        >>> L = ['Apple', 123, True]
-        ```
+    ```python
+    >>> classmates[1] = 'Sarah'
+    >>> classmates
+    ['Michael', 'Sarah', 'Tracy']
+    ```
 
-    2. **list元素也可以是另一个list**，比如：
+**注意：**
 
-        ```python
-        >>> s = ['python', 'java', ['asp', 'php'], 'scheme']
-        >>> len(s)
-        4
-        ```
+1. **list里面的元素的数据类型可以不同**，比如：
 
-    3. **当一个list中含有list元素时，则它可以看成是一个二维数组**，比如：
+    ```python
+    >>> L = ['Apple', 123, True]
+    ```
 
-        ```python
-        >>> p = ['asp', 'php']
-        >>> s = ['python', 'java', p, 'scheme']
-        ```
+2. **list元素也可以是另一个list**，比如：
 
-        要拿到`'php'`可以写`p[1]`或者`s[2][1]`，与此类推，还有三维等多维数组。
+    ```python
+    >>> s = ['python', 'java', ['asp', 'php'], 'scheme']
+    >>> len(s)
+    4
+    ```
 
-- **tuple：**另一种有序列表叫元组，tuple和list非常类似，但是tuple一旦初始化就不能修改，比如同样是列出同学的名字：
+3. **当一个list中含有list元素时，则它可以看成是一个二维数组**，比如：
+
+    ```python
+    >>> p = ['asp', 'php']
+    >>> s = ['python', 'java', p, 'scheme']
+    ```
+
+    要拿到`'php'`可以写`p[1]`或者`s[2][1]`，与此类推，还有三维等多维数组。
+
+
+##### 2.3.2  tuple
+
+> python中的另一种有序列表，与list非常类似，但是tuple的大小元素不可变，一旦初始化就不能修改。
+
+- **初始化：**如下，classmates就是一个tuple：
+
+    ```python
+    >>> classmates = ('Michael', 'Bob', 'Tracy')
+    ```
+
+    现在，classmates这个tuple就**只可访问不可修改**，获取元素的方法与list是一致的。同时因为tuple不可变，所以代码更安全。如果可能，能用tuple代替list就尽量用tuple。
+
+**注意：**
+
+1. **定义tuple的时候，元素就必须被确定**，比如：
+
+    ```python
+    >>> t = (1, 2)
+    >>> t
+    (1, 2)
+    ```
+
+2. **定义一个空的tuple，可以写成`()**`，比如：
+
+    ```python
+    >>> t = ()
+    >>> t
+    ()
+    ```
+
+3. **定义只有1个元素的tuple时必须加一个逗号`,`，来消除歧义**，比如：
+
+    ```Python
+    >>> t = (1,)
+    >>> t
+    (1,)
+    ```
+
+    因为括号`()`既可以表示tuple，又可以表示数学公式中的小括号，因此，Python规定：只有1个元素的tuple定义时必须加一个逗号`,`
+
+4. **“可变的”tuple**：tuple所谓的“不变”是说，tuple的每个元素，指向永远不变，但若元素是list，list本身是可变的。比如：
+
+    ```python
+    >>> t = ('a', 'b', ['A', 'B'])
+    >>> t[2][0] = 'X'
+    >>> t[2][1] = 'Y'
+    >>> t
+    ('a', 'b', ['X', 'Y'])
+    ```
+
+
+
+#### 2.4  条件语句
+
+if语句的完整形式：
+
+```python
+if <条件判断1>:
+    <执行1>
+elif <条件判断2>:
+    <执行2>
+elif <条件判断3>:
+    <执行3>
+else:
+    <执行4>
+```
+
+**注意：**
+
+1. 冒号`:`和缩进都必须要有，冒号`:`代表下面缩进的语句为其子语句，缩进则代表代码块`{}`。
+
+2. `if`语句是从上往下判断的，如果某个条件是`True`，则后面的条件都不会执行。
+
+3. `if`语句还可以简写，比如写：
+
+    ```python
+    if x:
+        print('True')
+    ```
+
+    只要`x`是非零数值、非空字符串、非空list等，就判断为`True`，否则为`False`。
+
+
+
+#### 2.5  循环语句
+
+
+
+##### 2.5.1  for...in循环
+
+for...in循环，依次把list、tuple或者一个序列中的每个元素迭代出来，类似java中的forEach，比如：
+
+```python
+>>> names = ['Michael', 'Bob', 'Tracy']
+... for name in names:
+...     print(name)
+...     
+Michael
+Bob
+Tracy
+```
+
+Python还提供一个`range()`函数，可以生成一个整数序列，再通过`list()`函数可以转换为list。比如`range(5)`生成的序列是从0开始小于5的整数：
+
+```python
+>>> list(range(5))
+[0, 1, 2, 3, 4]
+```
+
+`range()`函数也可以用于for ...in 循环中，比如：
+
+```python
+>>> for i in range(2):
+...     print(i)
+...     
+0
+1
+```
+
+
+
+##### 2.5.2  while循环
+
+while循环，只要条件满足，就不断循环，条件不满足时才会退出循环。比如计算100以内所有奇数之和，使用while循环：
+
+```python
+>>> n = 1
+... sum = 0
+... while n < 100:
+...     sum += n
+...     n += 2
+... print(sum)
+2500
+```
+
+
+
+##### 2.5.3  break和continue
+
+- **break**
+
+    在循环中，`break`语句可以退出当前循环。
+
+- **continue**
+
+    在循环中，`continue`语句可以跳过当前的这次循环，直接开始下一次循环。
+
+**注意：**在多层循环中，`break`和`continue`的作用域都是它所在的那一层，若它们在内层并不能改变外层的循环状态。

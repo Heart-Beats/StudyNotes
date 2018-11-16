@@ -10,11 +10,13 @@
 
 1. 使用别名更改log显示方式: 
 
-```
+```shell
 git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset-%C(yellow)%dCreset %s %Cgreen(%cr)%C(bold blue)<%an>%Creset' --abbrev-commit --date=relative"
 ```
 
 2. 运行该命令后使用: `git lg` 即可查看log日志
+
+
 
 ------
 
@@ -28,13 +30,13 @@ git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset-%C(yel
 
 3. 把当前版本回退到上一个版本，就可以使用git reset命令：
 
-   ```
+   ```shell
    git reset --hard HEAD^
    ```
 
 4. 若回退版本后又想回到先前的版本，只要没回退之前显示git日志的命令行窗口还没有被关掉，找到对应版本的版本号，就可以使用`git reset`命令：
 
-   ```
+   ```sh
    git reset --hard 版本号（版本号没必要写全，前几位就可以）
    ```
 
@@ -47,6 +49,8 @@ git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset-%C(yel
    ​	① HEAD指向的版本就是当前版本，因此，Git允许我们在版本的历史之间穿梭，使用命令`git reset --hard commit_id`。
    ​	② 穿梭前，用`git log`可以查看提交历史，以便确定要回退到哪个版本。
    ​	③ 要重返未来，用`git reflog`查看命令历史，以便确定要回到未来的哪个版本。
+
+
 
 ------
 
@@ -75,6 +79,8 @@ git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset-%C(yel
    因为我们创建Git版本库时，Git自动为我们创建了唯一的一个`master`分支，所以，现在，`git commit`就是往`master`分支上提交更改。
 
    **所以，`git add`命令实际上就是把要提交的所有修改放到暂存区（Stage），然后，执行`git commit`就可以一次性把暂存区的所有修改提交到分支。一旦提交后，如果你没有对工作区做任何修改，那么工作区就是“干净”的。因此，每次修改文件如果不把它`git add`到暂存区，那么它也就不会`commit`到版本库中。**
+
+
 
 ------
 
@@ -123,7 +129,7 @@ git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset-%C(yel
 
      此时想恢复的话，由于你的本地仓库和远程仓库是等价的，你只需要先恢复本地仓库，再强制push到远程仓库就好了，可以依次执行下列命令：
 
-     ```
+     ```shell
      git reset --hard HEAD^`
      git push -f
      ```
@@ -150,6 +156,8 @@ git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset-%C(yel
 
 ​		    **git reset  会保存工作区的改动，回退到版本的初始状态。**
 
+
+
 ------
 
 
@@ -167,6 +175,8 @@ git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset-%C(yel
 #### 小结：
 
 ​	命令`git rm`用于删除一个文件。如果一个文件已经被提交到版本库，那么你永远不用担心误删，但是要小心，你只能恢复文件到最新版本，你会丢失**最近一次提交后你修改的内容**。	
+
+
 
 ------
 
@@ -198,7 +208,7 @@ git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset-%C(yel
 
 - 2. 将本地仓库与远程仓库关联：
 
-     ```
+     ```shell
      git remote add origin git@github.com:stormzhang/test.git
      ```
 
@@ -206,7 +216,7 @@ git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset-%C(yel
 
 - 3. 本地库内容推送到远程上： 
 
-     ```
+     ```shell
      git push -u origin master
      ```
 
@@ -214,7 +224,7 @@ git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset-%C(yel
 
 - 4. 本地提交后推送远程库： 
 
-     ```
+     ```shell
      git push origin master
      ```
 
@@ -240,7 +250,7 @@ git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset-%C(yel
 
   2. 本地新建StudyGit文件夹，在此目录下克隆远程库：
 
-     ```
+     ```shell
      git clone git@github.com:Heart-Beats/StudyGit.git
      ```
 
@@ -250,6 +260,8 @@ git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset-%C(yel
 
   - 要克隆一个仓库，首先必须知道仓库的地址，然后使用**`git clone`**命令克隆。
   - Git支持多种协议，包括`https`，但通过`ssh`支持的原生`git`协议速度最快。
+
+
 
 ------
 
@@ -340,7 +352,7 @@ Git创建一个分支很快，因为除了增加一个`dev`指针，改改`HEAD`
 
 那么，如何才可以不使用默认的`Fast forward`模式合并呢？
 
-```
+```shell
 git merge --no-ff <branch-name> -m "Hello World"
 ```
 
@@ -422,13 +434,13 @@ git merge --no-ff <branch-name> -m "Hello World"
 
   推送分支，就是把该分支上的所有本地提交推送到远程库。推送时，要指定本地分支，这样，Git就会把该分支推送到远程库对应的远程分支上：
 
-  ```
+  ```shell
   $ git push origin master
   ```
 
   如果要推送其他分支，比如`dev`，就改成：
 
-  ```
+  ```shell
   $ git push origin dev
   ```
 
@@ -445,20 +457,20 @@ git merge --no-ff <branch-name> -m "Hello World"
 
   当你的小伙伴从远程库clone时，默认情况下，你的小伙伴只能看到本地的`master`分支。不信可以用`git branch`命令看看：
 
-  ```
+  ```shell
   $ git branch
   * master
   ```
 
   现在，你的小伙伴要在`dev`分支上开发，就必须创建远程`origin`的`dev`分支到本地，于是他用这个命令创建本地`dev`分支：
 
-  ```
+  ```shell
   $ git checkout -b dev origin/dev
   ```
 
   现在，他就可以在`dev`上继续修改，然后，时不时地把`dev`分支`push`到远程：
 
-  ```
+  ```shell
   $ git add env.txt
   
   $ git commit -m "add env"
@@ -478,7 +490,7 @@ git merge --no-ff <branch-name> -m "Hello World"
 
   你的小伙伴已经向`origin/dev`分支推送了他的提交，而碰巧你也对同样的文件作了修改，并试图推送：
 
-  ```
+  ```shell
   $ cat env.txt
   env
   
@@ -501,7 +513,7 @@ git merge --no-ff <branch-name> -m "Hello World"
 
   推送失败，因为你的小伙伴的最新提交和你试图推送的提交有冲突，解决办法也很简单，Git已经提示我们，先用`git pull`把最新的提交从`origin/dev`抓下来，然后，在本地合并，解决冲突，再推送：
 
-  ```
+  ```shell
   $ git pull
   There is no tracking information for the current branch.
   Please specify which branch you want to merge with.
@@ -516,14 +528,14 @@ git merge --no-ff <branch-name> -m "Hello World"
 
   `git pull`也失败了，原因是没有指定本地`dev`分支与远程`origin/dev`分支的链接，根据提示，设置`dev`和`origin/dev`的链接：
 
-  ```
+  ```shell
   $ git branch --set-upstream-to=origin/dev dev
   Branch 'dev' set up to track remote branch 'dev' from 'origin'.
   ```
 
   再pull：
 
-  ```
+  ```shell
   $ git pull
   Auto-merging env.txt
   CONFLICT (add/add): Merge conflict in env.txt
@@ -532,7 +544,7 @@ git merge --no-ff <branch-name> -m "Hello World"
 
   这回`git pull`成功，但是合并有冲突，需要手动解决，解决的方法和分支管理中的解决冲突完全一样。解决后，提交，再push：
 
-  ```
+  ```shell
   $ git commit -m "fix env conflict"
   [dev 57c53ab] fix env conflict
   
@@ -576,7 +588,7 @@ git merge --no-ff <branch-name> -m "Hello World"
 
 每次合并再push后，分支变成了这样：
 
-```
+```shell
 $ git log --graph --pretty=oneline --abbrev-commit
 * d1be385 (HEAD -> master, origin/master) init hello
 *   e5e69f1 Merge branch 'dev'
@@ -609,6 +621,8 @@ Git有一种称为rebase的操作，有人把它翻译成“变基”。
 - rebase操作可以把本地未push的分叉提交历史整理成直线；
 - rebase的目的是使得我们在查看历史提交的变化时更容易，因为分叉的提交需要三方对比。
 
+
+
 ------
 
 
@@ -627,13 +641,13 @@ Git的标签虽然是版本库的快照，但其实它就是指向某个commit�
 
 在Git中打标签非常简单，首先，切换到需要打标签的分支上，然后，使用**`git tag <tag-name> [commit-id]（默认为HEAD）`**就可以打一个新标签：
 
-```
+```shell
 $ git tag v0.1
 ```
 
 可以用命令**`git tag`**查看所有标签：
 
-```
+```shell
 $ git tag
 v0.1
 ```
@@ -644,7 +658,7 @@ v0.1
 
 比方说要对`Update README.md`这次提交打标签，它对应的commit id是`250affe`，敲入命令：
 
-```
+```shell
 $ git tag v1.0 250affe
 ```
 
@@ -656,7 +670,7 @@ $ git tag v1.0 250affe
 
 还可以创建带有说明的标签，`-m`指定说明文字：
 
-```
+```shell
 $ git tag v1.1 df9294a -m "版本1.1发布"  
 ```
 
@@ -680,19 +694,19 @@ $ git tag v1.1 df9294a -m "版本1.1发布"
 
 - 删除本地标签
 
-  ```
+  ```shell
   $ git tag -d v0.1
   ```
 
 - 推送某个标签到远程
 
-  ```
+  ```shell
   $ git push origin v1.0
   ```
 
 - 推送所有未推送的标签到远程
 
-  ```
+  ```shell
   $ git push origin --tags
   ```
 
@@ -700,13 +714,13 @@ $ git tag v1.1 df9294a -m "版本1.1发布"
 
   - 先从本地删除：
 
-    ```
+    ```shell
     $ git tag -d v1.1
     ```
 
   - 再从远程删除。删除命令也是push，但是格式如下：
 
-    ```
+    ```shell
     $ git push origin :refs/tags/v1.1
     ```
 

@@ -1455,3 +1455,135 @@ False
 
 #### 4.4  生成器
 
+如果列表的元素可以按照某种算法在循环的过程中推算出来，就可以不用创建完整的list，从而节省大量的空间。这种**一边循环一边计算的机制，在Python中称为生成器：generator**。
+
+
+
+##### 4.4.1  创建generator方法：
+
+- **把一个列表生成式的`[]`改成`()`，就创建了一个generator：**
+
+    ```python
+    >>> L = [x * x for x in range(10)]
+    >>> L
+    [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+    >>> g = (x * x for x in range(10))
+    >>> g
+    <generator object <genexpr> at 0x1022ef630>
+    ```
+
+    创建`L`和`g`的区别仅在于最外层的`[]`和`()`，`L`是一个list，而`g`是一个generator。
+
+- 如果推算的算法比较复杂，用类似列表生成式的`for`循环无法实现的时候，还可以用函数来实现。
+
+    比如，著名的斐波拉契数列（Fibonacci），除第一个和第二个数外，任意一个数都可由前两个数相加得到：
+
+    ```python
+    def fib(max):
+        n, a, b = 0, 0, 1
+        while n < max:
+            print(b)
+            a, b = b, a + b
+            n = n + 1
+        return 'done'
+    ```
+
+    *注意*，赋值语句：
+
+    ```python
+    a, b = b, a + b
+    ```
+
+    相当于：
+
+    ```python
+    t = (b, a + b) # t是一个tuple
+    a = t[0]
+    b = t[1]
+    ```
+
+    但不必显式写出临时变量t就可以赋值。
+
+    上面的函数可以输出斐波那契数列的前N个数：
+
+    ```python
+    >>> fib(6)
+    1
+    1
+    2
+    3
+    5
+    8
+    'done'
+    ```
+
+    `fib`函数实际上是定义了斐波拉契数列的推算规则，可以从第一个元素开始，推算出后续任意的元素，这种逻辑其实非常类似generator。
+
+    也就是说，上面的函数和generator仅一步之遥。要把`fib`函数变成generator，只需要把`print(b)`改为`yield b`就可以了：
+
+    ```python
+    def fib(max):
+        n, a, b = 0, 0, 1
+        while n < max:
+            yield b         #b就是generator的计算值，会被返回
+            a, b = b, a + b
+            n = n + 1
+        return 'done'
+    ```
+
+    这就是定义generator的另一种方法。**如果一个函数定义中包含`yield`关键字，那么这个函数就不再是一个普通函数，而是一个generator：**
+
+    ```python
+    >>> f = fib(6)
+    >>> f
+    <generator object fib at 0x104feaaa0>
+    ```
+
+    这里，最难理解的就是generator和函数的执行流程不一样。函数是顺序执行，遇到`return`语句或者最后一行函数语句就返回。而**变成generator的函数，在每次调用`next()`的时候执行，遇到`yield`语句返回，再次执行时从上次返回的`yield`语句处继续执行。**
+
+
+##### 4.4.2  获取generator的元素：
+
+- **可以使用迭代获取generator的元素：**
+
+    ```python
+    >>> g = (x * x for x in range(4))
+    >>> for n in g:
+    ...     print(n)
+    ... 
+    0
+    1
+    4
+    9
+    16
+    ```
+
+- 还可以不断地调用**`next(g)`**，计算`g`的下一个元素的值，直到没有更多的元素时，抛出`StopIteration`的错误。
+
+- **注意：**
+
+    **用`for`循环调用generator时，无法拿到generator的`return`语句的返回值。如果想要拿到返回值，必须捕获`StopIteration`错误，返回值包含在`StopIteration`的`value`中：**
+
+    ```
+    >>> g = fib(6)
+    >>> while True:
+    ...     try:
+    ...         x = next(g)
+    ...         print('g:', x)
+    ...     except StopIteration as e:
+    ...         print('Generator return value:', e.value)
+    ...         break
+    ...
+    g: 1
+    g: 1
+    g: 2
+    g: 3
+    g: 5
+    g: 8
+    Generator return value: done
+    ```
+
+
+
+#### 4.5  迭代器
+

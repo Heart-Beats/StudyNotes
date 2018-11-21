@@ -1457,6 +1457,8 @@ False
 
 如果列表的元素可以按照某种算法在循环的过程中推算出来，就可以不用创建完整的list，从而节省大量的空间。这种**一边循环一边计算的机制，在Python中称为生成器：generator**。
 
+**generator的工作原理：**它是在`for`循环的过程中不断计算出下一个元素，并在适当的条件结束`for`循环。对于函数改成的generator来说，遇到`return`语句或者执行到函数体最后一行语句，就是结束generator的指令，`for`循环随之结束。
+
 
 
 ##### 4.4.1  创建generator方法：
@@ -1542,6 +1544,7 @@ False
     这里，最难理解的就是generator和函数的执行流程不一样。函数是顺序执行，遇到`return`语句或者最后一行函数语句就返回。而**变成generator的函数，在每次调用`next()`的时候执行，遇到`yield`语句返回，再次执行时从上次返回的`yield`语句处继续执行。**
 
 
+
 ##### 4.4.2  获取generator的元素：
 
 - **可以使用迭代获取generator的元素：**
@@ -1587,3 +1590,233 @@ False
 
 #### 4.5  迭代器
 
+可以直接作用于`for`循环的对象统称为**可迭代对象：`Iterable`**。主要有下面两类：
+
+1. 集合数据类型：如`list`、`tuple`、`dict`、`set`、`str`等；
+2. `generator`：包括生成器和带`yield`的generator function。
+
+可以使用**`isinstance()`**判断一个对象是否是`Iterable`对象：
+
+```python
+>>> from collections import Iterable
+>>> isinstance([], Iterable)
+True
+>>> isinstance({}, Iterable)
+True
+>>> isinstance('abc', Iterable)
+True
+>>> isinstance((x for x in range(10)), Iterable)
+True
+>>> isinstance(100, Iterable)
+False
+```
+
+而可以被`next()`函数调用并不断返回下一个值的对象称为**迭代器：`Iterator`**。
+
+同样也可以使用**`isinstance()`**判断一个对象是否是`Iterator`对象：
+
+```python
+>>> from collections import Iterator
+>>> isinstance((x for x in range(10)), Iterator)
+True
+>>> isinstance([], Iterator)
+False
+>>> isinstance({}, Iterator)
+False
+>>> isinstance('abc', Iterator)
+False
+```
+
+把`list`、`dict`、`str`等**`Iterable`变成`Iterator`可以使用`iter()`函数：**
+
+```python
+>>> isinstance(iter([]), Iterator)
+True
+>>> isinstance(iter('abc'), Iterator)
+True
+```
+
+**注意：**
+
+​	**Python的`Iterator`对象表示的是一个不限大小数据流**，Iterator对象可以被`next()`函数调用并不断返回下一个数据，直到没有数据时抛出`StopIteration`错误。甚至可以表示一个无限大的数据流，例如全体自然数。
+
+
+
+##### 小结：
+
+- 凡是可作用于`for`循环的对象都是`Iterable`类型；
+
+- 凡是可作用于`next()`函数的对象都是`Iterator`类型，它们表示一个惰性计算的序列；
+
+- 集合数据类型如`list`、`dict`、`str`等是`Iterable`但不是`Iterator`，不过可以通过`iter()`函数获得一个`Iterator`对象。
+
+- Python的**`for`循环本质上就是使用迭代器`Iterator`实现的**，例如：
+
+    ```python
+    for x in [1, 2, 3, 4, 5]:
+        pass
+    ```
+
+    实际上完全等价于：
+
+    ```python
+    # 首先获得Iterator对象:
+    it = iter([1, 2, 3, 4, 5])
+    # 循环:
+    while True:
+        try:
+            # 获得下一个值:
+            x = next(it)
+        except StopIteration:
+            # 遇到StopIteration就退出循环
+            break
+    ```
+
+
+
+------
+
+
+
+### 5.  函数式编程
+
+> 在编程语言中，就是越低级的语言，越贴近计算机，抽象程度低，执行效率高，比如C语言；越高级的语言，越贴近计算，抽象程度高，执行效率低，比如Lisp语言。
+>
+> **函数式编程就是一种抽象程度很高的编程范式，纯粹的函数式编程语言编写的函数没有变量，因此，任意一个函数，只要输入是确定的，输出就是确定的，这种纯函数我们称之为没有副作用。**而允许使用变量的程序设计语言，由于函数内部的变量状态不确定，同样的输入，可能得到不同的输出，因此，这种函数是有副作用的。
+>
+> **函数式编程的一个特点就是，允许把函数本身作为参数传入另一个函数，还允许返回一个函数！**
+>
+> Python对函数式编程提供部分支持。由于Python允许使用变量，因此，**Python不是纯函数式编程语言。**
+
+
+
+#### 5.1  高阶函数
+
+**把函数作为参数传入，这样的函数称为高阶函数，函数式编程就是指这种高度抽象的编程范式。**
+
+
+
+- **变量可以指向函数：**
+
+    如果一个变量指向了一个函数本身，那么，可否通过该变量来调用这个函数？用代码验证一下：
+
+    ```python
+    >>> f = abs
+    >>> f(-10)
+    10
+    ```
+
+    成功！说明变量`f`现在已经指向了`abs`函数本身。直接调用`abs()`函数和调用变量`f()`完全相同。
+
+- **函数名也是变量：**
+
+    函数名其实就是指向函数的变量！对于`abs()`这个函数，完全可以把函数名`abs`看成变量，它指向一个可以计算绝对值的函数！
+
+    如果把`abs`指向其他对象，会有什么情况发生？
+
+    ```python
+    >>> abs = 10
+    >>> abs(-10)
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    TypeError: 'int' object is not callable
+    ```
+
+    把`abs`指向`10`后，就无法通过`abs(-10)`调用该函数了！因为`abs`这个变量已经不指向求绝对值函数而是指向一个整数`10`！
+
+- **传入函数：**
+
+    既然变量可以指向函数，函数的参数能接收变量，那么一个函数就可以接收另一个函数作为参数，这种函数就称之为高阶函数。
+
+    一个最简单的高阶函数：
+
+    ```python
+    def add(x, y, f):
+        return f(x) + f(y)
+    ```
+
+    当我们调用`add(-5, 6, abs)`时，参数`x`，`y`和`f`分别接收`-5`，`6`和`abs`，根据函数定义，我们可以推导计算过程为：
+
+    ```python
+    x = -5
+    y = 6
+    f = abs
+    f(x) + f(y) ==> abs(-5) + abs(6) ==> 11
+    return 11
+    ```
+
+
+
+##### 5.1.1  map/reduce
+
+- **map()：**
+
+    `map()`函数接收两个参数，一个是函数，一个是`Iterable`，**`map`将传入的函数依次作用到序列的每个元素，并把结果作为新的`Iterator`返回。**
+
+    比如我们有一个函数f(x)=x^2^，要把这个函数作用在一个list `[1, 2, 3, 4, 5, 6, 7, 8, 9]`上，就可以用`map()`实现如下：
+
+    ```python
+    >>> def f(x):
+    ...     return x ** 2
+    ...
+    >>> r = map(f, [1, 2, 3, 4, 5, 6, 7, 8, 9])
+    >>> list(r)
+    [1, 4, 9, 16, 25, 36, 49, 64, 81]
+    ```
+
+    `map()`传入的第一个参数是`f`，即函数对象本身。由于结果`r`是一个`Iterator`，**`Iterator`是惰性序列，因此通过`list()`函数让它把整个序列都计算出来并返回一个list**。
+
+    `map()`作为高阶函数，还可以计算任意复杂的函数，比如，把这个list所有数字转为字符串：
+
+    ```python
+    >>> list(map(str, [1, 2, 3, 4, 5, 6, 7, 8, 9]))
+    ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+    ```
+
+- **reduce()：**
+
+    **`reduce`把一个函数作用在一个序列`[x1, x2, x3, ...]`上，这个函数必须接收两个参数，`reduce`把这个函数的返回结果再继续和序列的下一个元素做累积（非累乘）计算，**其效果就是：
+
+    ```python
+    reduce(f, [x1, x2, x3, x4]) = f(f(f(x1, x2), x3), x4)
+    ```
+
+    比方说对一个序列求和，就可以用`reduce`实现：
+
+    ```python
+    >>> from functools import reduce
+    >>> def add(x, y):
+    ...     return x + y
+    ...
+    >>> reduce(add, [1, 3, 5, 7, 9])
+    25
+    ```
+
+    配合`map()`，还可以写出把`str`转换为`int`的函数：
+
+    ```python
+    from functools import reduce
+    
+    DIGITS = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9}
+    
+    def str2int(s):
+        def fn(x, y):
+            return x * 10 + y
+        def char2num(s):
+            return DIGITS[s]
+        return reduce(fn, map(char2num, s))
+    ```
+
+    还可以用lambda函数进一步简化成：
+
+    ```python
+    from functools import reduce
+    
+    DIGITS = {'0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9}
+    
+    def char2num(s):
+        return DIGITS[s]
+    
+    def str2int(s):
+        return reduce(lambda x, y: x * 10 + y, map(char2num, s))
+    ```

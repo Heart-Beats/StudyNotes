@@ -1964,11 +1964,11 @@ def lazy_sum(*args):
 
 ##### 5.2.2  闭包
 
-**当一个函数内定义一个函数时，其参数或内部的局部变量还被定义的函数所引用**，这种结构就称为闭包。
+**当一个函数返回一个函数后，其参数或局部变量还被返回的函数所引用**，这种结构就称为闭包。
 
 
 
-而且**返回的函数并没有立刻执行，而是直到调用了`f()`才执行**。我们来看一个例子：
+而且返回的函数并没有立刻执行，而是直到调用了`f()`才执行。我们来看一个例子：
 
 ```python
 def count():
@@ -1995,7 +1995,7 @@ f1, f2, f3 = count()  #count()返回值是list，并且有三个元素
 
 全部都是`9`！因为`f()`调用时才执行的，而此时变量`i`的值已经变为3。
 
- 因此，**返回闭包时牢记一点：返回函数不要引用任何循环变量，或者后续会发生变化的变量。**
+ 因此，**返回闭包时牢记一点：返回函数不要引用任何循环变量，或者本身会发生变化的局部变量。**
 
 **闭包中如果一定要引用循环变量，就需要再创建一个函数，用该函数的参数绑定循环变量当前的值，无论该循环变量后续如何更改，已绑定到函数参数的值不变：**
 
@@ -2010,4 +2010,157 @@ def count():
         fs.append(f(i)) # f(i)立刻被执行，因此i的当前值被传入f()
     return fs
 ```
+
+因此，从以上可以看出：
+
+​	**返回一个函数`f`它并不是马上执行，而仅仅只是返回一个函数对象，此时并不能确定它的返回值，只有使用`f()`调用它时才能确定`f`内的变量的值以及它的返回值。**
+
+
+
+#### 5.3  匿名函数
+
+在Python中，对匿名函数提供了有限支持。**关键字`lambda`表示匿名函数，格式为：`lambda  参数 : 返回值`**
+
+- **匿名函数有个限制，就是返回值必须一个表达式可以表示**，不用写`return`，返回值就是该表达式的结果。
+
+- **匿名函数也是一个函数对象**，也可以把匿名函数赋值给一个变量，再利用变量来调用该函数：
+
+    ```python
+    >>> f = lambda x: x * x
+    >>> f
+    <function <lambda> at 0x101c6ef28>
+    >>> f(5)
+    25
+    ```
+
+- **匿名函数也可以作为返回值返回**，比如：
+
+    ```python
+    def build(x, y):
+        return lambda: x * x + y * y
+    ```
+
+
+
+#### 5.4  装饰器
+
+函数对象有一个`__name__`属性，可以拿到函数的名字：
+
+```python
+>>> def now():
+...     print('2015-3-25')
+...
+>>> f = now
+>>> now.__name__
+'now'
+>>> f.__name__
+'now'
+```
+
+假设我们要增强`now()`函数的功能，比如，在函数调用前后自动打印日志，但又不希望修改`now()`函数的定义，这种**在代码运行期间动态增加功能的方式，称之为“装饰器”（Decorator）。**
+
+
+
+- **无参装饰器**
+
+    本质上，decorator就是一个返回函数的高阶函数。所以，我们要定义一个能打印日志的decorator，可以定义如下：
+
+    ```python
+    def log(func):
+        def wrapper(*args, **kw):
+            print('call %s():' % func.__name__)
+            return func(*args, **kw)
+        return wrapper
+    ```
+
+    观察上面的`log`，因为它是一个decorator，所以接受一个函数作为参数，并返回一个函数，这里的wrapper就是装饰者。我们要**借助Python的@语法，把decorator置于函数的定义处**：
+
+    ```python
+    @log
+    def now():
+        print('2015-3-25')
+    ```
+
+    调用`now()`函数，不仅会运行`now()`函数本身，还会在运行`now()`函数前打印一行日志：
+
+    ```python
+    >>> now()
+    call now():
+    2015-3-25
+    ```
+
+    **注意：**
+
+    1. **把`@log`放到`now()`函数的定义处，相当于执行了`now = log(now)`。**
+    2. **原来的`now()`函数仍然存在，只是现在同名的`now`变量指向了新的函数，于是调用`now()`将执行新函数（即wrapper）**。
+    3. **若`wrapper()`函数的参数定义是**`(*args, **kw)`，**`func()`函数调用时传入的参数就必须为**`(*args, **kw)`，只有这样才能把`wrapper()`传入的参数转化为`func()`可用的参数。
+        - `*args`和`**kw`代表着可变参数与关键字参数，若直接使用得到的将是`tuple`与`dict`，在`tuple`前加上`*`就又变为可变参数，`dict`也是如此。
+
+
+
+- **带参装饰器**
+
+    如果decorator本身需要传入参数，那就需要编写一个返回decorator的高阶函数，写出来会更复杂。比如，要自定义log的文本：
+
+    ```python
+    def log(text):
+        def decorator(func):
+            def wrapper(*args, **kw):
+                print('%s %s():' % (text, func.__name__))
+                return func(*args, **kw)
+            return wrapper
+        return decorator
+    ```
+
+    这个3层嵌套的decorator用法如下：
+
+    ```python
+    @log('execute')
+    def now():
+        print('2015-3-25')
+    ```
+
+    执行结果如下：
+
+    ```python
+    >>> now()
+    execute now():
+    2015-3-25
+    ```
+
+    和两层嵌套的decorator相比，3层嵌套的效果是这样的：
+
+    ```python
+    >>> now = log('execute')(now)
+    ```
+
+
+
+- **重置**`__name__`**属性**
+
+    经过decorator装饰之后的`now()`函数，它们的`__name__`都从原来的`'now'`变成了`'wrapper'`：
+
+    ```python
+    >>> now.__name__
+    'wrapper'
+    ```
+
+    **因为此时的`now`就是返回的`wrapper()`函数**，所以，需要把原始函数的`__name__`等属性复制到`wrapper()`函数中，否则，有些依赖函数签名的代码执行就会出错。
+
+    Python内置的`functools.wraps`就是解决此问题的，所以，一个完整的decorator的写法如下：
+
+    ```python
+    import functools
+    
+    def log(text):
+        def decorator(func):
+            @functools.wraps(func)     #相当于wrapper.__name__ = func.__name__
+            def wrapper(*args, **kw):
+                print('%s %s():' % (text, func.__name__))
+                return func(*args, **kw)
+            return wrapper
+        return decorator
+    ```
+
+    因此只需记住**在定义`wrapper()`的前面加上`@functools.wraps(func)**`即可。
 

@@ -935,7 +935,7 @@ def power(x, n=2):
 
 2. 当函数有多个参数时，把经常改变的参数放前面，很少改变的参数放后面。很少改变的参数就可以作为默认参数。
 
-3. 有多个默认参数时，调用的时候，既可以按顺序提供部分默认参数，也可以不按顺序提供部分默认参数。当不按顺序提供部分默认参数时，需要把参数名写上并赋值，其他默认参数仍继续使用默认值。
+3. 有多个默认参数时，调用的时候，既可以按顺序提供部分默认参数，也可以不按顺序提供部分默认参数。**当不按顺序提供部分默认参数时，需要把参数名写上并赋值，其他默认参数仍继续使用默认值。**
 
 4.  定义默认参数要牢记一点：**默认参数必须指向不变对象！**，否则，使用默认参数多次调用时并不会返回预期的结果，如：
 
@@ -2164,3 +2164,211 @@ def count():
 
     因此只需记住**在定义`wrapper()`的前面加上`@functools.wraps(func)**`即可。
 
+
+
+#### 5.5  偏函数
+
+Python的`functools`模块提供了很多有用的功能，其中一个就是偏函数（Partial function）。
+
+
+
+**`functools.partial`就是创建一个偏函数的，它可以把一个函数的某些参数给固定住（也就是设置默认值），返回一个新的函数，调用这个新函数会更简单。**
+
+比如`int()`函数提供的`base`参数，默认值为`10`。如果传入`base`参数，就可以做N进制的转换：
+
+```python
+>>> int('12345', base=8)  # 将8进制的12345转化成10进制
+5349
+>>> int('12345', 16)      # 将16进制的12345转化成10进制
+74565
+```
+
+假设要转换大量的二进制字符串，每次都传入`int(x, base=2)`非常麻烦，这是就可以使用下面的代码创建一个新的函数`int2`：
+
+```python
+>>> import functools
+>>> int2 = functools.partial(int, base=2)
+>>> int2('1000000')
+64
+>>> int2('1010101')
+85
+```
+
+上面的新的`int2`函数，仅仅是把`base`参数重新设定默认值为`2`，但也可以在函数调用时传入其他值：
+
+```python
+>>> int2('1000000', base=10)
+1000000
+```
+
+
+
+------
+
+
+
+### 6.  模块
+
+
+
+#### 6.1  使用模块
+
+Python本身就内置了很多非常有用的模块，只要安装完毕，这些模块就可以立刻使用。
+
+我们以内建的`sys`模块为例，编写一个`hello`的模块：
+
+```python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+' a test module '
+
+__author__ = 'Michael Liao'
+
+import sys
+
+def test():
+    args = sys.argv
+    if len(args)==1:
+        print('Hello, world!')
+    elif len(args)==2:
+        print('Hello, %s!' % args[1])
+    else:
+        print('Too many arguments!')
+
+if __name__=='__main__':
+    test()
+```
+
+第1行和第2行是标准注释，第1行注释可以让这个`hello.py`文件直接在Unix/Linux/Mac上运行，第2行注释表示.py文件本身使用标准UTF-8编码；
+
+第4行是一个字符串，表示模块的文档注释，任何模块代码的第一个字符串都被视为模块的文档注释；
+
+第6行使用`__author__`变量把作者写进去，这样当你公开源代码后别人就可以瞻仰你的大名；
+
+以上就是Python模块的标准文件模板，当然也可以全部删掉不写，但是，按标准办事肯定没错。
+
+
+
+- **使用模块**
+
+    使用`sys`模块的第一步，就是导入该模块：
+
+    ```python
+    import sys
+    ```
+
+    `sys`模块有一个`argv`变量，用list存储了命令行的所有参数。`argv`至少有一个元素，因为第一个参数永远是该.py文件的名称，例如：
+
+    运行`python3 hello.py`获得的`sys.argv`就是`['hello.py']`；
+
+    最后，注意到这两行代码：
+
+    ```python
+    if __name__=='__main__':
+        test()
+    ```
+
+    **当我们在命令行运行`hello`模块文件时，Python解释器把一个特殊变量`__name__`置为`__main__`，而如果在其他地方导入该`hello`模块时，`if`判断将失败**，因此，这种`if`测试可以让一个模块通过命令行运行时执行一些额外的代码，最常见的就是运行测试。
+
+    我们可以用命令行运行`hello.py`看看效果：
+
+    ```python
+    $ python3 hello.py
+    Hello, world!
+    $ python hello.py Michael
+    Hello, Michael!
+    ```
+
+    如果导入`hello`模块：
+
+    ```python
+    >>> import hello
+    >>>
+    ```
+
+    导入时，没有打印`Hello, word!`，因为没有执行`test()`函数。
+
+    调用`hello.test()`时，才能打印出`Hello, word!`：
+
+    ```python
+    >>> hello.test()
+    Hello, world!
+    ```
+
+- **作用域**
+
+    **在Python中，是通过`_`前缀来实现访问权限控制的：**
+
+    - 正常的函数和变量名是公开的（public），可以被直接引用，比如：`abc`，`x123`，`PI`等；
+
+    - 类似**`__xxx__`**这样的变量是特殊变量，可以被直接引用，但是有特殊用途，比如上面的`__author__`，`__name__`就是特殊变量，`hello`模块定义的文档注释也可以用特殊变量`__doc__`访问，我们自己的变量一般不要用这种变量名；
+
+    - 类似**`_xxx`**和**`__xxx`**这样的函数或变量就是非公开的（private），不应该被直接引用，比如`_abc`，`__abc`等；
+
+    之所以我们说，private函数和变量“不应该”被直接引用，而不是“不能”被直接引用，是因为Python并没有一种方法可以完全限制访问private函数或变量，但是，从编程习惯上不应该引用private函数或变量。
+
+
+
+#### 6.2  安装第三方模块
+
+- **安装常用模块**
+
+    在使用Python时，我们经常需要用到很多第三方库，例如：Pillow，以及MySQL驱动程序，Web框架Flask，科学计算Numpy等。用pip一个一个安装费时费力，还需要考虑兼容性。推荐直接使用[Anaconda](https://www.anaconda.com/)，这是一个基于Python的数据处理和科学计算平台，它已经内置了许多非常有用的第三方库，我们装上Anaconda，就相当于把数十个第三方模块自动安装好了，非常简单易用。
+
+    下载后直接安装，Anaconda会把系统Path中的python指向自己自带的Python，并且，Anaconda安装的第三方模块会安装在Anaconda自己的路径下，不影响系统已安装的Python目录。
+
+    安装好Anaconda后，重新打开命令行窗口，输入python，可以看到Anaconda的信息：
+
+    ```shell
+    ┌────────────────────────────────────────────────────────┐
+    │Command Prompt - python                           - □ x │
+    ├────────────────────────────────────────────────────────┤
+    │Microsoft Windows [Version 10.0.0]                      │
+    │(c) 2015 Microsoft Corporation. All rights reserved.    │
+    │                                                        │
+    │C:\> python                                             │
+    │Python 3.6.3 |Anaconda, Inc.| ... on win32              │
+    │Type "help", ... for more information.                  │
+    │>>> import numpy                                        │
+    │>>> _                                                   │
+    │                                                        │
+    │                                                        │
+    │                                                        │
+    └────────────────────────────────────────────────────────┘
+    ```
+
+- **模块搜索路径**
+
+    默认情况下，Python解释器会搜索当前目录、所有已安装的内置模块和第三方模块，**搜索路径存放在`sys`模块的`path`变量中**：
+
+    ```python
+    >>> import sys
+    >>> sys.path
+    ['', '/Library/Frameworks/Python.framework/Versions/3.6/lib/python36.zip', '/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6', ..., '/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages']
+    ```
+
+    如果我们要添加自己的搜索目录，有两种方法：
+
+    - **第一种是直接修改`sys.path`，添加要搜索的目录：**
+
+        ```python
+        >>> import sys
+        >>> sys.path.append('/Users/michael/my_py_scripts')
+        ```
+
+        这种方法是**在运行时修改，运行结束后失效。**
+
+    - **第二种方法是设置环境变量`PYTHONPATH`**，该环境变量的内容会被自动添加到模块搜索路径中。设置方式与设置Path环境变量类似。注意只需要添加你自己的搜索路径，Python自己本身的搜索路径不受影响。
+
+
+
+------
+
+
+
+### 7.  面向对象编程
+
+
+
+#### 7.1  

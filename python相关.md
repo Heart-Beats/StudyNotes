@@ -3058,3 +3058,478 @@ class Dog(Mammal, Runnable):
 
 #### 8.5  枚举类
 
+当我们需要定义常量时，一个办法是用大写变量通过整数来定义，但实际上它仍然是变量，更好的方法是为这样的枚举类型定义一个class类型，然后，每个常量都是class的一个唯一实例。Python提供了`Enum`类来实现这个功能：
+
+```python
+from enum import Enum
+
+Month = Enum('Month', ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'))
+```
+
+这样我们就获得了`Month`类型的枚举类，可以直接使用`Month.Jan`来引用一个常量，或者枚举它的所有成员：
+
+```python
+for name, member in Month.__members__.items():
+    print(name, '=>', member, ',', member.value)
+```
+
+`value`属性则是自动赋给成员的`int`常量，默认从`1`开始计数。
+
+**如果需要更精确地控制枚举类型，可以从`Enum`派生出自定义类**：
+
+```python
+from enum import Enum, unique
+
+@unique
+class Weekday(Enum):
+    Sun = 0 # Sun的value被设定为0
+    Mon = 1
+    Tue = 2
+    Wed = 3
+    Thu = 4
+    Fri = 5
+    Sat = 6
+```
+
+**`@unique`装饰器可以帮助我们检查保证没有重复值。**
+
+访问这些枚举类型可以有若干种方法：
+
+```python
+>>> day1 = Weekday.Mon
+>>> print(day1)
+Weekday.Mon
+>>> print(Weekday['Tue'])
+Weekday.Tue
+>>> print(Weekday.Tue.value)
+2
+>>> print(Weekday(1))
+Weekday.Mon
+
+>>> for name, member in Weekday.__members__.items():
+...     print(name, '=>', member)
+...
+Sun => Weekday.Sun
+Mon => Weekday.Mon
+Tue => Weekday.Tue
+Wed => Weekday.Wed
+Thu => Weekday.Thu
+Fri => Weekday.Fri
+Sat => Weekday.Sat
+```
+
+可见，**既可以用成员名称引用枚举常量，又可以直接根据value的值获得枚举常量**。
+
+
+
+#### 8.6 使用元类
+
+- **type()：动态创建类**
+
+    动态语言和静态语言最大的不同，就是函数和类的定义，不是编译时定义的，而是运行时动态创建的。
+
+    比方说我们要定义一个`Hello`的class，就写一个`hello.py`模块：
+
+    ```python
+    class Hello(object):
+        def hello(self, name='world'):
+            print('Hello, %s.' % name)
+    ```
+
+    当Python解释器载入`hello`模块时，就会依次执行该模块的所有语句，执行结果就是动态创建出一个`Hello`的class对象，测试如下：
+
+    ```python
+    >>> from hello import Hello
+    >>> h = Hello()
+    >>> h.hello()
+    Hello, world.
+    >>> print(type(Hello))
+    <class 'type'>
+    >>> print(type(h))
+    <class 'hello.Hello'>
+    ```
+
+    `type()`函数可以查看一个类型或变量的类型，`Hello`是一个class，它的类型就是`type`，而`h`是一个实例，它的类型就是class `Hello`。
+
+    我们说**class的定义是运行时动态创建的，而创建class的方法就是使用`type()`函数。**
+
+    `type()`函数既可以返回一个对象的类型，又可以创建出新的类型，比如，我们可以通过`type()`函数创建出`Hello`类，而无需通过`class Hello(object)...`的定义：
+
+    ```Python
+    >>> def fn(self, name='world'): # 先定义函数
+    ...     print('Hello, %s.' % name)
+    ...
+    >>> Hello = type('Hello', (object,), dict(hello=fn)) # 创建Hello class
+    >>> h = Hello()
+    >>> h.hello()
+    Hello, world.
+    >>> print(type(Hello))
+    <class 'type'>
+    >>> print(type(h))
+    <class '__main__.Hello'>
+    ```
+
+    要创建一个class对象，`type()`函数依次传入3个参数：
+
+    1. class的名称；
+    2. 继承的父类集合，注意Python支持多重继承，如果只有一个父类，别忘了tuple的单元素写法；
+    3. class的方法名称与函数绑定，这里我们把函数`fn`绑定到方法名`hello`上。
+
+    **通过`type()`函数创建的类和直接写class是完全一样的，因为Python解释器遇到class定义时，仅仅是扫描一下class定义的语法，然后调用`type()`函数创建出class。**
+
+    动态语言本身支持运行期动态创建类，这和静态语言有非常大的不同，要在静态语言运行期创建类，必须构造源代码字符串再调用编译器，或者借助一些工具生成字节码实现，本质上都是动态编译，会非常复杂。
+
+- **metaclass**
+
+    metaclass，直译为元类，简单的解释就是：先定义metaclass，就可以创建类，最后创建实例。
+
+    所以，**metaclass允许你创建类或者修改类。换句话说，你可以把类看成是metaclass创建出来的“实例”**。
+
+    我们先看一个简单的例子，这个metaclass可以给我们自定义的MyList增加一个`add`方法：
+
+    ```python
+    # metaclass是类的模板，所以必须从type类型派生：
+    class ListMetaclass(type):
+        def __new__(cls, name, bases, attrs):
+            attrs['add'] = lambda self, value: self.append(value)
+            return type.__new__(cls, name, bases, attrs)
+    ```
+
+    `__new__()`方法接收到的参数依次是：
+
+    1. 当前准备创建的类的对象；
+    2. 类的名字；
+    3. 类继承的父类集合；
+    4. 类的方法集合。
+
+    有了ListMetaclass，我们在定义类的时候还要指示使用ListMetaclass来定制类，传入**关键字参数`metaclass`**：
+
+    ```Python
+    class MyList(list, metaclass=ListMetaclass):
+        pass
+    ```
+
+    **当我们传入关键字参数`metaclass`时，魔术就生效了，它指示Python解释器在创建`MyList`时，要通过`ListMetaclass.__new__()`来创建，在此，我们可以修改类的定义**，比如，加上新的方法，然后，返回修改后的定义。
+
+    测试一下`MyList`是否可以调用`add()`方法：
+
+    ```python
+    >>> L = MyList()
+    >>> L.add(1)
+    >> L
+    [1]
+    ```
+
+    而普通的`list`没有`add()`方法。
+
+    **注意：**
+
+    - 正常情况下，你不会碰到需要使用metaclass的情况，除非要编写一个ORM框架。ORM全称“Object Relational Mapping”，即对象-关系映射，就是把关系数据库的一行映射为一个对象，也就是一个类对应一个表，这样，写代码更简单，不用直接操作SQL语句。
+
+
+
+------
+
+
+
+### 9.  错误、调试和测试
+
+
+
+#### 9.1  错误处理
+
+高级语言通常都内置了一套`try...except...finally...`的错误处理机制，Python也不例外。
+
+
+
+- **try**
+
+    让我们用一个例子来看看`try`的机制：
+
+    ```python
+    try:
+        print('try...')
+        r = 10 / 0
+        print('result:', r)
+    except ZeroDivisionError as e:
+        print('except:', e)
+    finally:
+        print('finally...')
+    print('END')
+    ```
+
+    当我们认为某些代码可能会出错时，就可以用`try`来运行这段代码，如果执行出错，则后续代码不会继续执
+
+    行，而是直接跳转至错误处理代码，即`except`语句块，执行完`except`后，如果有`finally`语句块，则执行`finally`语句块，至此，执行完毕。它和Java中的异常处理机制相同。
+
+- **调用栈**
+
+    如果错误没有被捕获，它就会一直往上抛，最后被Python解释器捕获，打印一个错误信息，然后程序退出。来看看`err.py`：
+
+    ```python
+    # err.py:
+    def foo(s):
+        return 10 / int(s)
+    
+    def bar(s):
+        return foo(s) * 2
+    
+    def main():
+        bar('0')
+    
+    main()
+    ```
+
+    执行，结果如下：
+
+    ```python
+    $ python3 err.py
+    Traceback (most recent call last):
+      File "err.py", line 11, in <module>
+        main()
+      File "err.py", line 9, in main
+        bar('0')
+      File "err.py", line 6, in bar
+        return foo(s) * 2
+      File "err.py", line 3, in foo
+        return 10 / int(s)
+    ZeroDivisionError: division by zero
+    ```
+
+    解读错误信息是定位错误的关键，我们从上往下可以看到整个错误的调用函数链，一般最后一行给出错误原因。
+
+- **记录错误**
+
+    如果不捕获错误，自然可以让Python解释器来打印出错误堆栈，但程序也被结束了。既然我们能捕获错误，就可以把错误堆栈打印出来，然后分析错误原因，同时，让程序继续执行下去。
+
+    Python内置的`logging`模块可以非常容易地记录错误信息：
+
+    ```python
+    # err_logging.py
+    
+    import logging
+    
+    def foo(s):
+        return 10 / int(s)
+    
+    def bar(s):
+        return foo(s) * 2
+    
+    def main():
+        try:
+            bar('0')
+        except Exception as e:
+            logging.exception(e)
+    
+    main()
+    print('END')
+    ```
+
+    同样是出错，但程序打印完错误信息后会继续执行，并正常退出：
+
+    ```python
+    $ python3 err_logging.py
+    ERROR:root:division by zero
+    Traceback (most recent call last):
+      File "err_logging.py", line 13, in main
+        bar('0')
+      File "err_logging.py", line 9, in bar
+        return foo(s) * 2
+      File "err_logging.py", line 6, in foo
+        return 10 / int(s)
+    ZeroDivisionError: division by zero
+    END
+    ```
+
+    通过配置，`logging`还可以把错误记录到日志文件里，方便事后排查。
+
+- **抛出错误**
+
+    因为错误是class，捕获一个错误就是捕获到该class的一个实例。因此，错误并不是凭空产生的，而是有意创建并抛出的。Python的内置函数会抛出很多类型的错误，我们自己编写的函数也可以抛出错误。
+
+    如果要抛出错误，首先根据需要，可以定义一个错误的class，选择好继承关系，然后，用`raise`语句抛出一个错误的实例：
+
+    ```python
+    # err_raise.py
+    class FooError(ValueError):
+        pass
+    
+    def foo(s):
+        n = int(s)
+        if n==0:
+            raise FooError('invalid value: %s' % s)
+        return 10 / n
+    
+    foo('0')
+    ```
+
+    执行，可以最后跟踪到我们自己定义的错误：
+
+    ```python
+    $ python3 err_raise.py 
+    Traceback (most recent call last):
+      File "err_throw.py", line 11, in <module>
+        foo('0')
+      File "err_throw.py", line 8, in foo
+        raise FooError('invalid value: %s' % s)
+    __main__.FooError: invalid value: 0
+    ```
+
+    只有在必要的时候才定义我们自己的错误类型。如果可以选择Python已有的内置的错误类型（比如`ValueError`，`TypeError`），尽量使用Python内置的错误类型。
+
+
+
+#### 9.2  调试
+
+不建议在程序中使用print() 或者assert来调试程序，可以通过以下方式调试程序：
+
+- **logging**
+
+    `logging`不会抛出错误，而且可以输出到文件：
+
+    ```python
+    import logging
+    logging.basicConfig(level=logging.INFO)
+    
+    s = '0'
+    n = int(s)
+    logging.info('n = %d' % n)
+    print(10 / n)
+    ```
+
+    `logging.info()`就可以输出一段文本。运行可以看到输出：
+
+    ```python
+    $ python err.py
+    INFO:root:n = 0
+    Traceback (most recent call last):
+      File "err.py", line 8, in <module>
+        print(10 / n)
+    ZeroDivisionError: division by zero
+    ```
+
+    这就是`logging`的好处，它允许你指定记录信息的级别，有`debug`，`info`，`warning`，`error`等几个级别，当我们指定`level=INFO`时，`logging.debug`就不起作用了。同理，指定`level=WARNING`后，`debug`和`info`就不起作用了。这样一来，你可以放心地输出不同级别的信息，也不用删除，最后统一控制输出哪个级别的信息。
+
+    `logging`的另一个好处是通过简单的配置，一条语句可以同时输出到不同的地方，比如console和文件。
+
+
+
+    除了以上方式还可以使用Python的调试器pdb调试，不过一般IDE都支持debug，因此**最好的调试方法就是使用debug**。
+
+
+
+#### 9.3  单元测试
+
+如果你听说过“测试驱动开发”（TDD：Test-Driven Development），单元测试就不陌生。
+
+单元测试是用来对一个模块、一个函数或者一个类来进行正确性检验的测试工作。
+
+
+
+单元测试通过后有什么意义呢？如果我们对`abs()`函数代码做了修改，只需要再跑一遍单元测试，如果通过，说明我们的修改不会对`abs()`函数原有的行为造成影响，如果测试不通过，说明我们的修改与原有行为不一致，要么修改代码，要么修改测试。
+
+这种以测试为驱动的开发模式最大的好处就是确保一个程序模块的行为符合我们设计的测试用例。在将来修改的时候，可以极大程度地保证该模块行为仍然是正确的。
+
+
+
+Python中单元测试写法：
+
+1. 编写一个测试类，从`unittest.TestCase`继承；
+
+2. 以`test`开头的方法就是测试方法，不以`test`开头的方法不被认为是测试方法，测试的时候不会被执行；
+
+3. 断言输出是否是我们所期望的：
+
+    ```python
+    self.assertEqual(abs(-1), 1) # 断言函数返回的结果与1相等
+    ```
+
+    另一种重要的断言就是期待抛出指定类型的Error，比如通过`d['empty']`访问不存在的key时，断言会抛出`KeyError`：
+
+    ```python
+    with self.assertRaises(KeyError):
+        value = d['empty']
+    ```
+
+4. 编写好单元测试，我们就可以运行单元测试：
+
+    - 最简单的运行方式是在`test.py`的最后加上两行代码：
+
+        ```python
+        if __name__ == '__main__':
+            unittest.main()
+        ```
+
+    - 另一种方法是在命令行通过参数`-m unittest`直接运行单元测试：
+
+        ```python
+        $ python -m unittest test
+        .....
+        ----------------------------------------------------------------------
+        Ran 5 tests in 0.000s
+        
+        OK
+        ```
+
+        这是推荐的做法，因为这样可以一次批量运行很多单元测试，并且，有很多工具可以自动来运行这些单元测试。
+
+5. 可以在单元测试中编写两个特殊的`setUp()`和`tearDown()`方法。这两个方法会分别在每调用一个测试方法的前后分别被执行。
+
+
+
+#### 9.4  文档测试
+
+Python的内置的“文档测试”（文档测试）模块可以直接提取注释中的代码并执行测试。
+
+文档测试严格按照Python的交互式命令行的输入和输出来判断测试结果是否正确。只有测试异常的时候，可以用`...`表示中间一大段烦人的输出。如：
+
+```python
+# mydict2.py
+class Dict(dict):
+    '''
+    Simple dict but also support access as x.y style.
+
+    >>> d1 = Dict()
+    >>> d1['x'] = 100
+    >>> d1.x
+    100
+    >>> d1.y = 200
+    >>> d1['y']
+    200
+    >>> d2 = Dict(a=1, b=2, c='3')
+    >>> d2.c
+    '3'
+    >>> d2['empty']
+    Traceback (most recent call last):
+        ...
+    KeyError: 'empty'
+    >>> d2.empty
+    Traceback (most recent call last):
+        ...
+    AttributeError: 'Dict' object has no attribute 'empty'
+    '''
+    def __init__(self, **kw):
+        super(Dict, self).__init__(**kw)
+
+    def __getattr__(self, key):
+        try:
+            return self[key]
+        except KeyError:
+            raise AttributeError(r"'Dict' object has no attribute '%s'" % key)
+
+    def __setattr__(self, key, value):
+        self[key] = value
+
+if __name__=='__main__':
+    import doctest      #导入文档测试
+    doctest.testmod()	#开始文档测试
+```
+
+运行`python mydict2.py`：
+
+```python
+$ python mydict2.py
+```
+
+**什么输出也没有，这说明我们编写的文档测试运行都是正确的；如果程序有问题，运行就会报错**。当模块正常导入时，文档测试不会被执行。只有在命令行直接运行时，才执行文档测试。所以，不必担心文档测试会在非测试环境下执行。
+

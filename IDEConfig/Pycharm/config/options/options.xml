@@ -1,0 +1,87 @@
+<application>
+  <component name="PropertiesComponent">
+    <property name="ATTACHED_TOOL_WINDOW.DEFAULT.NELE_EDITOR.COMPONENT_TREE.AUTO_HIDE" value="false" />
+    <property name="ATTACHED_TOOL_WINDOW.DEFAULT.NELE_EDITOR.COMPONENT_TREE.LEFT" value="true" />
+    <property name="ATTACHED_TOOL_WINDOW.DEFAULT.NELE_EDITOR.COMPONENT_TREE.SPLIT" value="true" />
+    <property name="ATTACHED_TOOL_WINDOW.DEFAULT.NELE_EDITOR.PALETTE.AUTO_HIDE" value="false" />
+    <property name="ATTACHED_TOOL_WINDOW.DEFAULT.NELE_EDITOR.PALETTE.LEFT" value="true" />
+    <property name="ATTACHED_TOOL_WINDOW.DEFAULT.NELE_EDITOR.PALETTE.SPLIT" value="false" />
+    <property name="ATTACHED_TOOL_WINDOW.DEFAULT.NELE_EDITOR.PROPERTIES.AUTO_HIDE" value="false" />
+    <property name="ATTACHED_TOOL_WINDOW.DEFAULT.NELE_EDITOR.PROPERTIES.LEFT" value="false" />
+    <property name="ATTACHED_TOOL_WINDOW.DEFAULT.NELE_EDITOR.PROPERTIES.SPLIT" value="false" />
+    <property name="ATTACHED_TOOL_WINDOW.DEFAULT.NELE_EDITOR.TOOL_ORDER" value="PALETTE,PROPERTIES,COMPONENT_TREE" />
+    <property name="ATTACHED_TOOL_WINDOW.DEFAULT.Preview.PALETTE.AUTO_HIDE" value="true" />
+    <property name="ATTACHED_TOOL_WINDOW.DEFAULT.Preview.PALETTE.LEFT" value="true" />
+    <property name="ATTACHED_TOOL_WINDOW.DEFAULT.Preview.PALETTE.SPLIT" value="false" />
+    <property name="ATTACHED_TOOL_WINDOW.DEFAULT.Preview.TOOL_ORDER" value="PALETTE" />
+    <property name="ATTACHED_TOOL_WINDOW.NELE_EDITOR.COMPONENT_TREE.LEFT" value="true" />
+    <property name="ATTACHED_TOOL_WINDOW.NELE_EDITOR.COMPONENT_TREE.SPLIT" value="true" />
+    <property name="ATTACHED_TOOL_WINDOW.NELE_EDITOR.LEFT.UNSCALED.WIDTH" value="340" />
+    <property name="ATTACHED_TOOL_WINDOW.NELE_EDITOR.PALETTE.LEFT" value="true" />
+    <property name="ATTACHED_TOOL_WINDOW.NELE_EDITOR.PROPERTIES.MINIMIZED" value="true" />
+    <property name="ATTACHED_TOOL_WINDOW.NELE_EDITOR.RIGHT.UNSCALED.WIDTH" value="250" />
+    <property name="ATTACHED_TOOL_WINDOW.NELE_EDITOR.TOOL_ORDER" value="PALETTE,PROPERTIES,COMPONENT_TREE" />
+    <property name="ATTACHED_TOOL_WINDOW.Preview.LEFT.UNSCALED.WIDTH" value="225" />
+    <property name="ATTACHED_TOOL_WINDOW.Preview.PALETTE.AUTO_HIDE" value="true" />
+    <property name="ATTACHED_TOOL_WINDOW.Preview.PALETTE.LEFT" value="true" />
+    <property name="ATTACHED_TOOL_WINDOW.Preview.RIGHT.UNSCALED.WIDTH" value="225" />
+    <property name="ATTACHED_TOOL_WINDOW.Preview.TOOL_ORDER" value="PALETTE" />
+    <property name="AndroidInitConfigurator.V1" value="true" />
+    <property name="AndroidInitConfigurator.V3" value="true" />
+    <property name="AndroidInitConfigurator.V5" value="true" />
+    <property name="ColorChooser.RecentColors" value="255-71-57-255,,,255-255-255-255,,,143-161-255-255,,,62-255-231-255,,,255-248-193-255,,,193-182-176-255,,,255-27-8-255,,,255-53-32-255,,,255-78-55-255,,,69-137-84-255,,,47-170-146-255,,,34-121-97-255,,,23-75-55-255,,,0-0-0-255,,,214-214-214-255,,,190-190-190-255,,,255-254-254-255,,,142-142-142-255,,,153-153-153-255,,,163-163-163-255" />
+    <property name="CommitChangeListDialog.DETAILS_SPLITTER_PROPORTION_2" value="0.6255507" />
+    <property name="Copy.OpenInEditor" value="true" />
+    <property name="Darcula.savedEditorTheme" value="Visual Studio 2017" />
+    <property name="Default.savedEditorTheme" value="_@user_Default" />
+    <property name="ExpandBeforeRunStepsPanel" value="true" />
+    <property name="FileTemplates.CurrentTab" value="Other" />
+    <property name="FileTemplates.SelectedTemplate" value="Remote_Interface" />
+    <property name="KEYMAP" value="tran&#10;format&#10;trans" />
+    <property name="MTBorderPopup" value="true" />
+    <property name="MTTabsHeight" value="42" />
+    <property name="MemberChooser.copyJavadoc" value="false" />
+    <property name="MemberChooser.showClasses" value="true" />
+    <property name="NlScreenMode" value="BLUEPRINT_ONLY" />
+    <property name="PLUGIN_FILTER" value="Sexy&#10;SexyEditor&#10;material&#10;Material Theme UI&#10;JUnit" />
+    <property name="PyCharm.InitialConfiguration" value="true" />
+    <property name="PyCharm.InitialConfiguration.V2" value="true" />
+    <property name="PyCharm.InitialConfiguration.V3" value="true" />
+    <property name="PyCharm.InitialConfiguration.V4" value="true" />
+    <property name="PyCharm.InitialConfiguration.V5" value="true" />
+    <property name="PyCharm.InitialConfiguration.V6" value="true" />
+    <property name="PyCharm.InitialConfiguration.V7" value="true" />
+    <property name="PyCharm.initialConfigurationShown" value="true" />
+    <property name="SearchEveryWhereHistory" value="layout_ipod_base&#10;source&#10;am&#10;ic_launcher&#10;leepi_com_022" />
+    <property name="SettingsSearchHistory" value="line number&#10;Caret row" />
+    <property name="TrendingPluginsSearchHistory" value="material" />
+    <property name="android-component-compatibility-check" value="1543805119342" />
+    <property name="build.toolwindow.Build.selection.state" value="com.intellij.build.BuildTreeConsoleView" />
+    <property name="build.toolwindow.Sync.selection.state" value="com.intellij.build.BuildTreeConsoleView" />
+    <property name="build.toolwindow.run.selection.state" value="consoleView" />
+    <property name="cn.yiiguxing.plugin.translate.version" value="2.2" />
+    <property name="com.chrisrm.idea.MaterialThemeUI.theme" value="OCEANIC" />
+    <property name="com.intellij.diagnostic.IdeErrorsDialogactiveTab" value="0" />
+    <property name="com.intellij.history.integration.ui.views.FileHistoryDialog.0" value="300" />
+    <property name="com.intellij.history.integration.ui.views.FileHistoryDialog.1" value="800" />
+    <property name="decompiler.legal.notice.accepted" value="true" />
+    <property name="file.chooser.recent.files" value="$USER_HOME$/.AndroidStudio3.2/config/settings.jar&#10;/home/zhanglei/图片/WallpaperStudio10-88211.jpg&#10;/home/zhanglei/图片/WallpaperStudio10-100908.jpg&#10;/home/zhanglei/下载/Visual Studio 2017.jar&#10;/home/zhanglei/3T/home/zhanglei/zl_RC3/ivi/packages/uibase&#10;/home/zhanglei/3T/home/zhanglei/zl_RC3/out/target/product/mt2712/flashimg-init.sh&#10;/home/zhanglei/3T/home/zhanglei/zl_RC3/out/target/product/mt2712/system.img&#10;/home/zhanglei/3T/home/zhanglei/zl_poc/ivi/packages/apps/av&#10;/home/zhanglei/Android/Sdk&#10;/home/zhanglei/3T/home/zhanglei/zl_poc/ivi/packages/apps/av/app&#10;/home/zhanglei/3T/home/zhanglei/zl_RC3/ivi/packages/apps/home&#10;/home/zhanglei/3T/home/zhanglei/zl_RC3/ivi/packages/uibase/lib/iauto.uibase.aar&#10;/home/zhanglei/3T/home/zhanglei/zl_RC3/ivi/packages/uibase/app&#10;/home/zhanglei/3T/home/zhanglei/zl_RC3/ivi/packages/uibase/gradle&#10;/home/zhanglei/3T/home/zhanglei/zl_RC3/ivi/packages/apps/av&#10;/home/zhanglei/3T/home/zhanglei/zl_treble/ivi/packages/apps/av/iauto.uibase.aar&#10;/home/zhanglei/3T/home/zhanglei/zl_treble/ivi/packages/apps/av/iauto.uibase/iauto.uibase.aar&#10;/home/zhanglei/3T/home/zhanglei/zl_treble/ivi/packages/uibase&#10;/home/zhanglei/3T/home/zhanglei/zl_rc3/ivi/packages/apps/av&#10;/home/zhanglei/3T/home/zhanglei/zl_treble/ivi/packages/uibase/app/src/main/java/com/iauto/uibase/customcontrol&#10;/home/zhanglei/3T/home/zhanglei/zl_treble/ivi/packages/uibase/lib/iauto.uibase.aar&#10;/home/zhanglei/java/jdk1.8.0_181&#10;/home/zhanglei/3T/home/zhanglei/zl_treble/ivi/packages/apps/av&#10;/home/zhanglei/zl_POC/ivi/packages/apps/av/app/build.gradle&#10;/home/zhanglei/zl_rc3/ivi/packages/apps/home/build.gradle&#10;/home/zhanglei/桌面/CamelCasePlugin.jar&#10;/home/zhanglei/zl_rc3/ivi/packages/apps/av/app/libs/merbok.car.jar&#10;/home/zhanglei/zl_rc3/ivi/packages/apps/av&#10;/usr/java/jdk1.8.0_181" />
+    <property name="file.colors.enable.non.project" value="2f2e43" />
+    <property name="file.gist.reindex.count" value="4927" />
+    <property name="fileTypeChangedCounter" value="48" />
+    <property name="idea.background.editor" value="https://raw.githubusercontent.com/Heart-Beats/GraphBed/master/AndroidStudioBG_1.png,15,scale,center" />
+    <property name="idea.background.frame" value="https://raw.githubusercontent.com/Heart-Beats/GraphBed/master/AndroidStudioBG_1.png,50,scale,center" />
+    <property name="installation.uid" value="40fc6092-f53f-454c-a4e9-007165f260ee" />
+    <property name="installed.kotlin.plugin.version" value="1.2.71-release-Studio3.2-1" />
+    <property name="last.imported.location" value="$USER_HOME$/zl_rc3/ivi/packages/apps/av" />
+    <property name="lastTip" value="71" />
+    <property name="mt.showStatisticsAgreement" value="true" />
+    <property name="newly.installed.api.level" value="26" />
+    <property name="org.intellij.images.editor.actions.SetBackgroundImageDialog#recent" value="$USER_HOME$/图片/WallpaperStudio10-100908.jpg" />
+    <property name="plugins.preselection.path" value="$USER_HOME$/桌面" />
+    <property name="selected.color.option.type" value="LINE_NUMBERS_COLOR" />
+    <property name="settings.code.style.selected.tab.JAVA" value="Tabs and Indents" />
+    <property name="studio.activity.count" value="0" />
+    <property name="ts.lib.d.ts.version" value="3.1.1" />
+  </component>
+</application>

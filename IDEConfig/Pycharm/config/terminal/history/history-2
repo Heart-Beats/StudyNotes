@@ -1,0 +1,1381 @@
+: 1537351216:0;su
+: 1537351351:0;ls
+: 1537351572:0;exit
+: 1537351589:0;cd
+: 1537351594:0;ls
+: 1537406427:0;cd zl_rc3
+: 1537406442:0;repo sync -c
+: 1537407482:0;cd ivi/frameworks/service/testmode/
+: 1537407497:0;git pull
+: 1537407532:0;cd ivi/packages/apps/av/
+: 1537407553:0;cd zl_rc3
+: 1537407564:0;cd
+: 1537407569:0;cd zl_rc3
+: 1537407575:0;cd ivi/packages/apps/av/
+: 1537407588:0;git pull
+: 1537407663:0;cd ..
+: 1537407674:0;cd
+: 1537407679:0;cd zl_rc3
+: 1537407699:0;source build/envsetup.sh
+: 1537407710:0;lunch 
+: 1537407723:0;make -j8
+: 1537410633:0;last -x | grep shutdown
+: 1537410665:0;last
+: 1537410721:0;clear
+: 1537410723:0;last -x | grep shutdown
+: 1537412228:0;git 
+: 1537412237:0;git lg
+: 1537412410:0;git config --global
+: 1537412486:0;git config --global user.name
+: 1537412498:0;git config --global user.name "zhanglei"
+: 1537412501:0;git config --global user.name
+: 1537412531:0;git config --global user.email "zhanglei2@iauto.com"
+: 1537412539:0;git config --global user.email
+: 1537351250:0;cd ivi/packages/apps/av/
+: 1537351261:0;git stTUS
+: 1537351292:0;git status
+: 1537351816:0;git checkout -b dev
+: 1537352046:0;git status
+: 1537352074:0;git flow
+: 1537352119:0;git lg
+: 1537352159:0;git show
+: 1537352179:0;git branch
+: 1537352195:0;git branch -d
+: 1537352252:0;git branch -d dev
+: 1537352320:0;git check Leepi _MTK_RC3
+: 1537352332:0;git checkout Leepi _MTK_RC3
+: 1537352352:0;git status
+: 1537352421:0;git remote -v
+: 1537352533:0;git checkout Leepi_MTK_RC3
+: 1537352548:0;git status
+: 1537352559:0;git branch -d dev
+: 1537352563:0;git status
+: 1537352592:0;git branch
+: 1537352597:0;clear
+: 1537352601:0;cd
+: 1537352610:0;cd zl_rc3
+: 1537353041:0;git status
+: 1537353063:0;git checkout -b test
+: 1537353070:0;git status
+: 1537353074:0;git add .
+: 1537354469:0;git commit -m 'test'
+: 1537354738:0;git checkout Leepi_MTK_RC3
+: 1537354804:0;git branch -d test
+: 1537354839:0;git branch -D test
+: 1537354934:0;git relog
+: 1537354941:0;git reflog
+: 1537354971:0;git reset d5ad4f0 
+: 1537354978:0;git branch -a
+: 1537355582:0;git status
+: 1537355597:0;git branch
+: 1537417200:0;cd ivi/packages/apps/av
+: 1537417209:0;git status
+: 1537417214:0;git branch
+: 1537417236:0;git checkout Leepi_MTK_RC3
+: 1537417242:0;git status
+: 1537417256:0;git pull
+: 1537417271:0;git status
+: 1537417284:0;git pull
+: 1537417550:0;git log
+: 1537417586:0;git reset fabf6086a7214016de80e0457948e09bb572dba6
+: 1537417610:0;git status
+: 1537417644:0;git branch
+: 1537417895:0;git status
+: 1537424515:0;cd 
+: 1537424521:0;cd zl_rc3
+: 1537424736:0;EMMA_INSTRUMENT_STATIC=true mmma -j32 ivi/packages/apps/av
+: 1537424865:0;cd zl_rc3
+: 1537424879:0;source build/envsetup.sh
+: 1537424917:0;exit
+: 1537424942:0;bash
+: 1537437709:0;ssh Leepi_test1@192.168.48.19
+: 1537437841:0;ssh Leepi-Test1@192.168.48.19
+: 1537492370:0;vi ~/.ssh/known_hosts
+: 1537493173:0;fctix
+: 1537493186:0;bash
+: 1537496142:0;cd zl_rc3
+: 1537496161:0;source build/envsetup.sh
+: 1537496182:0;lunch
+: 1537496208:0;make -j8
+: 1537499069:0;EMMA_INSTRUMENT_STATIC=true mmma -j32 ivi/packages/apps/av
+: 1537499120:0;source build/envsetup.sh
+: 1537499133:0;lunch
+: 1537499144:0;EMMA_INSTRUMENT_STATIC=true mmma -j32 ivi/packages/apps/av
+: 1537499156:0;bash
+: 1537511993:0;git status
+: 1537512290:0;git checkout -b dev
+: 1537512310:0;git status
+: 1537512336:0;git add app/src/androidTest/java/net/suntec/merbok/avAndroidTest/avscreen/bta/BtaBaseTest.java
+: 1537512715:0;git add app/src/androidTest/java/net/suntec/merbok/avAndroidTest/avscreen/bta/BtaDisconnectTest.java
+: 1537512721:0;git status
+: 1537512828:0;cd app/src/androidTest/java/net/suntec/merbok/avAndroidTest/uicommon
+: 1537512834:0;ls
+: 1537512845:0;git pull
+: 1537512897:0;git branch
+: 1537512935:0;git checkout Leepi_MTK_RC3
+: 1537512949:0;git pull
+: 1537513537:0;git checkout dev
+: 1537513551:0;git status
+: 1537516462:0;git add .
+: 1537516469:0;git status
+: 1537517028:0;git commit -m "uicommon part junit test "
+: 1537517059:0;git checkout Leepi_MTK_RC3
+: 1537517226:0;git config --global user
+: 1537517248:0;git config --global user.email
+: 1537517275:0;git merge dev
+: 1537517458:0;git status
+: 1537517497:0;git commit
+: 1537517741:0;cd zl_rc3
+: 1537517758:0;cd ivi/packages/apps/av
+: 1537517766:0;git status
+: 1537517849:0;git commit -m 'uicommon part junit test'
+: 1537517857:0;git status
+: 1537517880:0;git log -3
+: 1537517951:0;git checkout dev
+: 1537517958:0;git log -3
+: 1537518778:0;info synergy
+: 1537518997:0;cd zl_rc3/ivi/packages/apps/av
+: 1537519006:0;git status
+: 1537519057:0;git remote
+: 1537519062:0;git remote -v
+: 1537519092:0;git remote -d aosp
+: 1537519121:0;git remote remove aosp
+: 1537519125:0;git remote -v
+: 1537519148:0;git checkout Leepi_MTK_RC3
+: 1537519157:0;git remote -v
+: 1537519201:0;git remote add aosp ssh://gerrit.iauto.com:29418/Src/Leepi_MTK_E2/ivi/packages/apps/av
+: 1537519205:0;git remote -v
+: 1537519221:0;git push -u aosp
+: 1537519244:0;git push --set-upstream aosp Leepi_MTK_RC3
+: 1537519307:0;git remote -v
+: 1537519375:0;git push
+: 1537519384:0;git push aosp
+: 1537519475:0;git remote -v
+: 1537519496:0;git push --set-upstream aosp Leepi_MTK_RC3
+: 1537519510:0;exit
+: 1537519643:0;git push --set-upstream aosp +Leepi_MTK_RC3
+: 1537519812:0;git status
+: 1537519831:0;git remote -v
+: 1537519849:0;git push -u aosp Leepi_MTK_RC3
+: 1537520105:0;git status
+: 1537520113:0;git pull
+: 1537520141:0;git branch --set-upstream-to=aosp/<ÂÉ®É¶ÊÉ¥Ø> Leepi_MTK_RC3
+: 1537520166:0;git branch --set-upstream-to=aosp/Leepi_MTK_RC3 Leepi_MTK_RC3
+: 1537520196:0;git fetch
+: 1537520225:0;git remote -v
+: 1537520299:0;git push
+: 1537520382:0;git branch --set-upstream-to=aosp/Leepi_MTK_RC3
+: 1537520399:0;git pull
+: 1537520437:0;git pull aosp Leepi_MTK_RC3
+: 1537520512:0;git push -u aosp Leepi_MTK_RC3 Leepi_MTK_RC3
+: 1537520705:0;git log -3
+: 1537520730:0;git reset a6567edb1
+: 1537520764:0;git push -u aosp Leepi_MTK_RC3 Leepi_MTK_RC3
+: 1537520828:0;git push
+: 1537520842:0;git push aosp
+: 1537520850:0;git branch
+: 1537520943:0;git push aosp HEAD:refs/for/Leepi_MTK_RC3
+: 1537520971:0;git status
+: 1537520987:0;git add app/src/androidTest/java/net/suntec/merbok/avAndroidTest/uicommon/CarlifeCommonTest.java
+: 1537521006:0;git commit -m "[Rc3][test]test"
+: 1537521021:0;git push aosp HEAD:refs/for/Leepi_MTK_RC3
+: 1537521064:0;git add .
+: 1537521067:0;git statsu
+: 1537521074:0;git status
+: 1537521164:0;git reset HEAD
+: 1537521305:0;git push aosp HEAD:refs/for/Leepi_MTK_RC3
+: 1537521365:0;git status
+: 1537521428:0;git log -3
+: 1537521483:0;git reflog 
+: 1537521537:0;git reflog --all
+: 1537521756:0;git branch
+: 1537522257:0;git log 3
+: 1537522264:0;git log -3
+: 1537523040:0;git branch
+: 1537523062:0;git status
+: 1537523106:0;git branch
+: 1537523126:0;git branch -d dev
+: 1537838678:0;cd zl_rc3
+: 1537838685:0;repo sync
+: 1537839530:0;ivi/frameworks/service/testmode/
+: 1537839545:0;git pull
+: 1537839902:0;git status
+: 1537839923:0;git checkout .
+: 1537839934:0;git status
+: 1537839939:0;git pull
+: 1537839968:0;~/zl_rc3
+: 1537839986:0;source build/envsetup.sh
+: 1537839994:0;lunch
+: 1537840014:0;make -j8
+: 1537848222:0;EMMA_INSTRUMENT_STATIC=true mmma -j32 ivi/packages/apps/av
+: 1537848234:0;bash
+: 1537863264:0;sudo apt install im-config
+: 1537863304:0;Im-config
+: 1537863314:0;bash
+: 1537863493:0;sudo apt-get install -f 
+: 1537863556:0;sudo apt remove ibus*
+: 1537863561:0;bash
+: 1537865202:0;cd zl_poc
+: 1537865208:0;repo sync
+: 1537866397:0;cd ivi/packages/apps/av
+: 1537866405:0;git status
+: 1537867085:0;sudo dpkg -i sogoupinyin_2.2.0.0108_amd64.deb
+: 1537867229:0;dkpg --status synergy
+: 1537867235:0;bash
+: 1537867892:0;fcitx -r
+: 1537868006:0;bash
+: 1537868024:0;pidof fcitx|xargs kill
+: 1537868038:0;fcitx &
+: 1537868047:0;sogou-qimpanel &
+: 1537868143:0;sudo apt-get purge fcitx-ui-qimpanel
+: 1537868201:0;fcitx -r
+: 1537868922:0;sync
+: 1537871099:0;bash
+: 1537932218:0;la
+: 1537932347:0;fsck
+: 1537932358:0;root
+: 1537932360:0;su
+: 1537932679:0;[200~error, corrupted directory (invalid entries)
+: 1537932701:0;tail -f /var/log/syslog
+: 1538016124:0;cd ÊÉÅÉ¨ÈÉΩÉÇ
+: 1538016172:0;touch Steering Wheel Switch Key
+: 1538019554:0;sudo apt-get install nautilus-share
+: 1538019571:0;nautilus -q
+: 1538019769:0;sudo apt-get install smbclient smbfs
+: 1538103261:0;/usr/AndroidStudio/android-studio
+: 1538103276:0;ll
+: 1538103301:0;sudo chmod 777 /usr/AndroidStudio/android-studio
+: 1538104186:0;cd ÊÉÅÉ¨ÈÉΩÉÇ
+: 1538104192:0;touch v
+: 1538106996:0;adb remount
+: 1538107001:0;bash
+: 1538186698:0;sudo vim /etc/samba/smb.conf
+: 1538186819:0;sudo smbpasswd -a username 
+: 1538186869:0;sudo smbpasswd -a zhanglei
+: 1538187782:0;sudo /etc/init.d/smbd restart
+: 1538188276:0;sudo apt install gnome-shell-extensions
+: 1538188381:0;sudo apt install chrome-gnome-shell
+: 1538193038:0;gedit    ~/zl_rc3/frameworks/base/core/java/android/view/KeyEvent.java
+: 1538201988:0;exit
+: 1538202020:0;dpkg --status synergy
+: 1538202512:0;apt remove synergy
+: 1538202523:0;sudo apt remove synergy
+: 1538202606:0;dpkg -i synergy-v1.8.8ÂÉ•ºÂÆπÂÉ¨É•.deb
+: 1538202613:0;sudo dpkg -i synergy-v1.8.8ÂÉ•ºÂÆπÂÉ¨É•.deb
+: 1538203774:0;cd ~/.config
+: 1538203789:0;sudo rm -rf SogouPY* sogou*
+: 1538203798:0;reboot
+: 1538209363:0;cd zl_rc3
+: 1538209370:0;repo sync
+: 1538210005:0;cd ivi/packages/apps/av/
+: 1538210012:0;git pull
+: 1538210016:0;cd -
+: 1538210018:0;bash
+: 1538210056:0;cd zl_poc
+: 1538210061:0;repo sync
+: 1538210594:0;bash
+: 1538213741:0;cd ivi/packages/
+: 1538213743:0;lks
+: 1538213745:0;ls
+: 1538213750:0;cd apps
+: 1538213751:0;ls
+: 1538213755:0;cd ../
+: 1538213757:0;cd ..
+: 1538213759:0;ls
+: 1538213761:0;cd frameworks
+: 1538213764:0;cd base
+: 1538213766:0;git status
+: 1538213768:0;git pull
+: 1538213780:0;cd frameworks
+: 1538213781:0;ls
+: 1538213784:0;cd base
+: 1538213786:0;git status
+: 1538213788:0;git pull
+: 1538273294:0;repo init -u
+: 1538273340:0;cd zl_poc
+: 1538273377:0;repo sync -c
+: 1538276704:0;repo start iAuto_Android_POC --all
+: 1538276826:0;source build/envsetup.sh
+: 1538276839:0;bash
+: 1538278654:0;repo init -u ssh://gerrit.iauto.com:29418/Src/Leepi_MTK_E2/manifest -b iAuto_Android_POC
+: 1538278666:0;repo sync -c
+: 1538283858:0;repo start iAuto_Android_POC --all
+: 1538283875:0;source build/envsetup.sh
+: 1538283878:0;bash
+: 1538962966:0;sudo apt-get update
+: 1538963006:0;sudo apt-get install synergy
+: 1538963063:0;sudo apt autoremove
+: 1538963181:0;sudo apt-get install synergy
+: 1538963219:0;sudo apt autoremove 1.8.8-stable+dfsg.1-1build1
+: 1538963253:0;sudo apt autoremove synergy
+: 1538963305:0;cd ÊÉÅÉ¨ÈÉΩÉÇ
+: 1538963309:0;ls
+: 1538963426:0;sudo dpkg -i synergy_1.8.8-stable+dfsg.1-1build1_amd64.deb
+: 1538963481:0;sudo apt-get install libavahi-compat-libdnssd1
+: 1538963492:0;sudo dpkg -i synergy_1.8.8-stable+dfsg.1-1build1_amd64.deb
+: 1538963514:0;sudo apt-get update
+: 1538965186:0;ar x synergy_1.8.8-stable+dfsg.1-1build1_amd64.deb
+: 1538965198:0;tar zxvf control.tar.gz
+: 1538965352:0;tar zxvf control.tar.xz
+: 1538965360:0;ar x synergy_1.8.8-stable+dfsg.1-1build1_amd64.deb
+: 1538965365:0;tar zxvf control.tar.xz
+: 1538966346:0;bash
+: 1538971869:0;vim studio64.vmoptions
+: 1538972018:0;sudo vim studio64.vmoptions
+: 1538972235:0;la
+: 1538972280:0;sudo chmod 777 android-studio
+: 1538972288:0;la
+: 1538972306:0;cd android-studio
+: 1538972309:0;la
+: 1538972361:0;cd -
+: 1538972382:0;sudo chmod 777 -r  android-studio
+: 1538972426:0;sudo chmod -r  777 android-studio
+: 1538972432:0;sudo chmod -R  777 android-studio
+: 1538972436:0;ls
+: 1538972439:0;la
+: 1538972445:0;cd android-studio
+: 1538972449:0;la
+: 1538972463:0;cd -
+: 1538972484:0;sudo chmod 777 -R  android-studio
+: 1538972489:0;cd android-studio
+: 1538972490:0;la
+: 1538972512:0;cd bin
+: 1538972516:0;la
+: 1538972696:0;cd -
+: 1538972742:0;sudo chmod -R 777 android-studio
+: 1538987278:0;bash
+: 1539154883:0;killall ibus-daemon
+: 1539154892:0;ibus-daemon -d
+: 1539221132:0;cd zl_r
+: 1539221140:0;cd zl_rc3
+: 1539221145:0;bash
+: 1539222055:0;cd zl_poc
+: 1539222058:0;bash
+: 1539331676:0;repo init -u ssh://gerrit.iauto.com:29418/Src/Android8/manifest -b Leepi_MTK_RC3
+: 1539331696:0;repo sync -c
+: 1539335355:0;repo start Leepi_MTK_RC3 --all
+: 1539339931:0;reboot
+: 1539566160:0;cd zl_rc3
+: 1539566166:0;repo dync
+: 1539566173:0;repo sync
+: 1539567097:0;cd zl_poc
+: 1539567103:0;repo sync
+: 1539567929:0;cd ivi/packages/apps/av/
+: 1539567937:0;git pull
+: 1539567943:0;cd -
+: 1539567955:0;source build/envsetup.sh
+: 1539567963:0;lunch
+: 1539567976:0;make -j8
+: 1539575345:0;./ studio.sh
+: 1539575378:0;sudo .studio.sh
+: 1539575390:0;sudo . studio.sh
+: 1539575399:0;sudo ./ studio.sh
+: 1539575414:0;sudo .\ studio.sh
+: 1539575445:0;. format
+: 1539575449:0;. format.sh
+: 1539575470:0;./ format.sh
+: 1539575584:0;sudo  ./format.sh
+: 1539575600:0;sudo  ./studio.sh
+: 1539577040:0;sudo chmod 777
+: 1539577052:0;sudo chmod 777 .
+: 1539577095:0;sudo .studio.sh
+: 1539577105:0;sudo ./studio.sh
+: 1539577449:0;sudo chmod 777 .
+: 1539588347:0;sudo apt purge gdm gdm3
+: 1539588418:0;sudo apt install gdm3 ubuntu-desktop
+: 1539588472:0;systemctl restart gdm
+: 1539588526:0;systemctl status gdm.service
+: 1539588795:0;bash
+: 1539589599:0;sudo apt-get install LXDE
+: 1539590039:0;sudo apt-get install fbterm
+: 1539590064:0;sudo fbterm
+: 1539590093:0;chmod 777 .
+: 1539590097:0;sudo apt-get install fbterm
+: 1539590138:0;sudo vim/etc/default/locale
+: 1539590144:0;sudo vim/etc/default/local
+: 1539590207:0;sudo vim /etc/default/local
+: 1539590392:0;reboot
+: 1539591085:0;sudo vim /etc/default/locale
+: 1539591226:0;reboot
+: 1539591411:0;sudo apt install gdm3 ubuntu-desktop
+: 1539591454:0;systemctl restart gdm
+: 1539591571:0;sudo apt-get install ubuntu-gnome-desktop
+: 1539591599:0;sudo apt install gdm3
+: 1539591644:0;cat /var/cache/apt/archives
+: 1539591645:0;ls
+: 1539591768:0;adduser 123
+: 1539591786:0;sudo adduser 123
+: 1539591799:0;sudo adduser abc
+: 1539591869:0;reboot
+: 1539592008:0;sudo adduser qaz
+: 1539592103:0;vi /etc/default/local
+: 1539592151:0;sudo vi /etc/default/local
+: 1539592166:0;reboot
+: 1539594656:0;sudo apt install gdm3 ubuntu-desktop
+: 1539594795:0;systemctl restart gdm
+: 1539596802:0;sudo vim /boot/grub/menu.lst
+: 1539596850:0;cd /boot/grub
+: 1539596851:0;ls
+: 1539596867:0;remove menu.lst
+: 1539596896:0;rm menu.lst
+: 1539596910:0;sudo rm menu.lst
+: 1539596913:0;ls
+: 1539596924:0;vim grub.cfg
+: 1539597394:0;cd /boot/grub
+: 1539597397:0;vim grub.cfg
+: 1539597450:0;cd /boot/grub
+: 1539597462:0;sudo vim grub.cfg
+: 1539597706:0;cd /boot/grub
+: 1539597708:0;ls
+: 1539597732:0;sudo gedit grub.cfg
+: 1539597987:0;cd /etc
+: 1539597989:0;ls
+: 1539598047:0;sudo gedit  grub.d
+: 1539598082:0;cd grub.d
+: 1539598083:0;ls
+: 1539598101:0;gedit 00_header
+: 1539598171:0;cd -
+: 1539598178:0;cd default
+: 1539598182:0;ls
+: 1539598209:0;sudo gedit grub
+: 1539598401:0;sudo gedit /etc/default/grub
+: 1539598448:0;sudo update-grub
+: 1539598462:0;reboot
+: 1539598614:0;sudo gedit /etc/default/grub
+: 1539598647:0;sudo update-grub
+: 1539598730:0;cd grub.d
+: 1539598747:0;sudo /etc/grub.d
+: 1539598782:0;sudo gedit  /etc/grub.d/00_header
+: 1539598990:0;cat /boot/grub2/grub.cfg |grep menuentry
+: 1539599005:0;cat /boot/grub/grub.cfg |grep menuentry
+: 1539599234:0;grub-set-default "UbuntuÔºÉ¨Linux 4.15.0-36-generic"
+: 1539599247:0;sudo  grub-set-default "UbuntuÔºÉ¨Linux 4.15.0-36-generic"
+: 1539599275:0;grub-editenv list
+: 1539599297:0;reboot
+: 1539653160:0;sudo gedit grub
+: 1539653682:0;sudo update-grub
+: 1539654031:0;cd /etc/grub.d
+: 1539654033:0;ls
+: 1539654120:0;sudo nautilus
+: 1539654559:0;grep menuentry /boot/grub/grub.cfg
+: 1539655192:0;cat /proc/version
+: 1539655310:0;sudo gedit  /etc/default/grub
+: 1539655479:0;sudo update-grub
+: 1539655502:0;sudo gedit  /etc/default/grub
+: 1539655520:0;cat /proc/version
+: 1539655632:0;sudo update-grub
+: 1539655658:0;cat /proc/version
+: 1539655676:0;sudo update-grub
+: 1539655688:0;reboot
+: 1539656067:0;sudo nautils
+: 1539656082:0;sudo nautilus
+: 1539656167:0;sudo update-grub
+: 1539656200:0;reboot
+: 1539657537:0;find /var/log -type f|xargs grep "00:01"  
+: 1539657568:0;sudo find /var/log -type f|xargs grep "00:0b"  
+: 1539657586:0;clear
+: 1539657589:0;root
+: 1539657596:0;su
+: 1539658071:0;sudo gedit /var/log/syslog
+: 1539658271:0;sudo gedit /var/log/kern.log.1
+: 1539658307:0;sudo gedit /var/log/syslog
+: 1539658340:0;sudo gedit /var/log/kern.log.1
+: 1539658379:0;sudo vim  gedit /var/log/kern.log.1
+: 1539658444:0;ls
+: 1539658456:0;rm gedit
+: 1539658463:0;ls
+: 1539658472:0;rm -f gedit
+: 1539658474:0;ls
+: 1539658492:0;sudo vim /var/log/kern.log.1
+: 1539658524:0;clear
+: 1539658926:0;sudo gedit  /boot/grub/grub.conf
+: 1539659007:0;sudo gedit  /boot/grub/grub.cfg
+: 1539659263:0;sudo grub-install
+: 1539659307:0;sudo update-grub2
+: 1539659463:0;sudo gedit  /boot/grub/grub.cfg
+: 1539659797:0;sudo gedit /etc/default/grub
+: 1539660803:0;sudo gedit grub.cfg
+: 1539661379:0;systemd-analyze bkame
+: 1539661406:0;systemd-analyze blame
+: 1539661484:0;sudo gedit /etc/fstab
+: 1539662578:0;sudo systemctl mask plymouth-quit-wait.service
+: 1539662674:0;sudo systemctl disable plymouth-start.service
+: 1539662703:0;reboot
+: 1539662827:0;systemd-analyze blame
+: 1539662868:0;sudo gedit /etc/fstab
+: 1539663062:0;systemd-analyze blame
+: 1539663106:0;sudo gedit /etc/fstab
+: 1539663440:0;systemctl status dev-sda2.device
+: 1539663504:0;journalctl -b|grep sda2
+: 1539663833:0;cat /etc/fstab
+: 1539666654:0;sudo gedit /etc/sysctl.conf
+: 1539671193:0;df -lh
+: 1539671539:0;sudo apt-get -y clean
+: 1539671546:0;sudo apt-get -f -y install
+: 1539671558:0;sudo dpkg --configure -a
+: 1539671593:0;sudo apt
+: 1539671700:0;sudo apt upgrade
+: 1539671748:0;sudo journalctl --vacuum-files=1
+: 1539671776:0;sudo gedit /etc/systemd/journald.conf
+: 1539671850:0;reboot
+: 1539672103:0;systemd-analyze blame
+: 1539672198:0;sudo journalctl --vacuum-files=1
+: 1539672212:0;sudo gedit /etc/systemd/journald.conf
+: 1539672264:0;sudo systemctl disable systemd-journal-flush.service
+: 1539672440:0;sudo fsck /dev/sda2
+: 1539672773:0;sudo swapon -s
+: 1539672924:0;sudo gedit /etc/fstab
+: 1539672986:0;sudo apt-get install gparted
+: 1539673016:0;sudo gparted
+: 1539673267:0;sudo gedit /etc/fstab
+: 1539674415:0;ls -all /dev/disk/by-uuid 
+: 1539674487:0;sudo gedit /etc/fstab
+: 1539674605:0;sudo fdisk -l
+: 1539674993:0;gedit /var/log/syslog
+: 1539675062:0;cd  /var/log/syslog 
+: 1539675081:0;ll /var/log/syslog\
+
+: 1539675091:0;ll /var/log/syslog.l\
+
+: 1539675097:0;ll /var/log/syslog.1\
+
+: 1539675117:0;gedit /var/log/syslog
+: 1539675248:0;reboot
+: 1539675464:0;systemd-analyze blame
+: 1539675591:0;mount -l
+: 1539675634:0;df
+: 1539675767:0;mount -a
+: 1539675775:0;sudo mount -a
+: 1539675793:0;df
+: 1539675845:0;sudo fdisk -l
+: 1539675888:0;sudo gedit /etc/fstab
+: 1539676228:0;ll
+: 1539676274:0;sudo gedit /etc/fstab
+: 1539677224:0;reboot
+: 1539677822:0;systemd-analyze blame
+: 1539680731:0;sudo apt-get install gnome-shell-extensions
+: 1539681676:0;sudo apt update && sudo apt upgrade -y && sudo apt autoremove
+: 1539681918:0;sudo apt install cmatrix
+: 1539681937:0;cmatrix -b
+: 1539682159:0;cd ~/.oh-my-zsh/custom/plugins &&\\
+git clone git://github.com/zsh-users/zsh-syntax-highlighting.git
+: 1539682175:0;plugins=( [plugins...] zsh-syntax-highlighting)
+: 1539682755:0;systemd-analyze blame
+: 1539684030:0;sudo mkdir themes
+: 1539684169:0;sudo mv '/home/zhanglei/ÊÉÅÉ¨ÈÉΩÉÇ/Atomic' /boot/grub/themes
+: 1539684270:0;cd ÊÉÅÉ¨ÈÉΩÉÇ
+: 1539684272:0;ls
+: 1539684311:0;sudo ./install.sh
+: 1539684507:0;sudo apt install arc-theme
+: 1539685129:0;sudo nautilus
+: 1539685369:0;ar p osx-arc-collection_1.4.7_amd64.deb data.tar.gz | tar zxf -
+: 1539685386:0;ar p osx-arc-collection_1.4.7_amd64.deb
+: 1539685729:0;unzip X-Arc-Collection-v1.4.9.zip
+: 1539685864:0;sudo unzip ~/ÊÉÅÉ¨ÈÉΩÉÇ/X-Arc-Collection-v1.4.9.zip
+: 1539685915:0;sudo nautilus
+: 1539686056:0;sudo apt remove arc-theme
+: 1539690129:0;cd ~/.icons
+: 1539690135:0;cd
+: 1539690137:0;cd ~/.icons
+: 1539690185:0;git clone https://github.com/keeferrourke/la-capitaine-icon-theme.git
+: 1539690197:0;sudo git clone https://github.com/keeferrourke/la-capitaine-icon-theme.git
+: 1539691365:0;cd.
+: 1539691367:0;cd .
+: 1539691374:0;cd ..
+: 1539691383:0;cd themes
+: 1539691394:0;git@github.com:jiqing112/Mac-OSX-Sierra-Compact.git /usr/share/themes/Sierra-gtk-theme
+: 1539691418:0;sudo git@github.com:jiqing112/Mac-OSX-Sierra-Compact.git
+: 1539691458:0;mkdir /use/share/themes/Sierra-gtk-theme
+: 1539691469:0;sudo  mkdir /use/share/themes/Sierra-gtk-theme
+: 1539691481:0;cd ~
+: 1539691485:0;sudo  mkdir /use/share/themes/Sierra-gtk-theme
+: 1539691521:0;sudo  mkdir /usr/share/themes/Sierra-gtk-theme
+: 1539691536:0;git@github.com:jiqing112/Mac-OSX-Sierra-Compact.git /usr/share/themes/Sierra-gtk-theme
+: 1539691720:0;sudo rm /usr/share/themes/Sierra-gtk-theme
+: 1539691734:0;sudo rmdir /usr/share/themes/Sierra-gtk-theme
+: 1539691866:0;sudo add-apt-repository ppa:dyatlov-igor/sierra-theme
+: 1539691894:0;sudo apt update
+: 1539691903:0;sudo apt install sierra-gtk-theme
+: 1539691926:0;sudo apt install sierra-gtk-theme-git
+: 1539691955:0;./install.sh
+: 1539692030:0;sudo apt-get install gtk2-engines-murrine gtk2-engines-pixbuf
+: 1539692052:0;sudo apt install sierra-gtk-theme
+: 1539692060:0;sudo apt install sierra-gtk-theme-git
+: 1539692245:0;sudo dpkg -P  sierra-gtk-theme-git\
+
+: 1539692307:0;sudo  apt-get -f install sierra-gtk-theme-git
+: 1539692662:0;sudo apt-get --reinstall install sierra-gtk-theme-git
+: 1539692669:0;clear
+: 1539692700:0;sudo apt install sierra-gtk-theme-git
+: 1539692915:0;wget http://security.ubuntu.com/ubuntu/pool/main/d/dpkg/dpkg_1.17.5ubuntu5.8_amd64.deb
+: 1539692931:0;ar x dpkg*.deb data.tar.gz
+: 1539692937:0;tar xfvz data.tar.gz ./usr/bin/dpkg
+: 1539692956:0;sudo cp ./usr/bin/dpkg /usr/bin
+: 1539692963:0;sudo apt-get update
+: 1539692989:0;sudo apt-get install --reinstall dpkg
+: 1539693009:0;sudo apt install sierra-gtk-theme-git
+: 1539693221:0;sudo apt-get install -f
+: 1539693229:0;sudo apt install sierra-gtk-theme-git
+: 1539693258:0;sudo dpkg -P sierra-gtk-theme-git
+: 1539693462:0;dpkg --remove-architecture i368
+: 1539693474:0;sudo dpkg --remove-architecture i368 
+: 1539693480:0;apt-get update
+: 1539693496:0;sudo apt-get update\
+
+: 1539693531:0;sudo apt install sierra-gtk-theme-git
+: 1539693544:0;sudo add-apt-repository ppa:dyatlov-igor/sierra-theme
+: 1539693561:0;sudo apt update
+: 1539693571:0;sudo apt install sierra-gtk-theme
+: 1539693579:0;sudo apt install sierra-gtk-theme-git
+: 1539693617:0;dpkg --print-foreign-architectures
+: 1539693643:0;cd /etc/apt/sources.list.d
+: 1539693651:0;grep chrome * | grep -v amd64
+: 1539693660:0;cat /etc/apt/sources.list.d/google-chrome-unstable.list
+: 1539693672:0;deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main
+: 1539693738:0;clear
+: 1539693747:0;sudo apt install sierra-gtk-theme-git
+: 1539693800:0;cd /var/lib/dpkg\
+\
+
+: 1539693809:0;sudo mv info info.bak
+: 1539693815:0;sudo mkdir info
+: 1539693826:0;sudo fc-cache -fv 2>&1 | grep failed | cut -f1 -d":" | xargs -i sudo touch {} && sudo fc-cache -fv
+: 1539693971:0;apt-get install sierra-gtk-theme-git
+: 1539693987:0;sudo  apt-get install sierra-gtk-theme-git
+: 1539694150:0;sudo apt install sierra-gtk-theme-git
+: 1539694164:0;./install.sh
+: 1539694816:0;sudo nautilus
+: 1539695256:0;repo sync
+: 1539739359:0;sudo nautilus
+: 1539739414:0;systemd-analyze blame
+: 1539739475:0;systemctl disable apt-daily.service
+: 1539739680:0;sudo nautilus
+: 1539741363:0;sudo gedit grub.cfg
+: 1539741461:0;sudo rm 30_uefi-firmware
+: 1539741506:0;sudo rename 07_os-prober 30_os-prober
+: 1539741569:0;sudo 07_os-prober rename 30_os-prober
+: 1539741591:0;sudo rename 07_os-prober 30_os-prober
+: 1539741879:0;sudo rename -n 07_os-prober 30_os-prober
+: 1539742076:0;sudo mv  07_os-prober 30_os-prober
+: 1539742100:0;sudo update-grub
+: 1539742205:0;reboot
+: 1539742880:0;cd /etc/alternatives/default.plymouth
+: 1539743474:0;sudo gedit /usr/share/themes/Sierra-compact-light/gnome-shell/gnome-shell.css
+: 1539744267:0;reboot
+: 1539744470:0;sudo gedit /usr/share/themes/Sierra-compact-light/gnome-shell/gnome-shell.css
+: 1539744537:0;repo sync
+: 1539744793:0;sudo gedit /etc/fstab
+: 1539744898:0;sudo nautilus
+: 1539745209:0;repo sync
+: 1539745636:0;source build/envsetup.sh
+: 1539745641:0;lunch
+: 1539745772:0;repo sync
+: 1539746068:0;source build/envsetup.sh
+: 1539746086:0;bash
+: 1539758965:0;sudo nautilus
+: 1539759847:0;sudo fdisk -l<br>
+: 1539759866:0;sudo fdisk -l
+: 1539760338:0;sudo badblocks -v /dev/sda2 > badsectors.txt
+: 1539760371:0;su
+: 1539760610:0;systemd-analyze blame
+: 1539761035:0;sudo badblocks -v /dev/sda2 > badsectors.txt
+: 1539761069:0;sudo nautilus
+: 1539761216:0;sudo rm -rf ~/.local/share/Trash/*
+: 1539761506:0;cd 3T/home/zhanglei/zl_treble
+: 1539761514:0;bash
+: 1539763731:0;sudo apt remove wine
+: 1539763755:0;sudo apt remove wine-devel
+: 1539763777:0;sudo apt remove wine-devel-dev
+: 1539763802:0;sudo apt remove wine-devel-amd64
+: 1539763815:0;sudo apt remove wine-devel-i386:i386 
+: 1539763846:0;sudo apt update
+: 1539763860:0;apt list --upgradable
+: 1539763933:0;sudo apt-get update
+: 1539764205:0;sudo rmdir AndroidStudio
+: 1539764341:0;sudo mv java ~/
+: 1539764535:0;sudo ./studio.sh
+: 1539765048:0;repo sync
+: 1539765282:0;bash
+: 1539766686:0;cd 3T/home/zhanglei/zl_rc3
+: 1539766693:0;repo sync
+: 1539770560:0;source build/envsetup.sh
+: 1539770565:0;bash
+: 1540344838:0;repo init -u ssh://gerrit.iauto.com:29418/Src/Android8/manifest -b leepi/master
+: 1540344919:0;repo sync -c
+: 1540364186:0;repo start master --all
+: 1540366419:0;bash
+: 1540368592:0;make -j8
+: 1540368609:0;source build/envsetup.sh
+: 1540368617:0;bash
+: 1540434457:0;git status
+: 1540434591:0;git add app/src/main/java/com/iauto/av/avscreen/bta/BtaBase.java app/src/main/java/com/iauto/av/avscreen/bta/BtaDisconnect.java app/src/main/java/com/iauto/av/onsview/Ons_OpeManual.java app/src/main/java/com/iauto/av/settingscreen/OpeManualDetail.java app/src/main/java/com/iauto/av/settingscreen/OpeManualList.java app/src/main/java/com/iauto/av/uicommon/BtaCommon.java app/src/main/java/com/iauto/av/uicommon/SettingCommon.java app/src/main/res/layout/avscreen/layout/layout_bta_disconnect.xml app/src/main/res/layout/onsview/layout/layout_ons_opemanual.xml app/src/main/res/layout/settingscreen/layout/layout_opemanualdetail.xml app/src/main/res/layout/settingscreen/layout/layout_opemanuallist.xml app/src/main/res/layout/avscreen/layout/layout_bta.xml 
+: 1540434631:0;bash
+: 1540434944:0;??????????????????????????????
+: 1540435024:0;git commit -m "OpeManual and BtaDisconnect Completed"
+: 1540435046:0;git status
+: 1540435110:0;git branch
+: 1540435133:0;git checkout master
+: 1540435143:0;git status
+: 1540435163:0;bash
+: 1540446325:0;git status
+: 1540447336:0;git add app/src/main/java/com/iauto/av/settingscreen/OpeManualDetail.java
+: 1540447424:0;git commit -m "Ê∑ªÂÉ™ÉÄVR
+: 1540447450:0;git commit -m "Ê∑ªÂÉ™ÉÄVRÁÉ¥ªÈÉΩÉÇ‚ÄÉº
+: 1540447461:0;git status
+: 1540447473:0;git log
+: 1540447505:0;git commit -m "Ê∑ªÂÉ™ÉÄVRÁÉ¥ªÈÉΩÉÇ"
+: 1540447511:0;git lg
+: 1540447533:0;git stash
+: 1540447548:0;git stash list
+: 1540447598:0;git checkout master
+: 1540447612:0;git pull
+: 1540454587:0;reboot
+: 1540454910:0;bash
+: 1540461189:0;git config
+: 1540461211:0;git config -l
+: 1540461519:0;local
+: 1540462290:0;sudo update-locale
+: 1540462374:0;locale -a
+: 1540462487:0;sudo gedit /etc/default/locale 
+: 1540462639:0;update-locale
+: 1540462656:0;sudo update-locale
+: 1540462708:0;sudo gedit /etc/default/locale 
+: 1540462803:0;sudo update-locale
+: 1540462923:0;bash
+: 1540463236:0;git status
+: 1540463695:0;cat ivi/packages/uibase/app/src/main/AndroidManifest.xml
+: 1540463739:0;cd ivi/packages/uibase
+: 1540463742:0;git st
+: 1540463748:0;git status
+: 1540463752:0;git log
+: 1540516324:0;bash
+: 1540522412:0;cd ÊÉÅÉ¨ÈÉΩÉÇ
+: 1540522434:0;sudo dpkg -i anydesk_4.0.0-1_amd64.deb
+: 1540522461:0;sudo apt get -f
+: 1540522519:0;sudo apt get -f install
+: 1540522529:0;sudo apt -get -f install
+: 1540522539:0;sudo apt get-install -f
+: 1540522639:0;sudo apt-get install -f
+: 1540522665:0;sudo dpkg -i anydesk_4.0.0-1_amd64.deb
+: 1540523513:0;adb remount
+: 1540523558:0;bash
+: 1540524136:0;lsusb
+: 1540524282:0;gedit .android/uid.txt
+: 1540524592:0;cd /etc/udev/rules.d
+: 1540524606:0;ls
+: 1540524649:0;lsusb\
+
+: 1540524805:0;adb devices
+: 1540524859:0;sudo
+: 1540524865:0;sudo minicom
+: 1540524953:0;lsusb
+: 1540525392:0;su
+: 1540533295:0;bash
+: 1540543588:0;git status
+: 1540543694:0;git add app/src/main/java/com/iauto/av/avscreen/bta/BtaBase.java app/src/main/java/com/iauto/av/avscreen/bta/BtaDisconnect.java app/src/main/java/com/iauto/av/onsview/Ons_OpeManual.java app/src/main/java/com/iauto/av/settingscreen/OpeManualDetail.java app/src/main/java/com/iauto/av/settingscreen/OpeManualList.java app/src/main/java/com/iauto/av/uicommon/SettingCommon.java app/src/main/res/layout/avscreen/layout/layout_bta.xml app/src/main/res/layout/onsview/layout/layout_ons_opemanual.xml app/src/main/res/layout/settingscreen/layout/layout_opemanuallist.xml
+: 1540543762:0;git commit -m  "‰øÆÊÉ¥πBTAÁÉµÉ¨ÈÉΩÉÇ„ÄÅÊÉ≥É≠‰ΩÉºÊÉ©É´ÂÉ¶É¨ÂØπÂ∫É¥ÊÉ∂ÉßË®Ä"
+: 1540543767:0;git lg
+: 1540543790:0;git log
+: 1540547037:0;git stash
+: 1540613757:0;git pull
+: 1540617313:0;bash
+: 1540617585:0;git status
+: 1540617615:0;git stash list
+: 1540617642:0;git stash drop 1
+: 1540617651:0;git stash list
+: 1540617657:0;git stash
+: 1540617687:0;git checkout zl_dev1
+: 1540617754:0;git checkout master
+: 1540617767:0;git log
+: 1540617813:0;git stash list
+: 1540617825:0;git stash apply 0
+: 1540618453:0;gedit /home/zhanglei/.gradle/caches/transforms-1/files-1.1/iauto.uibase.aar/67d4020cd15bdc3aec56f1c41fd02c9f/AndroidManifest.xml
+: 1540620574:0;git pull
+: 1540776111:0;bash
+: 1540867791:0;git pull
+: 1540867875:0;git stash
+: 1540867883:0;git pull
+: 1540867983:0;git stash pop
+: 1540953861:0;cd usr / share / plymouth /
+: 1540953879:0;cd usr/share/plymouth/
+: 1540963445:0;bash
+: 1541052028:0;sudo nautilus
+: 1541052155:0;cd /usr/share/gdm/themes
+: 1541052170:0;cd /usr/share/gdm/
+: 1541052172:0;ls
+: 1541052191:0;sudo mkdir themes
+: 1541053261:0;sudo nautilus
+: 1541053728:0;sudo chmod x install.sh
+: 1541053747:0;sudo chmod X install.sh
+: 1541053763:0;chmod --help
+: 1541053784:0;ll
+: 1541053795:0;./install.sh
+: 1541053819:0;sudo ./install.sh
+: 1541053893:0;./install.sh
+: 1541055097:0;sudo nautilus
+: 1541055250:0;./install.sh
+: 1541055260:0;sudo nautilus
+: 1541055981:0;./install.sh
+: 1541056087:0;sudo nautilus
+: 1541056151:0;./install.sh
+: 1541056727:0;ls
+: 1541056738:0;./SetAsWallpaper
+: 1541057279:0;sudo gedit /etc/default/grub
+: 1541057340:0;sudo update-grub
+: 1541058267:0;ttimedatectl
+: 1541058271:0;bash
+: 1541058283:0;timedatectl
+: 1541058522:0;systemd-analyze
+: 1541058527:0;systemd-analyze blame
+: 1541058853:0;sudo apt-get upgrade
+: 1541059099:0;sudo nautilus
+: 1541059187:0;sudo gedit /etc/default/grub
+: 1541059228:0;sudo update-grub
+: 1541059292:0;sudo rm /var/lib/dpkg/lock
+: 1541059300:0;sudo apt-get upgrade
+: 1541059344:0;sudo rm /var/lib/dpkg/lock-frontend - open
+: 1541059366:0;sudo rm /var/cache/apt/archives/lock
+: 1541059375:0;sudo rm /var/lib/dpkg/lock
+: 1541059381:0;sudo apt-get upgrade
+: 1541059391:0;sudo dpkg --configure -a
+: 1541059525:0;sudo apt-get upgrade
+: 1541059562:0;sudo mv /var/lib/dpkg/info /var/lib/dpkg/info_old 
+: 1541059574:0;sudo mkdir /var/lib/dpkg/info
+: 1541059580:0;sudo apt-get update
+: 1541059593:0;sudo apt-get -f install
+: 1541059604:0;sudo mv /var/lib/dpkg/info/* /var/lib/dpkg/info_old 
+: 1541059610:0;sudo rm -rf /var/lib/dpkg/info
+: 1541059619:0;sudo mv /var/lib/dpkg/info_old /var/lib/dpkg/info
+: 1541059633:0;sudo apt-get upgrade
+: 1541059641:0;reboot
+: 1541059998:0;repo sync
+: 1541063342:0;cd frameworks/base/
+: 1541063346:0;git pull
+: 1541063351:0;croot
+: 1541063356:0;bash
+: 1541121015:0;python
+: 1541121112:0;cd ÊÉÅÉ¨ÈÉΩÉÇ
+: 1541121116:0;./hello
+: 1541121127:0;chmod 755 hello
+: 1541121130:0;./hello
+: 1541121647:0;./hello.py
+: 1541122024:0;python hello.py
+: 1541122052:0;./hello.py
+: 1541128525:0;sudo nautilus
+: 1541128643:0;cd /usr/bin
+: 1541128665:0;python3.6
+: 1541128745:0;whereis python3.6
+: 1541128897:0;su
+: 1541129090:0;python
+: 1541137991:0;./pycharm.sh
+: 1541138225:0;./format.sh
+: 1541138243:0;./in
+: 1541138247:0;./inspect.sh
+: 1541139915:0;sudo gedit /usr/share/applications/jetbrains-pycharm.desktop
+: 1541140666:0;sudo rm  /usr/share/applications/jetbrains-pycharm.desktop
+: 1541140684:0;sudo gedit /usr/share/applications/jetbrains-pycharm.desktop
+: 1541141119:0;sudo chmod 700  /usr/share/applications/jetbrains-pycharm.desktop
+: 1541141171:0;sudo gedit /usr/share/applications/jetbrains-pycharm.desktop
+: 1541141272:0;sudo mv /usr/share/applications/jetbrains-pycharm.desktop /usr/share/applications/pycharm.desktop
+: 1541141298:0;sudo chmod 755  /usr/share/applications/jetbrains-pycharm.desktop
+: 1541141307:0;sudo chmod 755  /usr/share/applications/pycharm.desktop
+: 1541141332:0;sudo chmod 777  /usr/share/applications/pycharm.desktop
+: 1541141359:0;sudo chmod 700  /usr/share/applications/pycharm.desktop
+: 1541141411:0;sudo gedit /usr/share/applications/pycharm.desktop
+: 1541141653:0;sudo gedit /usr/share/applications/AndroidStudio 
+: 1541141707:0;sudo gedit  /usr/share/applications/jetbrains-studio.desktop
+: 1541141748:0;sudo gedit /usr/share/applications/pycharm.desktop
+: 1541141972:0;sudo mv /usr/share/applications/pycharm.desktop /usr/share/applications/jetbrains-pycharm.desktop
+: 1541142088:0;sudo gedit /usr/share/applications/jetbrains- pycharm.desktop
+: 1541142117:0;sudo gedit /usr/share/applications/jetbrains-pycharm.desktop
+: 1541142492:0;sudo rm /usr/share/applications/jetbrains-pycharm.desktop
+: 1541142634:0;cd ÊÉÅÉ¨ÈÉΩÉÇ
+: 1541142646:0;cd ~/ÊÉÅÉ¨ÈÉΩÉÇ
+: 1541142677:0;sudo cp Pycharm.desktop /usr/share/applications
+: 1541382155:0;repo sync
+: 1541382934:0;bash
+: 1541554883:0;repo sync
+: 1541555822:0;cd frameworks/base/
+: 1541555830:0;git pull
+: 1541555837:0;croot
+: 1541555842:0;cd -
+: 1541555855:0;cd ivi/packages/apps/av/
+: 1541555858:0;git pull
+: 1541558376:0;make javac-check-merbok.car -j8
+: 1541558381:0;cd -
+: 1541558383:0;make javac-check-merbok.car -j8
+: 1541558559:0;source build/envsetup.sh
+: 1541558564:0;bash
+: 1541570967:0;repo sync -c
+: 1541571393:0;cd ivi/packages/apps/av/
+: 1541571399:0;git pull
+: 1541571419:0;bash
+: 1541576660:0;git status
+: 1541576872:0;. build/envsetup.sh
+: 1541576877:0;lunch
+: 1541576906:0;ba
+: 1541576912:0;bash
+: 1541579021:0;cd ../..
+: 1541579027:0;cd ivi/frameworks/base
+: 1541579030:0;bash
+: 1541641073:0;repo sync
+: 1541642270:0;cd ivi/packages/apps/av/
+: 1541642272:0;git pull
+: 1541642277:0;cd -
+: 1541642341:0;cd ivi/packages/apps/home/
+: 1541642348:0;git pull
+: 1541642351:0;cd -
+: 1541642361:0;cd ivi/packages/apps/av/
+: 1541642363:0;git pull
+: 1541642373:0;cd -
+: 1541642381:0;bash
+: 1541656988:0;adb version 
+: 1541656999:0;which adb
+: 1541657015:0;ll /usr/bin/adb
+: 1541657035:0;ll /usr//lib/android-sdk/platform-tools/adb
+: 1541657057:0;exit
+: 1541660927:0;android list
+: 1541660979:0;./android
+: 1541661071:0;./sdkmanager
+: 1541661103:0;./avdmanager
+: 1541661114:0;./avdmanager list
+: 1541662187:0;chmod 777 -r /dev/kvm
+: 1541662197:0;sudo  chmod 777 -r /dev/kvm
+: 1541662212:0;chmod 777 -r /dev/kvm
+: 1541662220:0;sudo  chmod 777 -r /dev/kvm
+: 1541662253:0;sudo chmod 777 /dev/kvm
+: 1541662262:0;sudo chmod -r 777 /dev/kvm
+: 1541662273:0;sudo chmod 777 -r /dev/kvm
+: 1541662313:0;which /dev/kvm
+: 1541662394:0;chmod 777 -R /home/zhanglei/Android/Sdk/emulator
+: 1541662499:0;sudo chmod -R 755 /dev/kvm
+: 1541662528:0;which /dev/kvm
+: 1541662551:0;ls -ll /dev/kvm
+: 1541662603:0;sudo chown zhanglei -R /dev/kvm
+: 1541662619:0;ls -al /dev/kvm
+: 1541662664:0;./avdmanager list
+: 1541662988:0;./avdmanager
+: 1541663292:0;./avdmanager create avd -n MyEmualtor -t 1 --abi default/armeabi-v7a
+: 1541663390:0;./avdmanager create avd -n MyEmualtor -d 1 --abi default/armeabi-v7a
+: 1541663480:0;./avdmanager create avd -n MyEmualtor -b 1 --abi default/armeabi-v7a
+: 1541663549:0;./avdmanager list
+: 1541663663:0;./avdmanager create avd -n MyEmualtor -b 1
+: 1541663918:0;egrep -c '(vmx|svm)' /proc/cpuinfo
+: 1541664103:0;./avdmanager create avd -n MyEmualtor
+: 1541664116:0;./avdmanager
+: 1541664910:0;./avdmanager list
+: 1541665033:0;./avdmanager create avd -n MyEmualtor -b 1 --abi android-tv/armeabi-v7a
+: 1541665092:0;./avdmanager create avd -n MyEmualtor
+: 1541665179:0;android list
+: 1541665186:0;./android list
+: 1541665282:0;android list avd\
+
+: 1541665291:0;./android list avd
+: 1541665315:0;android list target\
+
+: 1541665328:0;./android list target
+: 1541665347:0;./android list
+: 1541665362:0;./android list device
+: 1541665399:0;./android create avd -n MyEmualtor -t 6 --abi default/armeabi-v7a
+: 1541665474:0;./android create avd -n MyEmualtor -d 1 --abi default/armeabi-v7a
+: 1541665941:0;./android create avd -n MyEmualtor -d 1 --abi /home/zhanglei/Android/Sdk/system-images/android-23/android-tv/armeabi-v7a
+: 1541665981:0;./android create avd -n MyEmualtor -d 1 --abi /home/zhanglei/Android/Sdk/system-images/android-23/
+: 1541665985:0;./android create avd -n MyEmualtor -d 1 --abi /home/zhanglei/Android/Sdk/system-images/android-23
+: 1541665995:0;./android create avd -n MyEmualtor -d 1 --abi /home/zhanglei/Android/Sdk/system-images
+: 1541666027:0;./android list
+: 1541666083:0;./android create avd -n MyEmualtor -d 1 -k /home/zhanglei/Android/Sdk/system-images/android-23/android-tv/armeabi-v7a
+: 1541666455:0;./android create avd -n MyEmualtor -d 1 -k ~/home/zhanglei/Android/Sdk/system-images/android-23/android-tv/armeabi-v7a
+: 1541666498:0;./android create avd -n MyEmualtor -d 1 -k system-images
+: 1541669433:0;gradle tasks
+: 1541670096:0;_gradle
+: 1541670103:0;gradle
+: 1541670362:0;gradlew --help
+: 1541670377:0;./gradlew.bat --help
+: 1541670402:0;./gradlew  --help
+: 1541670420:0;chmod 777 gradlew
+: 1541670424:0;./gradlew  --help
+: 1541670469:0;./gradlew  tasks
+: 1541670791:0;./gradlew  properties
+: 1541670904:0;./gradlew m=
+: 1541670915:0;./gradlew myTask
+: 1541671184:0;./gradlew copyFile
+: 1541672363:0;cd Test
+: 1541672367:0;./gradlew copyFile
+: 1541672521:0;cd -
+: 1541672523:0;./gradlew copyFile
+: 1541734976:0;./gradlew hell
+: 1541734984:0;./gradlew helloWorld
+: 1541735092:0;./gradlew myTask
+: 1541735259:0;./gradlew helloWorld
+: 1541735576:0;git status
+: 1541735593:0;git st
+: 1541735601:0;git graph-log
+: 1541751417:0;./variable.py
+: 1541751428:0;chmod 777 variable.py
+: 1541751432:0;./variable.py
+: 1541986876:0;sudo apt-get remove --purge nvida-*
+: 1541986888:0;sudo apt-get remove --purge nvidia-*
+: 1541986926:0;sudo apt purge gdm gdm3
+: 1541987064:0;locale
+: 1541987135:0;sudo vi /etc/default/locale
+: 1541987399:0;sudo apt-get install zhcon
+: 1541987543:0;sudo adduser $(whoami) video
+: 1541987587:0;zhcon --utf8
+: 1541987633:0;log out
+: 1541987639:0;logout
+: 1541987660:0;zhcon --utf8
+: 1541987676:0;sudo apt purge gdm gdm3
+: 1541988184:0;sudo apt-get update
+: 1541988256:0;sudo apt install gdm3 ubuntu-desktop
+: 1541988389:0;sudo mv /var/lib/dpkg/info/ /var/lib/dpkg/info_old
+: 1541988419:0;sudo mkdir /var/lib/dpkg/info
+: 1541988440:0;sudo apt-get update
+: 1541988469:0;sudo apt-get -f install
+: 1541988504:0;sudo apt-get update
+: 1541988525:0;sudo apt-get upgrade
+: 1541988573:0;sudo apt purge gdm gdm3
+: 1541988618:0;sudo apt install gdm3 ubuntu-desktop
+: 1541988654:0;sudo apt install gdm3
+: 1541988700:0;sudo apt autoremove
+: 1541988897:0;sudo mv /var/lib/dpkg/info /var/lib/dpkg/info.bak
+: 1541988926:0;sudo mkdir /var/lib/dpkg/info
+: 1541988936:0;sudo apt-get update
+: 1541988960:0;sudo apt-get -f install
+: 1541989009:0;sudo mv /var/lib/dpkg/info/* /var/lib/dpkg/info.bak
+: 1541989043:0;sudo rm -rf /var/lib/dpkg/info
+: 1541989082:0;sudo mv /var/lib/dpkg/info.bak /var/lib/dpkg/info
+: 1541989128:0;sudo rm -rf  /var/lib/dpkg/info_old
+: 1541989169:0;sudo apt install gdm3 ubuntu-desktop
+: 1541989188:0;systemctl restart gdm
+: 1541989253:0;systemctl status gdm.service 
+: 1541989280:0;systemctl restart gdm
+: 1541989465:0;reboot
+: 1541989489:0;systemctl restart gdm.service 
+: 1541989498:0;sudo systemctl restart gdm.service 
+: 1541989521:0;sudo reboot
+: 1541989913:0;zhcon --utf8
+: 1541989970:0;sudo apt-get remove --purge nvidia-*
+: 1541989995:0;sudo apt purge gdm gdm3
+: 1541990052:0;sudo apt install gdm3 ubuntu-desktop
+: 1541990082:0;systemctl restart gdm
+: 1541990093:0;sudo reboot
+: 1541991547:0;sudo gedit /boot/grub/grub.conf
+: 1541991563:0;sudo vim /boot/grub/grub.conf
+: 1541991604:0;sudo gedit /boot/grub/grub.cfg
+: 1541991613:0;sudo vim /boot/grub/grub.cfg
+: 1541993632:0;su
+: 1541994474:0;zhcon --utf-8
+: 1541994478:0;zhcon --utf8
+: 1541994708:0;sudo vi /etc/default/grub
+: 1541994817:0;sudo vi /boot/grub/grub.cfg
+: 1541994906:0;sudo update-grub
+: 1541994919:0;sudo vi /boot/grub/grub.cfg
+: 1541994962:0;reboot
+: 1541994969:0;sudo reboot
+: 1541995614:0;zhcon --utf8
+: 1541995644:0;systemctl restart gdm
+: 1541995675:0;sudo apt purge gdm gdm3
+: 1541995734:0;sudo apt install gdm3 ubuntu-desktop
+: 1541995755:0;systemctl restart gdm
+: 1541995983:0;systemctl status gdm
+: 1541996394:0;gdm-stop
+: 1541996423:0;systemctl stop gdm.service
+: 1541996488:0;sudo systemctl stop gdm.service
+: 1541996506:0;sudo systemctl restart gdm.service
+: 1541996534:0;systemctl status gdm
+: 1541996856:0;startx
+: 1541996871:0;sudo startx
+: 1541996924:0;sudo systemctl restart gdm.service
+: 1541996955:0;systemctl status gdm
+: 1541996990:0;sudo gnome-shell gnome
+: 1541997003:0;sudo systemctl restart gdm.service
+: 1541997032:0;systemctl status gdm
+: 1541997116:0;sudo apt-get install lightdm
+: 1541997156:0;sudo dpkg-reconfigure lightdm
+: 1541997167:0;reboot
+: 1541997171:0;sudo reboot
+: 1541999433:0;sudo dpkg-reconfigure lightdm
+: 1541999442:0;reboot
+: 1541999449:0;sudo reboot
+: 1541999754:0;sudo dpkg-reconfigure lightdm
+: 1541999762:0;reboot
+: 1541999768:0;sudo reboot
+: 1542001316:0;adduser zh
+: 1542001331:0;zhcon --utf8
+: 1542001338:0;adduser zh
+: 1542001349:0;sudo adduser zh
+: 1542001452:0;sudo passwd zh 123
+: 1542001521:0;sudo passwd zh -a
+: 1542001536:0;sudo passwd -a zh
+: 1542001540:0;sudo passwd -a 
+: 1542001576:0;sudo passwd -S zh
+: 1542001590:0;sudo passwd -all
+: 1542001641:0;exit
+: 1542001693:0;sudo reboot
+: 1542002841:0;sudo passwd zh
+: 1542003199:0;sudo reboot
+: 1542003496:0;sudo useradd zl
+: 1542003505:0;sudo passwd zl
+: 1542003554:0;cat /etc/passwd
+: 1542003582:0;sudo userdel zh
+: 1542003825:0;sudo userdel zl
+: 1542003829:0;cat /etc/passwd
+: 1542003837:0;sudo reboot
+: 1542003910:0;exit
+: 1542004814:0;sudo userdel zl
+: 1542005179:0;sudo useradd zl
+: 1542005193:0;sudo passwd zl 123
+: 1542005199:0;sudo passwd zl
+: 1542005473:0;sudo chmod +w /etc/sudoers
+: 1542005507:0;sudo vi /etc/sudoers
+: 1542005578:0;sudo gedit /etc/sudoers
+: 1542007240:0;sudo service gdm restart
+: 1542007697:0;zhcon --utf8
+: 1542007730:0;sudo gdm
+: 1542007796:0;cd /etc/X11/
+: 1542007798:0;ls
+: 1542007947:0;sudo dpkg-reconfigure lightdm
+: 1542007998:0;su
+: 1542008034:0;sudo dpkg-reconfigure lightdm
+: 1542008107:0;sudo chmod 700 /var/lib/lightdm/.gvfs
+: 1542008123:0;su
+: 1542008237:0;sudo dpkg-reconfigure lightdm
+: 1542008457:0;sudo chmod 777 /var/lib/lightdm/.gvfs
+: 1542008483:0;cd  /var/lib/lightdm
+: 1542008493:0;sudo  cd  /var/lib/lightdm
+: 1542008502:0;su
+: 1542010124:0;sudo dpkg-reconfigure lightdm
+: 1542010173:0;sudo rm -f .Xauthority*
+: 1542010178:0;sudo reboot
+: 1542010501:0;zhcon --utf8
+: 1542010522:0;cat /var/log/Xorg.0.log
+: 1542010595:0;sudo vi /etc/gdm3/custom.conf
+: 1542010701:0;chown username:username /home/username -R
+: 1542010715:0;chown username:username/home/username -R
+: 1542010741:0;chown zhanglei /home/username -R
+: 1542010770:0;chown username:username/home/username -R
+: 1542010778:0;chown username:username /home/username -R
+: 1542010817:0;cat ~/.profile
+: 1542011126:0;ls .Xauthority -l
+: 1542011535:0;sudo reboot
+: 1542011850:0;zhcon --utf8
+: 1542011861:0;startx
+: 1542011951:0;ls .Xauthority
+: 1542011957:0;ls .Xauthority -f
+: 1542011961:0;ls .Xauthority -l
+: 1542012006:0;sudo startx
+: 1542012334:0;watch nvidia-smi
+: 1542012403:0;sudo apt-get install --reinstall ubuntu-desktop
+: 1542012454:0;cd /tmp
+: 1542012456:0;ll
+: 1542012491:0;startx
+: 1542012615:0;cat /home/zhanglei/.Xauthority
+: 1542012633:0;sudo cat /home/zhanglei/.Xauthority
+: 1542012667:0;cd ~
+: 1542012673:0;ll .Xauthority
+: 1542012751:0;sudo chown zhanglei:zhanglei /home/zhanglei/.Xauthority
+: 1542012755:0;ll .Xauthority
+: 1542012810:0;sudo rm -f /home/zhanglei/.Xauthority
+: 1542012823:0;sudo reboot
+: 1542013236:0;zhcon --utf8
+: 1542013248:0;ll .Xauthority
+: 1542013315:0;cat .xsession-errors
+: 1542013552:0;cat /etc/default/locale
+: 1542013596:0;cat /etc/default/local
+: 1542013735:0;ll /tmp
+: 1542013794:0;chmod 1777 /tmp
+: 1542013814:0;sudo chmod 1777 /tmp
+: 1542013823:0;ll /tmp
+: 1542013871:0;cat .xsession-errors.old
+: 1542013905:0;cat .Xauthority
+: 1542013916:0;ll .Xauthority
+: 1542013927:0;cat .xsession-errors
+: 1542014295:0;systemd-analyze blame
+: 1542014338:0;sudo reboot
+: 1542015011:0;zhcon --utf8
+: 1542015032:0;sudo service lightdm start
+: 1542015323:0;cd ~
+: 1542015360:0;sudo rm -rf .Xaut*
+: 1542015485:0;su
+: 1542015691:0;cd ~
+: 1542015700:0;cat .Xauthority
+: 1542015711:0;ll .Xauthority
+: 1542015740:0;sudo lightdm start
+: 1542015823:0;sudo userdel zhanglei
+: 1542015830:0;su zh
+: 1542016393:0;sudo userdel zh
+: 1542016405:0;sudo reboot
+: 1542016516:0;sudo deluser zh
+: 1542016530:0;zhcon --utf8
+: 1542016535:0;sudo deluser zh
+: 1542016563:0;su zh
+: 1542016572:0;su zl
+: 1542016599:0;sudo lightdm start
+: 1542016745:0;sudo reboot
+: 1542017096:0;sudo gedit /etc/sudoers
+: 1542017123:0;su zl
+: 1542017159:0;exit
+: 1542074007:0;cat /etc/passwd
+: 1542074030:0;sudo vim /etc/passwd
+: 1542074140:0;sudo dpkg-reconfigure lightdm
+: 1542074743:0;reboot
+: 1542078319:0;sudo apt upgrade
+: 1542078494:0;sudo nautilus
+: 1542079319:0;repo sync
+: 1542080383:0;cd frameworks/base/
+: 1542080414:0;git pull
+: 1542080420:0;croot
+: 1542080425:0;cd -
+: 1542080438:0;cd ivi/packages/apps/av
+: 1542080443:0;git pull
+: 1542080451:0;cd -
+: 1542080459:0;cd ivi/packages/apps/home
+: 1542080464:0;git pull
+: 1542080468:0;cd -
+: 1542080471:0;bash
+: 1542080872:0;repo sync
+: 1542081406:0;cd ivi/packages/apps/av/ 
+: 1542081411:0;git pull
+: 1542081415:0;cd -
+: 1542087825:0;sudo dpkg-reconfigure lightdm
+: 1542088177:0;bash
+: 1542088265:0;sudo rmdir -f zh
+: 1542088376:0;rmdir --help
+: 1542088407:0;sudo rmdir zh
+: 1542088455:0;sudo rmdir -p zh
+: 1542088462:0;sudo rmdir -f zh
+: 1542088473:0;sudo rmdir -R zh
+: 1542088483:0;sudo rm -f zh
+: 1542088494:0;sudo rmdir zh
+: 1542088608:0;sudo rmdir -R -p zh 
+: 1542088639:0;sudo nautilus
+: 1542097923:0;idea.qmanga.com
+: 1542097946:0;sudo gedit /etc/host
+: 1542097966:0;sudo gedit /etc/hosts
+: 1542103511:0;cd ÊÉÅÉ¨ÈÉΩÉÇ
+: 1542103521:0;python hello.py
+: 1542103785:0;python3 hello.py
+: 1542103898:0;python hello.py
+: 1542103904:0;python
+: 1542158604:0;repo sync
+: 1542159717:0;cd ivi/packages/apps/av
+: 1542159725:0;git pull
+: 1542159729:0;cd -
+: 1542186813:0;python
+: 1542252633:0;repo sync
+: 1542273096:0;sudo  apt-get  update 
+: 1542273447:0;sudo apt-get remove  fcitx
+: 1542273535:0;sudo apt-get  install  fcitx-ui-qimpanel
+: 1542273556:0;fcitx-qimpanel
+: 1542331856:0;sudo dpkg -i sogoupinyin_2.2.0.0108_amd64.deb
+: 1542332008:0;repo sync
+: 1542332282:0;sudo dpkg -i sogoupinyin_2.2.0.0108_amd64.deb
+: 1542332835:0;repo sync -c
+: 1542333066:0;cd ivi/packages/apps/home/
+: 1542333070:0;git pull
+: 1542333075:0;cd -
+: 1542333584:0;cd ivi/packages/apps/av/
+: 1542333617:0;git pull
+: 1542333640:0;cd -
+: 1542333646:0;source build/envsetup.sh
+: 1542333651:0;lunch
+: 1542333661:0;make -j8
+: 1542334158:0;sudo dpkg -i sogoupinyin_2.2.0.0108_amd64\ .deb
+: 1542335738:0;cd ivi/frameworks/base
+: 1542335742:0;git st
+: 1542335747:0;git log
+: 1542336067:0;git st
+: 1542336076:0;croot
+: 1542336103:0;source build/envsetup.sh
+: 1542336107:0;lunch
+: 1542336116:0;make -j8
+: 1542336817:0;cd ivi/frameworks/base
+: 1542336820:0;git st
+: 1542336828:0;git status
+: 1542336845:0;git remote -v
+: 1542336858:0;git co -b test
+: 1542336868:0;git st
+: 1542336893:0;git init
+: 1542336897:0;git st
+: 1542336904:0;git co -b test
+: 1542336915:0;git checkout -b test
+: 1542336949:0;git br
+: 1542336975:0;exit
+: 1542337033:0;git st
+: 1542337118:0;exit
+: 1542337564:0;sudo dpkg-reconfigure lightdm 
+: 1542337591:0;reboot
+: 1542338336:0;sudo gedit /etc/alternatives/gdm3.css
+: 1542339108:0;sudo cat /etc/sudoers
+: 1542339120:0;sudo gedit  /etc/sudoers
+: 1542339145:0;sudo 
+: 1542339158:0;sudo passwd zhanglei
+: 1542347344:0;python
+: 1542347577:0;clear
+: 1542347581:0;python3
+: 1542350780:0;bash
+: 1542590481:0;repo sync
+: 1542591432:0;cd 
+: 1542591437:0;cd -
+: 1542591442:0;cd ivi/packages/apps/av/
+: 1542591447:0;git pull
+: 1542591459:0;cd -
+: 1542591467:0;source build/envsetup.sh
+: 1542591477:0;bash
+: 1542591518:0;repo sync
+: 1542763865:0;cd ivi/packages/apps/av/
+: 1542763870:0;git pull
+: 1542763930:0;cd -
+: 1542850989:0;repo sync
+: 1542852300:0;cd ivi/packages/apps/av/
+: 1542852304:0;git pull
+: 1542852307:0;cd -
+: 1542869939:0;gcc
+: 1542870085:0;apt install gcc-x86-64-linux-gnu
+: 1542870097:0;sudo apt install gcc-x86-64-linux-gnu
+: 1542870125:0;sudo apt install -f  gcc-x86-64-linux-gnu
+: 1542870228:0;sudo apt install -f
+: 1542870234:0;sudo apt install -f  gcc-x86-64-linux-gnu
+: 1542870239:0;sudo apt install gcc-x86-64-linux-gnu
+: 1542870250:0;sudo apt-get install -f
+: 1542870324:0;sudo apt install gcc-x86-64-linux-gnu
+: 1542870348:0;sudo apt install gcc-7-x86-64-linux-gnu
+: 1542870366:0;sudo apt install libgcc-7-dev-amd64-cross
+: 1542870467:0;sudo apt install gcc-x86-64-linux-gnu
+: 1542870473:0;sudo apt install gcc-7-x86-64-linux-gnu
+: 1542870487:0;sudo apt install libgcc-7-dev-amd64-cross
+: 1542870525:0;sudo apt-get gcc-7-x86-64-linux-gnu
+: 1542870544:0;sudo apt-get install gcc-7-x86-64-linux-gnu
+: 1542870589:0;sudo apt-get upgrade
+: 1542871181:0;sudo apt-get gcc-7-x86-64-linux-gnu
+: 1542871200:0;sudo apt-get install gcc-x86-64-linux-gnu
+: 1542871209:0;sudo apt-get install gcc-7-x86-64-linux-gnu
+: 1542871235:0;sudo apt-get install -f gcc-7-x86-64-linux-gnu
+: 1542871477:0;sudo apt-get install gcc
+: 1542871504:0;sudo apt-get install build-essential
+: 1542871509:0;sudo apt-get install make
+: 1543196080:0;repo sync
+: 1543198790:0;cd ivi/packages/apps/av/
+: 1543198793:0;git pull
+: 1543198800:0;cd -
+: 1543198807:0;cd ivi/packages/apps/home
+: 1543198811:0;git pull
+: 1543198814:0;vf -
+: 1543198821:0;cd -
+: 1543198840:0;cd frameworks/base/
+: 1543198843:0;git pu;;
+: 1543198849:0;git pull
+: 1543198853:0;cd -
+: 1543198867:0;cd ivi/packages/apps/av
+: 1543198872:0;git pull
+: 1543198896:0;git sa
+: 1543198919:0;git pull
+: 1543199484:0;git sa-drop
+: 1543199525:0;git sa-list
+: 1543199536:0;cd -
+: 1543214578:0;bash
+: 1543215010:0;java
+: 1543224820:0;pip
+: 1543281271:0;repo sync
+: 1543286483:0;bash
+: 1543288913:0;git pull

@@ -1,0 +1,764 @@
+<application>
+  <component name="ActionsCollector">
+    <counts>
+      <entry action="$ChooseTranslatorAction" count="2" />
+      <entry action="$Copy" count="81" />
+      <entry action="$Cut" count="3" />
+      <entry action="$Delete" count="53" />
+      <entry action="$EditorTranslateAction" count="15" />
+      <entry action="$Paste" count="471" />
+      <entry action="$Redo" count="76" />
+      <entry action="$ShowInstantTranslationDialogAction" count="7" />
+      <entry action="$ShowTranslationDialogAction" count="2" />
+      <entry action="$TranslateTextComponent" count="2" />
+      <entry action="$Undo" count="1375" />
+      <entry action="ActivateProjectToolWindow" count="1" />
+      <entry action="Add TypeCast" count="6" />
+      <entry action="Add exception to catch clause" count="2" />
+      <entry action="Add exception to method signature" count="34" />
+      <entry action="Add missing new expression" count="1" />
+      <entry action="AliP3CInspectionAction" count="2" />
+      <entry action="Android.RunAndroidSdkManager" count="6" />
+      <entry action="Android.SyncProject" count="40" />
+      <entry action="Annotate method with  @Override " count="1" />
+      <entry action="AutoIndentLines" count="2" />
+      <entry action="Back" count="26" />
+      <entry action="Cast to  java.lang.Class&lt;?&gt; " count="1" />
+      <entry action="Cast to  java.lang.Class&lt;?&gt;[] " count="14" />
+      <entry action="Cast to  java.lang.Object " count="8" />
+      <entry action="Cast to  java.lang.Object[] " count="15" />
+      <entry action="ChangeTypeSignature" count="1" />
+      <entry action="ChangesView.DeleteUnversioned" count="1" />
+      <entry action="ChangesView.Refresh" count="2" />
+      <entry action="ChangesView.Revert" count="4" />
+      <entry action="ChangesView.Shelve" count="1" />
+      <entry action="CheckForUpdate" count="5" />
+      <entry action="CheckinProject" count="1" />
+      <entry action="ClassNameCompletion" count="1" />
+      <entry action="CleanGradleProject" count="16" />
+      <entry action="CloseContent" count="16" />
+      <entry action="CloseProject" count="1" />
+      <entry action="Collapse  catch  blocks" count="5" />
+      <entry action="CommentByBlockComment" count="41" />
+      <entry action="CommentByLineComment" count="127" />
+      <entry action="Compare.SameVersion" count="14" />
+      <entry action="CompareClipboardWithSelection" count="2" />
+      <entry action="CompareTwoFiles" count="3" />
+      <entry action="ConcurrencyDebug" count="1" />
+      <entry action="ContextHelp" count="1" />
+      <entry action="Convert to local" count="2" />
+      <entry action="CopyPaths" count="1" />
+      <entry action="Create Class from New" count="1" />
+      <entry action="CreateLibraryFromFile" count="2" />
+      <entry action="CreateRunConfiguration" count="2" />
+      <entry action="Debug" count="13" />
+      <entry action="DebugClass" count="7" />
+      <entry action="DialogOkAction Enter" count="53" />
+      <entry action="Diff.ShowDiff" count="2" />
+      <entry action="EditCustomVmOptions" count="3" />
+      <entry action="EditorBackSpace" count="11343" />
+      <entry action="EditorChooseLookupItem" count="297" />
+      <entry action="EditorChooseLookupItemCompleteStatement" count="9" />
+      <entry action="EditorChooseLookupItemReplace" count="4663" />
+      <entry action="EditorCodeBlockEndWithSelection" count="5" />
+      <entry action="EditorCodeBlockStartWithSelection" count="3" />
+      <entry action="EditorCompleteStatement" count="870" />
+      <entry action="EditorCopy" count="1196" />
+      <entry action="EditorCut" count="275" />
+      <entry action="EditorDelete" count="2" />
+      <entry action="EditorDeleteLine" count="20" />
+      <entry action="EditorDeleteToWordStart" count="20" />
+      <entry action="EditorDown" count="5400" />
+      <entry action="EditorDownWithSelection" count="2" />
+      <entry action="EditorDuplicate" count="39" />
+      <entry action="EditorEnter" count="2480" />
+      <entry action="EditorEscape" count="1" />
+      <entry action="EditorGutterToggleGlobalSoftWraps" count="2" />
+      <entry action="EditorIndentSelection" count="2" />
+      <entry action="EditorLeft" count="3306" />
+      <entry action="EditorLeftWithSelection" count="13" />
+      <entry action="EditorNextWord" count="45" />
+      <entry action="EditorNextWordWithSelection" count="2" />
+      <entry action="EditorPaste" count="1153" />
+      <entry action="EditorPasteFromX11" count="27" />
+      <entry action="EditorPreviousWord" count="22" />
+      <entry action="EditorPreviousWordWithSelection" count="1" />
+      <entry action="EditorRight" count="3928" />
+      <entry action="EditorRightWithSelection" count="16" />
+      <entry action="EditorScrollDown" count="53" />
+      <entry action="EditorScrollUp" count="1" />
+      <entry action="EditorSelectWord" count="1" />
+      <entry action="EditorSplitLine" count="4" />
+      <entry action="EditorStartNewLine" count="71" />
+      <entry action="EditorTab" count="814" />
+      <entry action="EditorToggleCase" count="10" />
+      <entry action="EditorToggleInsertState" count="8" />
+      <entry action="EditorToggleUseSoftWraps" count="2" />
+      <entry action="EditorUp" count="1343" />
+      <entry action="ExpandAllRegions" count="1" />
+      <entry action="ExpandLiveTemplateByTab" count="1" />
+      <entry action="ExportSettings" count="2" />
+      <entry action="ExpressionTypeInfo" count="1" />
+      <entry action="ExtractMethod" count="2" />
+      <entry action="FileChooser.GotoDesktop" count="2" />
+      <entry action="Find" count="185" />
+      <entry action="FindInPath" count="15" />
+      <entry action="FindNext" count="4" />
+      <entry action="FindPrevious" count="2" />
+      <entry action="FindUsages" count="12" />
+      <entry action="Fix Arguments" count="1" />
+      <entry action="Fix Variable Type" count="3" />
+      <entry action="Fix modifiers" count="3" />
+      <entry action="Forward" count="1" />
+      <entry action="Generate" count="11" />
+      <entry action="GenerateTests" count="3" />
+      <entry action="Generify File" count="1" />
+      <entry action="Git.CheckoutRevision" count="3" />
+      <entry action="Git.CreateNewBranch" count="2" />
+      <entry action="Git.Merge" count="2" />
+      <entry action="Git.Reset.In.Log" count="2" />
+      <entry action="Git.Revert.In.Log" count="1" />
+      <entry action="Git.Stash" count="2" />
+      <entry action="Git.Unstash" count="1" />
+      <entry action="GotoBookmark3" count="2" />
+      <entry action="GotoCustomRegion" count="1" />
+      <entry action="GotoDeclaration" count="602" />
+      <entry action="GotoFile" count="2" />
+      <entry action="GotoLine" count="1" />
+      <entry action="GotoTest" count="20" />
+      <entry action="GotoTypeDeclaration" count="3" />
+      <entry action="Gradle.ExecuteTask" count="1" />
+      <entry action="HTTP.Request.NewFile" count="1" />
+      <entry action="HideAllWindows" count="2" />
+      <entry action="ImplementMethods" count="8" />
+      <entry action="Import class" count="4" />
+      <entry action="Import static method  org.mockito.Mockito.mock " count="5" />
+      <entry action="Import static method  org.mockito.Mockito.when " count="2" />
+      <entry action="ImportModule" count="1" />
+      <entry action="ImportProject" count="1" />
+      <entry action="ImportSettings" count="3" />
+      <entry action="Inline variable" count="2" />
+      <entry action="InspectCode" count="3" />
+      <entry action="IntroduceField" count="16" />
+      <entry action="IntroduceFunctionalParameter" count="2" />
+      <entry action="IntroduceParameter" count="7" />
+      <entry action="JumpToLastChange" count="2" />
+      <entry action="JumpToLastWindow" count="1" />
+      <entry action="LoadUnloadModules" count="1" />
+      <entry action="LocalHistory.ShowHistory" count="3" />
+      <entry action="Make Final" count="2" />
+      <entry action="Make Private" count="1" />
+      <entry action="MakeGradleModule" count="2" />
+      <entry action="MakeGradleProject" count="30" />
+      <entry action="MaterialTheme.Accents" count="2" />
+      <entry action="MaterialTheme.Components" count="9" />
+      <entry action="MaterialTheme.Panels" count="13" />
+      <entry action="MaterialTheme.ThemeChooser" count="8" />
+      <entry action="MethodDown" count="1" />
+      <entry action="MethodDuplicates" count="1" />
+      <entry action="MoveStatementDown" count="32" />
+      <entry action="MoveStatementUp" count="135" />
+      <entry action="NewClass" count="2" />
+      <entry action="NewDir" count="2" />
+      <entry action="NewDirectoryProject" count="1" />
+      <entry action="NewElement" count="2" />
+      <entry action="NewFile" count="26" />
+      <entry action="NewIPynbFile" count="1" />
+      <entry action="NewModule" count="6" />
+      <entry action="NewModuleInGroup" count="13" />
+      <entry action="NewPythonFile" count="43" />
+      <entry action="NewPythonPackage" count="1" />
+      <entry action="NextTemplateVariable" count="338" />
+      <entry action="OpenFile" count="15" />
+      <entry action="OverrideMethods" count="16" />
+      <entry action="ParameterInfo" count="130" />
+      <entry action="PasteMultiple" count="1" />
+      <entry action="Progress Paused" count="1" />
+      <entry action="PyExecuteCellAction" count="1" />
+      <entry action="PyRunFileInConsole" count="1" />
+      <entry action="QuickImplementations" count="170" />
+      <entry action="RebuildGradleProject" count="10" />
+      <entry action="ReformatCode" count="126" />
+      <entry action="Register" count="1" />
+      <entry action="Remove explicit array creation" count="1" />
+      <entry action="RenameElement" count="127" />
+      <entry action="Replace" count="13" />
+      <entry action="Replace with  foreach " count="1" />
+      <entry action="ReplaceInPath" count="1" />
+      <entry action="Rerun" count="469" />
+      <entry action="RestoreDefaultLayout" count="2" />
+      <entry action="Resume" count="1" />
+      <entry action="RevealIn" count="25" />
+      <entry action="Run" count="33" />
+      <entry action="RunClass" count="66" />
+      <entry action="RunCoverage" count="5" />
+      <entry action="RunProfiler" count="1" />
+      <entry action="SafeDelete" count="1" />
+      <entry action="SaveAll" count="437" />
+      <entry action="SearchEverywhere" count="19" />
+      <entry action="ShowErrorDescription" count="2" />
+      <entry action="ShowFilePath" count="3" />
+      <entry action="ShowIntentionActions" count="338" />
+      <entry action="ShowLog" count="1" />
+      <entry action="ShowRecentTests" count="1" />
+      <entry action="ShowSettings" count="105" />
+      <entry action="Simplify  null != mDeviceManagerListener  to true" count="1" />
+      <entry action="SmartTypeCompletion" count="1" />
+      <entry action="Split Declaration" count="2" />
+      <entry action="StepInto" count="465" />
+      <entry action="StepIntoMyCode" count="20" />
+      <entry action="StepOut" count="2" />
+      <entry action="StepOver" count="2" />
+      <entry action="Stop" count="12" />
+      <entry action="Surround with  if (mDeviceManager != null) " count="1" />
+      <entry action="Surround with try/catch" count="16" />
+      <entry action="Synchronize" count="1" />
+      <entry action="TemplateProjectProperties" count="4" />
+      <entry action="TemplateProjectStructure" count="2" />
+      <entry action="Terminal.OpenInTerminal" count="1" />
+      <entry action="ToggleBookmark" count="5" />
+      <entry action="ToggleLineBreakpoint" count="76" />
+      <entry action="TypeHierarchy" count="8" />
+      <entry action="Vcs.CherryPick" count="1" />
+      <entry action="Vcs.Log.Refresh" count="34" />
+      <entry action="Vcs.Log.ShowDetailsAction" count="3" />
+      <entry action="Vcs.Log.ShowLongEdges" count="1" />
+      <entry action="Vcs.RevertSelectedChanges" count="1" />
+      <entry action="Vcs.ShowTabbedFileHistory" count="12" />
+      <entry action="Vcs.UpdateProject" count="3" />
+      <entry action="ViewToolBar" count="5" />
+      <entry action="WelcomeScreen.NewGroup" count="1" />
+      <entry action="de.netnexus.CamelCasePlugin.ToggleCamelCase" count="175" />
+      <entry action="editRunConfigurations" count="2" />
+      <entry action="third.party.plugin.action" count="42" />
+      <entry action="tooltip.actions.show.description.morelink" count="1" />
+      <entry action="tooltip.actions.show.description.shortcut" count="3" />
+      <entry action="添加/提取 @author" count="3" />
+    </counts>
+    <contextMenuCounts>
+      <entry action="[EditorPopup] $Paste" count="1" />
+      <entry action="[EditorPopup] ConcurrencyDebug" count="1" />
+      <entry action="[EditorPopup] DebugClass" count="2" />
+      <entry action="[EditorPopup] PyExecuteCellAction" count="1" />
+      <entry action="[EditorPopup] PyRunFileInConsole" count="1" />
+      <entry action="[EditorPopup] RunClass" count="47" />
+      <entry action="[EditorPopup] RunCoverage" count="5" />
+      <entry action="[EditorPopup] RunProfiler" count="1" />
+      <entry action="[EditorPopup] Terminal.OpenInTerminal" count="1" />
+      <entry action="[MainMenu] ActivateProjectToolWindow" count="1" />
+      <entry action="[MainMenu] ImportSettings" count="1" />
+      <entry action="[MainMenu] NewElement" count="1" />
+      <entry action="[MainMenu] RestoreDefaultLayout" count="2" />
+      <entry action="[MainMenu] ShowSettings" count="18" />
+      <entry action="[MainMenu] editRunConfigurations" count="2" />
+      <entry action="[MainToolbar] third.party.plugin.action" count="21" />
+      <entry action="[ProjectViewPopup] $Delete" count="1" />
+      <entry action="[ProjectViewPopup] HTTP.Request.NewFile" count="1" />
+      <entry action="[ProjectViewPopup] NewFile" count="1" />
+      <entry action="[ProjectViewPopup] NewPythonFile" count="7" />
+      <entry action="[ProjectViewPopup] NewPythonPackage" count="1" />
+    </contextMenuCounts>
+  </component>
+  <component name="FUSApplicationUsageTrigger">
+    <session id="655482535">
+      <usages-collector id="statistics.lifecycle.app">
+        <usage id="ide.close.restart" value="11" />
+        <usage id="ide.error" value="168" />
+        <usage id="ide.freeze.17" value="2" />
+        <usage id="ide.close" value="22" />
+        <usage id="ide.freeze.16" value="1" />
+        <usage id="ide.freeze.19" value="1" />
+        <usage id="ide.freeze.18" value="1" />
+        <usage id="ide.start" value="28" />
+        <usage id="ide.freeze" value="5">
+          <context>
+            <entry key="data_1" value="timeSecondsGrouped" />
+            <entry key="data_2" value="10+" />
+          </context>
+        </usage>
+      </usages-collector>
+      <usages-collector id="statistics.ui.tips">
+        <usage id="shown.automatically" value="17" />
+      </usages-collector>
+      <usages-collector id="statistics.ide.self.update">
+        <counts>
+          <entry key="dialog.shown" value="2" />
+          <entry key="dialog.update.started" value="2" />
+          <entry key="notification.clicked" value="2" />
+          <entry key="notification.shown" value="6" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.vcs.log.trigger" />
+      <usages-collector id="statistics.json.schema" />
+      <usages-collector id="statistics.deployment.serverSettingsUI" />
+      <usages-collector id="statistics.import.old.config">
+        <usage id="FROM_PREVIOUS" value="1" />
+      </usages-collector>
+    </session>
+  </component>
+  <component name="FeatureUsageStatistics" first-run="1535684822472" have-been-shown="false" show-in-other="true" show-in-compilation="true">
+    <feature id="editing.completion.camelHumps" count="1" last-shown="0" last-used="1542940930136" shown-count="0" />
+    <feature id="codeassists.comment.line" count="24" last-shown="0" last-used="1543400034561" shown-count="0" />
+    <feature id="codeassists.surroundwith.statement" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="refactoring.rename" count="20" last-shown="0" last-used="1542852685461" shown-count="0" />
+    <feature id="navigation.popup.action" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="editing.completion.cancelByControlArrows" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="navigation.popup.symbol" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="find.recent.search" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="editing.completion.replace" count="639" last-shown="1542263594645" last-used="1543571367864" shown-count="22" />
+    <feature id="navigation.goto.inspection" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="navigation.popup.camelprefix" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="SearchEverywhere" count="3" last-shown="0" last-used="1542615902750" shown-count="0" />
+    <feature id="navigation.popup.class" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="navigation.popup.file" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="navigation.popup.wildcards" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="refactoring.introduceVariable" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="codeassists.quickdefinition" count="168" last-shown="1543226840022" last-used="1540959474752" shown-count="12" />
+    <feature id="find.completion" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="editing.completion.basic" count="4712" last-shown="0" last-used="1543571367869" shown-count="0" />
+    <feature id="tag.name.completion" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="editing.select.word" count="2142" last-shown="0" last-used="1543548061855" shown-count="0" />
+    <feature id="navigation.recent.files" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="navigation.goto.declaration" count="601" last-shown="0" last-used="1543225026728" shown-count="0" />
+    <feature id="editing.completion.finishByDotEtc" count="2" last-shown="1543389541173" last-used="1542793035923" shown-count="12" />
+    <feature id="codeassists.quickjavadoc.lookup" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="ui.scheme.quickswitch" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="navigation.popup.file.structure" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="editing.completion.finishByCtrlDot" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="codeassists.quickjavadoc.ctrln" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="navigation.select.in" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="navigation.goto.usages" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="codeassists.quickjavadoc" count="0" last-shown="1543226840022" last-used="0" shown-count="13" />
+    <feature id="ui.recentchanges" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="ui.tree.speedsearch" count="1" last-shown="0" last-used="1542959515325" shown-count="0" />
+    <feature id="editing.completion.changeSorting" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="ui.horizontal.scrolling" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <feature id="codeassists.quickdefinition.lookup" count="0" last-shown="0" last-used="0" shown-count="0" />
+    <completionStatsTag>
+      <option name="sparedCharacters" value="25133" />
+      <option name="invocations" value="2868" />
+      <option name="startDate" value="1535904000000" />
+      <option name="dayCount" value="45" />
+      <option name="lastDate" value="1543507200000" />
+    </completionStatsTag>
+    <fixesStatsTag>
+      <option name="invocations" value="251" />
+      <option name="startDate" value="1535990400000" />
+      <option name="dayCount" value="33" />
+      <option name="lastDate" value="1543766400000" />
+    </fixesStatsTag>
+  </component>
+  <component name="IntentionsCollector">
+    <Intentions>
+      <entry name="Groovy org.jetbrains.android.inspections.lint.AndroidLintExternalAnnotator$MyFixingIntention" count="1" />
+      <entry name="JAVA [!]com.alibaba.p3c.idea.quickfix.LowerCamelCaseVariableNamingQuickFix" count="1" />
+      <entry name="JAVA codeInspection.dataFlow.DataFlowInspectionBase$2" count="1" />
+      <entry name="JAVA codeInspection.varScopeCanBeNarrowed.FieldCanBeLocalInspection$ConvertFieldToLocalQuickFix" count="1" />
+      <entry name="JAVA com.siyeh.ig.DelegatingFix" count="9" />
+      <entry name="JAVA com.siyeh.ig.fixes.InlineVariableFix" count="4" />
+      <entry name="JAVA com.siyeh.ipp.comment.ChangeToCStyleCommentIntention" count="1" />
+      <entry name="JAVA com.siyeh.ipp.concatenation.ReplaceConcatenationWithFormatStringIntention" count="1" />
+      <entry name="JAVA daemon.impl.quickfix.AddTypeCastFix" count="2" />
+      <entry name="JAVA daemon.impl.quickfix.ChangeMethodSignatureFromUsageFix" count="2" />
+      <entry name="JAVA daemon.impl.quickfix.ChangeParameterClassFix" count="7" />
+      <entry name="JAVA daemon.impl.quickfix.CreateInnerClassFromUsageFix" count="1" />
+      <entry name="JAVA daemon.impl.quickfix.ImplementMethodsFix" count="3" />
+      <entry name="JAVA daemon.impl.quickfix.ImportClassFix" count="3" />
+      <entry name="JAVA daemon.impl.quickfix.MethodReturnTypeFix" count="2" />
+      <entry name="JAVA daemon.impl.quickfix.ModifierFix" count="3" />
+      <entry name="JAVA daemon.impl.quickfix.RenameWrongRefFix" count="1" />
+      <entry name="JAVA daemon.impl.quickfix.StaticImportMethodFix" count="2" />
+      <entry name="JAVA daemon.impl.quickfix.SurroundWithTryCatchFix" count="10" />
+      <entry name="JAVA daemon.impl.quickfix.VariableTypeFix" count="3" />
+      <entry name="JAVA intention.impl.AddJavadocIntention" count="1" />
+      <entry name="JAVA lang.java.actions.CreateConstantAction" count="1" />
+      <entry name="JAVA lang.java.actions.CreateFieldAction" count="5" />
+      <entry name="JAVA lang.java.actions.CreateMethodAction" count="4" />
+      <entry name="JAVA lang.jvm.actions.JvmClassIntentionActionGroup" count="1" />
+      <entry name="JAVA refactoring.typeMigration.TypeMigrationVariableTypeFixProvider$1" count="3" />
+      <entry name="Python com.jetbrains.python.codeInsight.imports.AutoImportQuickFix" count="14" />
+      <entry name="Python com.jetbrains.python.codeInsight.imports.AutoImportQuickFix$1" count="4" />
+      <entry name="Python com.jetbrains.python.codeInsight.imports.OptimizeImportsQuickFix" count="1" />
+      <entry name="Python com.jetbrains.python.inspections.PyInterpreterInspection$ConfigureInterpreterFix" count="4" />
+      <entry name="Python com.jetbrains.python.inspections.PyPackageRequirementsInspection$PyInstallRequirementsFix" count="1" />
+      <entry name="Python com.jetbrains.python.inspections.quickfix.AddGlobalQuickFix" count="1" />
+      <entry name="Python com.jetbrains.python.inspections.quickfix.ChainedComparisonsQuickFix" count="3" />
+      <entry name="Python com.jetbrains.python.inspections.quickfix.ComparisonWithNoneQuickFix" count="2" />
+      <entry name="Python com.jetbrains.python.inspections.quickfix.PyMoveAttributeToInitQuickFix" count="1" />
+      <entry name="Python com.jetbrains.python.inspections.quickfix.PyRenameElementQuickFix" count="2" />
+      <entry name="Python com.jetbrains.python.inspections.quickfix.RedundantParenthesesQuickFix" count="2" />
+      <entry name="Python com.jetbrains.python.inspections.quickfix.ReformatFix" count="3" />
+      <entry name="XML util.xml.highlighting.DefineAttributeQuickFix" count="1" />
+    </Intentions>
+  </component>
+  <component name="MainMenuCollector">
+    <counts>
+      <entry path="Analyze -&gt; Inspect Code..." count="3" />
+      <entry path="Build -&gt; Clean Project" count="16" />
+      <entry path="Build -&gt; Make Module(s)" count="2" />
+      <entry path="Build -&gt; Make Project" count="20" />
+      <entry path="Build -&gt; Rebuild Project" count="10" />
+      <entry path="Code -&gt; Reformat Code" count="3" />
+      <entry path="Edit -&gt; Find -&gt; Find in Path..." count="1" />
+      <entry path="File -&gt; Close Project" count="1" />
+      <entry path="File -&gt; Export Settings..." count="2" />
+      <entry path="File -&gt; Import Settings..." count="3" />
+      <entry path="File -&gt; New -&gt; Import Module..." count="1" />
+      <entry path="File -&gt; New -&gt; Import Project..." count="1" />
+      <entry path="File -&gt; New -&gt; New Module..." count="6" />
+      <entry path="File -&gt; New Project..." count="1" />
+      <entry path="File -&gt; New..." count="2" />
+      <entry path="File -&gt; Open Recent -&gt; Reopen Project" count="10" />
+      <entry path="File -&gt; Open..." count="15" />
+      <entry path="File -&gt; Other Settings -&gt; Default Project Structure..." count="2" />
+      <entry path="File -&gt; Other Settings -&gt; Default Settings..." count="4" />
+      <entry path="File -&gt; Settings..." count="104" />
+      <entry path="Help -&gt; Check for Updates..." count="5" />
+      <entry path="Help -&gt; Edit Custom VM Options..." count="3" />
+      <entry path="Help -&gt; Register..." count="1" />
+      <entry path="Help -&gt; Show Log in File Manager" count="1" />
+      <entry path="Run -&gt; Edit Configurations..." count="2" />
+      <entry path="VCS -&gt; Git -&gt; Merge Changes..." count="2" />
+      <entry path="VCS -&gt; Git -&gt; Stash Changes..." count="2" />
+      <entry path="VCS -&gt; Git -&gt; UnStash Changes..." count="1" />
+      <entry path="View -&gt; Tool Windows -&gt; Project" count="1" />
+      <entry path="View -&gt; Tool Windows -&gt; Run" count="5" />
+      <entry path="View -&gt; Toolbar" count="5" />
+      <entry path="Window -&gt; Restore Default Layout" count="2" />
+    </counts>
+  </component>
+  <component name="ShortcutsCollector">
+    <counts>
+      <entry shortcut="Alt+Down" count="1" />
+      <entry shortcut="Alt+Enter" count="338" />
+      <entry shortcut="Alt+Insert" count="5" />
+      <entry shortcut="Alt+L" count="116" />
+      <entry shortcut="Alt+Left" count="20" />
+      <entry shortcut="Alt+Right" count="12" />
+      <entry shortcut="Alt+T" count="20" />
+      <entry shortcut="Alt+U" count="175" />
+      <entry shortcut="Backspace" count="11282" />
+      <entry shortcut="Ctrl+3" count="2" />
+      <entry shortcut="Ctrl+Alt+F" count="2" />
+      <entry shortcut="Ctrl+Alt+I" count="2" />
+      <entry shortcut="Ctrl+Alt+L" count="7" />
+      <entry shortcut="Ctrl+Alt+Period" count="1" />
+      <entry shortcut="Ctrl+Alt+Space" count="1" />
+      <entry shortcut="Ctrl+Alt+Z" count="2" />
+      <entry shortcut="Ctrl+B" count="4" />
+      <entry shortcut="Ctrl+Backspace" count="20" />
+      <entry shortcut="Ctrl+C" count="1234" />
+      <entry shortcut="Ctrl+D" count="42" />
+      <entry shortcut="Ctrl+Down" count="53" />
+      <entry shortcut="Ctrl+Enter" count="17" />
+      <entry shortcut="Ctrl+F" count="185" />
+      <entry shortcut="Ctrl+F1" count="17" />
+      <entry shortcut="Ctrl+F9" count="10" />
+      <entry shortcut="Ctrl+G" count="1" />
+      <entry shortcut="Ctrl+H" count="8" />
+      <entry shortcut="Ctrl+I" count="7" />
+      <entry shortcut="Ctrl+L" count="4" />
+      <entry shortcut="Ctrl+Left" count="22" />
+      <entry shortcut="Ctrl+O" count="15" />
+      <entry shortcut="Ctrl+P" count="130" />
+      <entry shortcut="Ctrl+R" count="16" />
+      <entry shortcut="Ctrl+Right" count="45" />
+      <entry shortcut="Ctrl+S" count="437" />
+      <entry shortcut="Ctrl+Shift+B" count="1" />
+      <entry shortcut="Ctrl+Shift+Backspace" count="2" />
+      <entry shortcut="Ctrl+Shift+Close Bracket" count="5" />
+      <entry shortcut="Ctrl+Shift+Down" count="32" />
+      <entry shortcut="Ctrl+Shift+Enter" count="879" />
+      <entry shortcut="Ctrl+Shift+Equals" count="1" />
+      <entry shortcut="Ctrl+Shift+F" count="14" />
+      <entry shortcut="Ctrl+Shift+I" count="170" />
+      <entry shortcut="Ctrl+Shift+L" count="2" />
+      <entry shortcut="Ctrl+Shift+Left" count="1" />
+      <entry shortcut="Ctrl+Shift+N" count="2" />
+      <entry shortcut="Ctrl+Shift+Open Bracket" count="3" />
+      <entry shortcut="Ctrl+Shift+P" count="1" />
+      <entry shortcut="Ctrl+Shift+R" count="1" />
+      <entry shortcut="Ctrl+Shift+Right" count="2" />
+      <entry shortcut="Ctrl+Shift+S" count="2" />
+      <entry shortcut="Ctrl+Shift+Semicolon" count="1" />
+      <entry shortcut="Ctrl+Shift+Slash" count="41" />
+      <entry shortcut="Ctrl+Shift+Space" count="1" />
+      <entry shortcut="Ctrl+Shift+T" count="1" />
+      <entry shortcut="Ctrl+Shift+U" count="10" />
+      <entry shortcut="Ctrl+Shift+Up" count="135" />
+      <entry shortcut="Ctrl+Slash" count="127" />
+      <entry shortcut="Ctrl+T" count="2" />
+      <entry shortcut="Ctrl+Up" count="1" />
+      <entry shortcut="Ctrl+V" count="1579" />
+      <entry shortcut="Ctrl+W" count="1" />
+      <entry shortcut="Ctrl+X" count="271" />
+      <entry shortcut="Ctrl+Y" count="20" />
+      <entry shortcut="Ctrl+Z" count="1302" />
+      <entry shortcut="Delete" count="6" />
+      <entry shortcut="Down" count="5474" />
+      <entry shortcut="Enter" count="3338" />
+      <entry shortcut="Escape" count="1" />
+      <entry shortcut="F1" count="1" />
+      <entry shortcut="F11" count="5" />
+      <entry shortcut="F12" count="1" />
+      <entry shortcut="Insert" count="8" />
+      <entry shortcut="Left" count="3306" />
+      <entry shortcut="Right" count="3928" />
+      <entry shortcut="Shift+Backspace" count="58" />
+      <entry shortcut="Shift+Down" count="2" />
+      <entry shortcut="Shift+Enter" count="72" />
+      <entry shortcut="Shift+F10" count="10" />
+      <entry shortcut="Shift+F6" count="114" />
+      <entry shortcut="Shift+Left" count="13" />
+      <entry shortcut="Shift+Right" count="16" />
+      <entry shortcut="Shift+Shift" count="19" />
+      <entry shortcut="Tab" count="5515" />
+      <entry shortcut="Up" count="1397" />
+    </counts>
+  </component>
+  <component name="StatisticsApplicationUsages">
+    <group name="run-configuration-type">
+      <project id="av" values="AndroidRunConfigurationType" collectionTime="1541063032363" />
+      <project id="home" values="AndroidRunConfigurationType" collectionTime="1540785796619" />
+    </group>
+    <group name="kotlin.formatter">
+      <project id="av" values="kotlin.formatter.kind.idea_default,kotlin.formatter.defaults.null" collectionTime="1541063035456" />
+      <project id="home" values="kotlin.formatter.defaults.null,kotlin.formatter.kind.idea_default" collectionTime="1540785856830" />
+    </group>
+    <group name="vcs">
+      <project id="av" values="Git" collectionTime="1541063032231" />
+      <project id="home" values="Git" collectionTime="1540785796569" />
+    </group>
+    <group name="VCS Log 2">
+      <project id="av" values="data.users.count.10+,data.branches.count.10+,data.commit.count.100+,data.git.root.count.1" collectionTime="1541063032465" />
+      <project id="home" values="data.git.root.count.1,data.branches.count.10+,data.commit.count.1+,data.users.count.1+" collectionTime="1540785796636" />
+    </group>
+    <group name="file-type">
+      <project id="StudyPython" values="Python" collectionTime="1542784484010" />
+      <project id="av" values="XML,Groovy,UNKNOWN,JAVA,Image,PLAIN_TEXT,ProGuard File,ARCHIVE,Properties,IDEA_MODULE,AIDL" collectionTime="1541063032361" />
+      <project id="home" values="Properties,PLAIN_TEXT,Groovy,UNKNOWN,ARCHIVE,XML,IDEA_MODULE,Image,AIDL,ProGuard File,JAVA" collectionTime="1540785796619" />
+    </group>
+    <group name="Run Dashboard">
+      <project id="av" values="run.dashboard.disabled" collectionTime="1541063032382" />
+      <project id="home" values="run.dashboard.disabled" collectionTime="1540785796635" />
+    </group>
+    <group name="Docker Integration">
+      <project id="StudyPython" values="docker.runConfigs.cliOptions 0,docker.accounts.registry 0,docker.runConfigs.image 0,docker.accounts.machines 0,docker.runConfigs.jsonFile 0,docker.runConfigs.compose 0,docker.runConfigs.dockerfile 0,docker.runConfigs.entrypoint 0,docker.runConfigs.total.0,docker.runConfigs.debug 0,docker.fileType.dockerfile.patterns.1,docker.accounts.total.0,docker.accounts.total 0,docker.fileType.dockerfile.patterns,docker.runConfigs.publishAllPorts 0,docker.runConfigs.command 0,docker.accounts.registry.0,docker.runConfigs.total 0" collectionTime="1542784484010" />
+    </group>
+    <group name="module-language-level">
+      <project id="av" values="JDK_1_7" collectionTime="1541063032467" />
+      <project id="home" values="JDK_1_7" collectionTime="1540785796636" />
+    </group>
+    <group name="all-bundled-tools">
+      <project id="av" values="XML.XmlHighlighting,null.AndroidLintDrawAllocation,JAVA.NewStringBufferWithCharArgument,JAVA.JUnit5AssertionsConverter,JAVA.FieldMayBeFinal,null.AndroidLintWebpUnsupported,JAVA.OverlyLargePrimitiveArrayInitializer,Groovy.GroovyBusyWait,JAVA.NonFinalClone,JAVA.RedundantArrayCreation,JAVA.PatternOverriddenByNonAnnotatedMethod,JAVA.ConstantDeclaredInInterface,null.AndroidLintMergeRootFrame,JAVA.CallToSimpleGetterFromWithinClass,JAVA.LoopConditionNotUpdatedInsideLoop,XML.CheckValidXmlInScriptTagBody,JAVA.ContinueStatementWithLabel,JAVA.NonSerializableObjectBoundToHttpSession,null.AndroidLintUseCheckPermission,JAVA.AccessToStaticFieldLockedOnInstance,JAVA.StaticNonFinalField,kotlin.RemoveRedundantSpreadOperator,JAVA.DeprecatedIsStillUsed,JAVA.HtmlTagCanBeJavadocTag,null.AndroidLintLabelFor,JAVA.NonConstantLogger,JAVA.ClassWithMultipleLoggers,JAVA.UnnecessaryTemporaryOnConversionToString,JAVA.ClassLoaderInstantiation,null.AndroidLintTypos,null.AndroidLintSlices,JAVA.CompareToUsesNonFinalVariable,JAVA.Java9CollectionFactory,XML.AndroidElementNotAllowed,JAVA.TextLabelInSwitchStatement,null.AndroidLintPxUsage,JAVA.BusyWait,JAVA.ForLoopReplaceableByForEach,JAVA.NonPrivateSerializationMethod,JAVA.NullThrown,null.AndroidLintInlinedApi,JAVA.ConstantAssertCondition,JAVA.AwaitNotInLoop,Groovy.GroovyAssignmentToForLoopParameter,JAVA.EndlessStream,JAVA.CheckedExceptionClass,kotlin.DeferredResultUnused,Groovy.JavaStylePropertiesInvocation,JAVA.MethodNamesDifferingOnlyByCase,kotlin.PrivatePropertyName,null.AndroidLintMissingId,null.AndroidLintMissingSuperCall,kotlin.RedundantExplicitType,null.AndroidLintUnsupportedTvHardware,JAVA.EmptyClassInitializer,JAVA.JUnitDatapoint,null.AndroidLintJobSchedulerService,JAVA.DanglingJavadoc,Groovy.GroovyMultipleReturnPointsPerMethod,null.AndroidLintSuspiciousImport,JAVA.RedundantStringFormatCall,null.AndroidLintIncludeLayoutParam,JAVA.CallToSuspiciousStringMethod,kotlin.DataClassPrivateConstructor,null.SpellCheckingInspection,JAVA.MultipleExceptionsDeclaredOnTestMethod,null.AndroidLintIntentReset,Groovy.GrFinalVariableAccess,JAVA.ImplicitNumericConversion,JAVA.OverlyCoupledMethod,kotlin.ConflictingExtensionProperty,Groovy.GrDeprecatedAPIUsage,JAVA.StringBufferReplaceableByString,JAVA.ClassWithTooManyTransitiveDependencies,JAVA.StringConcatenationInMessageFormatCall,null.AndroidLintIconMixedNinePatch,kotlin.FunctionName,null.AndroidLintEnqueueWork,JAVA.UseOfClone,JAVA.ClassWithTooManyDependencies,null.AndroidLintServiceCast,kotlin.FromClosedRangeMigration,JAVA.SwitchStatement,JAVA.AndroidNonConstantResIdsInSwitch,JAVA.OverlyComplexArithmeticExpression,kotlin.RecursivePropertyAccessor,JAVA.ComparisonOfShortAndChar,JAVA.CStyleArrayDeclaration,JAVA.UnaryPlus,null.AndroidLintValidRestrictions,null.AndroidLintInvalidVectorPath,Groovy.GroovyEmptyCatchBlock,null.AndroidLintDeletedProvider,kotlin.ReplaceSingleLineLet,JAVA.PackageWithTooManyClasses,null.AndroidLintOnClick,Properties.UnusedMessageFormatParameter,kotlin.CanBeParameter,null.AndroidLintUselessParent,XML.XmlDefaultAttributeValue,JAVA.StringConcatenationInFormatCall,kotlin.RemoveCurlyBracesFromTemplate,JAVA.CallToSystemSetSecurityManager,null.AndroidLintPrivateApi,JAVA.ConvertJavadoc,JAVA.SharedThreadLocalRandom,JAVA.TailRecursion,JAVA.SimplifiableConditionalExpression,XML.XmlWrongFileType,RoomSql.AndroidRoomQuestionMarkBindParameter,null.AndroidLintParcelClassLoader,null.AndroidLintInvalidImeActionId,JAVA.finally,null.AndroidLintMissingLeanbackLauncher,JAVA.InnerClassReferencedViaSubclass,XML.XmlInvalidId,JAVA.Java9RedundantRequiresStatement,JAVA.SimplifiableEqualsExpression,JAVA.UnnecessaryJavaDocLink,kotlin.ScopeFunctionConversion,JAVA.PatternValidation,null.AndroidLintSignatureOrSystemPermissions,kotlin.ArrayInDataClass,null.AndroidLintAddJavascriptInterface,JAVA.LogStatementGuardedByLogCondition,JAVA.AccessStaticViaInstance,XML.HtmlUnknownTarget,JAVA.MethodMayBeStatic,JAVA.LambdaParameterHidesMemberVariable,JAVA.MessageMissingOnTestNGAssertion,null.AndroidLintLintBaseline,null.AndroidLintUnlocalizedSms,JAVA.ClassWithTooManyConstructors,kotlin.SuspiciousAsDynamic,JAVA.SuperTearDownInFinally,JAVA.MisspelledEquals,JAVA.ConvertOldAnnotations,Properties.AlphaUnsortedPropertiesFile,null.AndroidLintInvalidPermission,JAVA.DuplicateThrows,null.AndroidLintUselessLeaf,JAVA.ArrayHashCode,null.AndroidLintPropertyEscape,null.SSBasedInspection,null.AndroidLintOrientation,JAVA.CallToThreadYield,kotlin.MoveLambdaOutsideParentheses,JAVA.JUnit3StyleTestMethodInJUnit4Class,Groovy.GroovyInfiniteRecursion,JAVA.MoveFieldAssignmentToInitializer,kotlin.ConvertTwoComparisonsToRangeCheck,Groovy.GroovyConditionalCanBeConditionalCall,JAVA.NonFinalFieldInEnum,null.AndroidLintResourceName,JAVA.UtilityClassWithoutPrivateConstructor,null.AndroidLintButtonCase,JAVA.NonFinalFieldReferencedInHashCode,JAVA.ComparatorCombinators,null.AndroidLintSetWorldReadable,JAVA.SuspiciousMethodCalls,JAVA.ExcessiveLambdaUsage,kotlin.KotlinRedundantOverride,JAVA.ClassNameSameAsAncestorName,JAVA.ConstantConditionalExpression,null.AndroidLintBottomAppBar,Groovy.GroovyEmptySyncBlock,JAVA.AbstractClassExtendsConcreteClass,JAVA.ConditionalBreakInInfiniteLoop,JAVA.MagicCharacter,JAVA.ThrowablePrintedToSystemOut,JAVA.WaitWhileHoldingTwoLocks,HTML.HtmlUnknownBooleanAttribute,JAVA.LambdaUnfriendlyMethodOverload,JAVA.ProhibitedExceptionDeclared,null.AndroidLintMissingPermission,Properties.TrailingSpacesInProperty,JAVA.CapturingCleaner,null.InconsistentLineSeparators,JAVA.InstantiationOfUtilityClass,JAVA.CallToRuntimeExec,kotlin.RedundantGetter,JAVA.NakedNotify,JAVA.UseOfProcessBuilder,Manifest.MissingFinalNewline,JAVA.ClassOnlyUsedInOneModule,JAVA.PackageVisibleInnerClass,JAVA.StringBufferField,JAVA.InterfaceNeverImplemented,null.AndroidLintRtlCompat,Groovy.GroovyAssignmentToMethodParameter,kotlin.CopyWithoutNamedArguments,JAVA.FieldHasSetterButNoGetter,JAVA.ConstantExpression,JAVA.SimplifiableAnnotation,JAVA.RedundantCast,Groovy.ClashingTraitMethods,JAVA.FinalPrivateMethod,JAVA.CanBeFinal,JAVA.ForLoopReplaceableByWhile,null.AndroidLintPinSetExpiry,JAVA.CallToSystemGC,Groovy.GroovyUnusedCatchParameter,JAVA.StaticGuardedByInstance,null.AndroidLintWrongCase,null.AndroidLintDuplicateDefinition,JAVA.ProhibitedExceptionCaught,JAVA.SignalWithoutCorrespondingAwait,null.DefaultFileTemplate,Groovy.GroovyThrowFromFinallyBlock,null.AndroidLintJavascriptInterface,kotlin.ConvertToStringTemplate,kotlin.RedundantUnitReturnType,JAVA.FullMethodName,null.AndroidLintRestrictedApi,null.AndroidLintDeviceAdmin,JAVA.PublicMethodNotExposedInInterface,JAVA.ClassInitializerMayBeStatic,JAVA.UnnecessaryParentheses,null.AndroidLintExtraTranslation,JAVA.AssignmentToStaticFieldFromInstanceMethod,JAVA.ClassHasNoToStringMethod,null.AndroidLintIconDuplicatesConfig,kotlin.SimplifyWhenWithBooleanConstantCondition,null.AndroidLintExportedReceiver,JAVA.MessageMissingOnJUnitAssertion,JAVA.Anonymous2MethodRef,JAVA.SuppressionAnnotation,null.AndroidLintLibraryCustomView,JAVA.KeySetIterationMayUseEntrySet,JAVA.ConstructorWithTooManyParameters,JAVA.ClassMayBeInterface,null.AndroidLintMinSdkTooLow,JAVA.CastToConcreteClass,JAVA.AssignmentToForLoopParameter,JAVA.EmptySynchronizedStatement,JAVA.OverlyComplexBooleanExpression,JAVA.AssertEqualsCalledOnArray,null.AndroidLintUnusedResources,null.AndroidLintPackageManagerGetSignatures,JAVA.ConditionalExpressionWithNegatedCondition,JAVA.UtilityClassCanBeEnum,null.AndroidLintInnerclassSeparator,JAVA.LocalCanBeFinal,JAVA.SynchronizationOnStaticField,kotlin.ConstantConditionIf,JAVA.TestOnlyProblems,null.AndroidLintSdCardPath,Groovy.ClashingGetters,JAVA.StaticImport,JAVA.FullJavaName,Groovy.GroovyEmptyFinallyBlock,Groovy.GroovySwitchStatementWithNoDefault,null.AndroidLintResAuto,JAVA.AnonymousInnerClassWithTooManyMethods,kotlin.ExplicitThis,null.AndroidLintUseOfBundledGooglePlayServices,XML.DeprecatedClassUsageInspection,JAVA.InstanceofIncompatibleInterface,JAVA.CastConflictsWithInstanceof,kotlin.ReplaceRangeToWithUntil,null.AndroidLintMissingApplicationIcon,JAVA.ConfusingMainMethod,JAVA.OptionalContainsCollection,Groovy.GroovyConditionalCanBeElvis,null.AndroidLintBackButton,kotlin.KotlinUnusedImport,JAVA.InterfaceWithOnlyOneDirectInheritor,JAVA.KotlinInternalInJava,Groovy.GroovySynchronizationOnVariableInitializedWithLiteral,null.AndroidLintIconExtension,JAVA.ThrowsRuntimeException,null.AndroidLintPermissionImpliesUnsupportedHardware,JAVA.ImplicitCallToSuper,RegExp.RegExpAnonymousGroup,JAVA.ConditionalExpression,JAVA.FieldCanBeLocal,JAVA.StaticMethodOnlyUsedInOneClass,null.AndroidLintIconExpectedSize,JAVA.SamePackageImport,JAVA.RedundantTypeArguments,JAVA.DuplicateBooleanBranch,JAVA.SimplifyForEach,kotlin.ObsoleteExperimentalCoroutines,RoomSql.AndroidUnresolvedRoomSqlReference,null.AndroidLintRequiredSize,JAVA.MissingPackageInfo,JAVA.ReturnOfThis,Groovy.GroovyFallthrough,JAVA.CallToThreadStartDuringObjectConstruction,JAVA.ConstantConditions,kotlin.DeprecatedCallableAddReplaceWith,JAVA.WaitNotInLoop,null.AndroidLintPrivateResource,null.LossyEncoding,JAVA.InnerClassOfInterface,null.AndroidLintDuplicateIncludedIds,JAVA.NonSerializableClassWithSerialVersionUID,JAVA.VariableTypeCanBeExplicit,JAVA.SimplifyStreamApiCallChains,JAVA.JavaRequiresAutoModule,kotlin.ForEachParameterNotUsed,kotlin.RemoveEmptyPrimaryConstructor,JAVA.EmptyTryBlock,JAVA.ReturnSeparatedFromComputation,JAVA.RedundantStreamOptionalCall,JAVA.AnonymousInnerClassMayBeStatic,null.AndroidLintMipmapIcons,JAVA.CheckForOutOfMemoryOnLargeArrayAllocation,kotlin.ReplaceSizeCheckWithIsNotEmpty,XML.CheckDtdRefs,JAVA.ExceptionPackage,JAVA.ExplicitArgumentCanBeLambda,Groovy.GroovyDocCheck,Groovy.GroovyUnreachableStatement,JAVA.CallToThreadStopSuspendOrResumeManager,JAVA.CloneableClassWithoutClone,null.AndroidLintNegativeMargin,JAVA.JavadocReference,JAVA.SubtractionInCompareTo,null.AndroidLintNetworkSecurityConfig,Groovy.GroovyUnconditionalWait,JAVA.MalformedSetUpTearDown,null.AndroidLintHighAppVersionCode,JAVA.EqualsAndHashcode,null.AndroidLintInvalidWearFeatureAttribute,kotlin.SortModifiers,null.AndroidLintExifInterface,kotlin.UnsafeCastFromDynamic,JAVA.IteratorNextCanNotThrowNoSuchElementException,JAVA.IntegerMultiplicationImplicitCastToLong,JAVA.ResultOfMethodCallIgnored,JAVA.JUnitTestCaseWithNoTests,JAVA.SynchronizeOnThis,JAVA.NumericCastThatLosesPrecision,JAVA.IndexOfReplaceableByContains,JAVA.AnonymousClassVariableHidesContainingMethodVariable,Groovy.GroovyEmptyTryBlock,null.AndroidLintRiskyLibrary,null.AndroidLintMangledCRLF,kotlin.RemoveExplicitTypeArguments,null.AndroidLintEllipsizeMaxLines,null.AndroidLintWrongThread,kotlin.HasPlatformType,JAVA.LabeledStatement,JAVA.ContinueOrBreakFromFinallyBlock,Properties.DuplicatePropertyInspection,JAVA.PatternNotApplicable,null.AndroidLintNotificationIconCompatibility,JAVA.OptionalAssignedToNull,JAVA.InstanceVariableMayNotBeInitializedByReadObject,null.AndroidLintButtonStyle,null.AndroidLintUnsupportedChromeOsHardware,JAVA.StringBufferToStringInConcatenation,JAVA.MissortedModifiers,Groovy.ChangeToMethod,null.PermissionUsageInspection,kotlin.JavaCollectionsStaticMethodOnImmutableList,JAVA.CallToThreadSetPriority,JAVA.LocalVariableUsedAndDeclaredInDifferentSwitchBranches,kotlin.LocalVariableName,Groovy.GroovyNegatedConditional,JAVA.SimplifiedTestNGAssertion,JAVA.CovariantEquals,JAVA.ConfusingElseBranch,kotlin.MoveSuspiciousCallableReferenceIntoParentheses,JAVA.UtilityClassWithPublicConstructor,JAVA.CallToThreadDumpStack,null.Annotator,null.AndroidLintRecycle,JAVA.SameReturnValue,null.AndroidLintGradlePath,JAVA.MismatchedQueryAndUpdateOfCollection,JAVA.InstanceofCatchParameter,JAVA.UnnecessaryToStringCall,JAVA.UnnecessarySuperQualifier,null.AndroidLintGoogleAppIndexingWarning,null.AndroidLintSQLiteString,JAVA.ReuseOfLocalVariable,JAVA.CollectionAddAllCanBeReplacedWithConstructor,JAVA.MathRandomCastToInt,null.AndroidLintUnpackedNativeCode,null.AndroidLintTrustAllX509TrustManager,null.AndroidLintSmallSp,JAVA.ClassWithoutNoArgConstructor,JAVA.JUnitTestCaseInProductSource,JAVA.ClassNewInstance,JAVA.PackageNamingConvention,JAVA.IgnoredJUnitTest,JAVA.deprecation,null.AndroidLintMultipleUsesSdk,JAVA.OverlyCoupledClass,JAVA.EmptyDirectory,kotlin.UselessCallOnCollection,JAVA.AssertEqualsBetweenInconvertibleTypesTestNG,JAVA.ControlFlowStatementWithoutBraces,Groovy.GroovyParameterNamingConvention,JAVA.ClassExplicitlyAnnotation,JAVA.ClassEscapesDefinedScope,null.AndroidLintGifUsage,JAVA.PublicField,JAVA.UnnecessaryInterfaceModifier,kotlin.IfThenToElvis,JAVA.DollarSignInName,JAVA.AssignmentToMethodParameter,JAVA.InnerClassTooDeeplyNested,JAVA.UnconstructableJUnitTestCase,JAVA.AssertEqualsBetweenInconvertibleTypes,JAVA.NegativelyNamedBooleanVariable,JAVA.UNUSED_IMPORT,null.AndroidLintNotInterpolated,JAVA.MisorderedAssertEqualsArgumentsTestNG,JAVA.BooleanConstructorCall,null.AndroidLintFontValidationWarning,kotlin.ConvertLambdaToReference,JAVA.ClassNameDiffersFromFileName,Groovy.GroovyWhileLoopSpinsOnField,JAVA.ConstantDeclaredInAbstractClass,JAVA.ForLoopWithMissingComponent,null.AndroidLintGridLayout,JAVA.PlaceholderCountMatchesArgumentCount,JAVA.BigDecimalLegacyMethod,null.AndroidLintMissingFirebaseInstanceTokenRefresh,JAVA.SerializableInnerClassWithNonSerializableOuterClass,null.AndroidLintVisibleForTests,null.AndroidLintWrongFolder,JAVA.NullableProblems,JAVA.MethodCallInLoopCondition,JAVA.SingleStatementInBlock,JAVA.RedundantStringOperation,null.AndroidLintSetJavaScriptEnabled,JAVA.SimplifiableBooleanExpression,kotlin.KDocUnresolvedReference,JAVA.RedundantFieldInitialization,JAVA.ObviousNullCheck,JAVA.PackageWithTooFewClasses,JAVA.UtilityClass,kotlin.UsePropertyAccessSyntax,JAVA.TryFinallyCanBeTryWithResources,JAVA.PublicInnerClass,JAVA.TryStatementWithMultipleResources,Groovy.NewInstanceOfSingleton,JAVA.ReadResolveAndWriteReplaceProtected,JAVA.StringBufferWithoutInitialCapacity,JAVA.ConstantValueVariableUse,JAVA.AtomicFieldUpdaterIssues,JAVA.CallToDriverManagerGetConnection,Groovy.SingletonConstructor,null.AndroidLintPluralsCandidate,null.AndroidLintIconLauncherShape,null.AndroidLintTypographyFractions,Groovy.GroovyNegatedIf,kotlin.ReplaceArrayEqualityOpWithArraysEquals,JAVA.AssertStatement,Groovy.DeprecatedGradleDependency,JAVA.CharacterComparison,JAVA.NestedConditionalExpression,JAVA.SetReplaceableByEnumSet,JAVA.divzero,JAVA.DuplicateStringLiteralInspection,Groovy.GroovySystemRunFinalizersOnExit,Groovy.GroovyInstanceVariableNamingConvention,JAVA.Guava,JAVA.HardcodedLineSeparator,kotlin.RedundantObjectTypeCheck,Groovy.GroovyRangeTypeCheck,kotlin.IfThenToSafeAccess,JAVA.CallToPrintStackTrace,null.AndroidLintMissingOnPlayFromSearch,null.AndroidLintUnusedAttribute,JAVA.ThrowFromFinallyBlock,Properties.UnusedProperty,JAVA.DataProviderReturnType,JAVA.AmbiguousMethodCall,JAVA.UnclearExpression,JAVA.AssignmentToLambdaParameter,JAVA.NonSerializableClassWithSerializationMethods,JAVA.ConstantOnRightSideOfComparison,null.AndroidLintCutPasteId,JAVA.WhileLoopSpinsOnField,JAVA.MethodReturnType,JAVA.UseBulkOperation,JAVA.SuspiciousLiteralUnderscore,kotlin.PackageName,JAVA.ObjectToString,null.AndroidLintUnknownIdInLayout,null.AndroidLintAppCompatMethod,JAVA.OverriddenMethodCallDuringObjectConstruction,JAVA.UnnecessarilyQualifiedStaticUsage,JAVA.AutoBoxing,Groovy.GroovyOverlyNestedMethod,JAVA.SuspiciousArrayCast,kotlin.UnusedLambdaExpressionBody,null.AndroidLintIllegalResourceRef,kotlin.RemoveExplicitSuperQualifier,JAVA.TooBroadScope,JAVA.CustomSecurityManager,HTML.PackageDotHtmlMayBePackageInfo,JAVA.InstantiatingAThreadWithDefaultRunMethod,Groovy.GrPackage,JAVA.CallToSignalInsteadOfSignalAll,JAVA.Java8ArraySetAll,JAVA.ConfusingFloatingPointLiteral,JAVA.InstanceofThis,kotlin.RecursiveEqualsCall,null.TodoComment,JAVA.MethodWithTooExceptionsDeclared,JAVA.MethodParameterNamingConvention,JAVA.FinalizeDeclaration,null.AndroidLintStringFormatInvalid,JAVA.AssertionCanBeIf,JAVA.IfCanBeSwitch,JAVA.LocalVariableHidesMemberVariable,JAVA.StaticInheritance,JAVA.OnDemandImport,null.UnusedDefine,JAVA.ConstructorNotProtectedInAbstractClass,JAVA.NotifyCalledOnCondition,JAVA.ExceptionClassNameDoesntEndWithException,null.AndroidLintCheckResult,Groovy.GroovyPointlessBoolean,null.LongLine,JAVA.StringConcatenationMissingWhitespace,JAVA.CustomClassloader,null.HardCodedStringLiteral,kotlin.CascadeIf,JAVA.HibernateResourceOpenedButNotSafelyClosed,JAVA.CallToNativeMethodWhileLocked,null.AndroidLintApplySharedPref,null.UseWithIndex,JAVA.BlockMarkerComments,JAVA.RedundantInterfaceDeclaration,JAVA.RedundantExplicitVariableType,JAVA.SuspiciousArrayMethodCall,Groovy.GroovyUnusedIncOrDec,JAVA.JDBCResourceOpenedButNotSafelyClosed,JAVA.StringEqualsEmptyString,JAVA.groupsTestNG,JAVA.SynchronizedOnLiteralObject,JAVA.PropertyValueSetToItself,null.AndroidLintAaptCrash,JAVA.CloneCallsConstructors,kotlin.RedundantLambdaArrow,null.AndroidLintLocalSuppress,JAVA.ClassWithoutConstructor,Groovy.GroovyConditional,kotlin.UnusedEquals,JAVA.LoopStatementThatDoesntLoop,JAVA.RedundantLambdaParameterType,JAVA.EnumerationCanBeIteration,null.AndroidLintInvalidId,JAVA.InfiniteLoopStatement,JAVA.ClassWithoutLogger,JAVA.JavacQuirks,JAVA.ReturnOfInnerClass,JAVA.NonFinalFieldInImmutable,null.AndroidLintRecyclerView,kotlin.RemoveToStringInStringTemplate,JAVA.BeforeOrAfterWithIncorrectSignature,null.AndroidLintAllowAllHostnameVerifier,JAVA.PrimitiveArrayArgumentToVarargsMethod,JAVA.OctalInteger,JAVA.UseOfObsoleteCollectionType,JAVA.UnqualifiedInnerClassAccess,JSON.JsonDuplicatePropertyKeys,null.AndroidLintDuplicateIds,null.AndroidLintNfcTechWhitespace,JAVA.UnconditionalWait,JAVA.MagicNumber,JAVA.LoopWithImplicitTerminationCondition,JAVA.FeatureEnvy,kotlin.WrapUnaryOperator,null.AndroidLintIconDuplicates,null.AndroidLintSuspicious0dp,null.AndroidLintDuplicateActivity,Manifest.MisspelledHeader,JAVA.AssertWithSideEffects,JAVA.StringTokenizerDelimiter,JAVA.SillyAssignment,JAVA.UnusedLabel,JAVA.resource,Groovy.NewGroovyClassNamingConvention,Groovy.GroovyMethodWithMoreThanThreeNegations,Groovy.GroovyInfiniteLoopStatement,kotlin.RedundantSemicolon,JAVA.StaticFieldReferencedViaSubclass,RegExp.RegExpEscapedMetaCharacter,null.AndroidLintRequiresFeature,JAVA.MagicConstant,JAVA.ListenerMayUseAdapter,Groovy.GroovyNonShortCircuitBoolean,JAVA.UnpredictableBigDecimalConstructorCall,JAVA.NegatedConditionalExpression,JAVA.UseOfPropertiesAsHashtable,JAVA.Annotation,JAVA.DoubleCheckedLocking,JAVA.LawOfDemeter,JAVA.CatchMayIgnoreException,JAVA.UnnecessaryBoxing,JAVA.CollectionsFieldAccessReplaceableByMethodCall,JAVA.CloneableClassInSecureContext,JAVA.OptionalIsPresent,JAVA.dependsOnMethodTestNG,JAVA.CallToStringConcatCanBeReplacedByOperator,null.AndroidLintBatteryLife,JAVA.EnumAsIdentifier,kotlin.MainFunctionReturnUnit,null.AndroidLintUnknownNullness,JAVA.UnnecessarySemicolon,JAVA.FuseStreamOperations,null.AndroidLintMissingIntentFilterForMediaSearch,JAVA.DefaultNotLastCaseInSwitch,JAVA.ManualArrayToCollectionCopy,JAVA.PublicMethodWithoutLogging,Groovy.GroovyConstantNamingConvention,null.AndroidLintFloatMath,JAVA.RedundantStringConstructorCall,JAVA.TypeParameterExplicitlyExtendsObject,null.AndroidLintGrantAllUris,JAVA.StaticVariableUsedBeforeInitialization,null.AndroidLintAutofill,JAVA.NonSerializableObjectPassedToObjectStream,kotlin.NullChecksToSafeCall,JAVA.ProhibitedExceptionThrown,null.AndroidLintSimpleDateFormat,null.IllegalIdentifier,null.AndroidLintAssert,kotlin.MayBeConstant,JAVA.MethodNameSameAsClassName,null.AndroidLintMissingMediaBrowserServiceIntentFilter,JAVA.RestSignature,JAVA.OverlyBroadThrowsClause,kotlin.RemoveSingleExpressionStringTemplate,JAVA.ChainOfInstanceofChecks,null.AndroidLintEasterEgg,kotlin.KotlinDeprecation,JAVA.ConstantForZeroLengthArrayAllocation,Groovy.GroovyLabeledStatement,JAVA.OverloadedMethodsWithSameNumberOfParameters,JAVA.ContinueStatement,kotlin.EqualsOrHashCode,JAVA.IfMayBeConditional,JAVA.Dependency,null.AndroidLintViewHolder,JAVA.NoopMethodInAbstractClass,null.AndroidLintGetContentDescriptionOverride,null.AndroidLintResourceCycle,JAVA.TypeParameterExtendsFinalClass,JAVA.FieldNamingConvention,JAVA.RecordStoreOpenedButNotSafelyClosed,JAVA.UnnecessaryUnicodeEscape,null.AndroidLintFontValidationError,JAVA.EqualsBetweenInconvertibleTypes,JAVA.EmptyFinallyBlock,JAVA.NonShortCircuitBooleanExpression,Groovy.GroovyUntypedAccess,JAVA.ParameterCanBeLocal,null.AndroidLintProtectedPermissions,JAVA.JUnit5Platform,JAVA.ClassWithTooManyTransitiveDependents,JAVA.ArrayObjectsEquals,null.AndroidLintTypographyQuotes,JAVA.AbstractMethodCallInConstructor,JAVA.RedundantIfStatement,null.SyntaxError,null.AndroidLintResourceAsColor,JAVA.LiteralAsArgToStringEquals,JAVA.NewClassNamingConvention,null.AndroidLintInvalidResourceFolder,null.AndroidLintStateListReachable,JAVA.FieldNameHidesFieldInSuperclass,JAVA.AbstractMethodOverridesAbstractMethod,JAVA.JUnitTestCaseWithNonTrivialConstructors,null.AndroidLintLocaleFolder,JAVA.CharUsedInArithmeticContext,null.AndroidLintAllCaps,JAVA.Java8MapApi,JAVA.ArraysAsListWithZeroOrOneArgument,Groovy.GrUnresolvedAccess,JAVA.LocalVariableOfConcreteClass,JAVA.ClassUnconnectedToPackage,JAVA.StringToUpperCaseOrToLowerCaseWithoutLocale,null.AndroidLintExportedService,Groovy.GroovyNotifyWhileNotSynchronized,JAVA.NonFinalGuard,JAVA.ResourceParameter,JAVA.NonStaticInitializer,JAVA.ChainedEqualityComparisons,JAVA.FakeJvmFieldConstant,XML.CheckEmptyScriptTag,null.AndroidLintBadHostnameVerifier,Groovy.UnnecessaryQualifiedReference,JAVA.NonConstantStringShouldBeStringBuffer,JAVA.OverlyNestedMethod,JAVA.RedundantConditionalExpression,null.AndroidLintViewTag,null.KotlinInvalidBundleOrProperty,JAVA.UnusedAssignment,null.AndroidLintEnforceUTF8,JAVA.ManualArrayCopy,JAVA.AssignmentUsedAsCondition,JAVA.ComparisonToNaN,kotlin.ReplaceCallWithBinaryOperator,Groovy.GrEqualsBetweenInconvertibleTypes,null.AndroidLintIconXmlAndPng,JAVA.StaticVariableOfConcreteClass,JAVA.DesignForExtension,null.AndroidLintVectorDrawableCompat,kotlin.RemoveRedundantBackticks,JAVA.RawTypeCanBeGeneric,JAVA.JNDIResourceOpenedButNotSafelyClosed,JAVA.ApiNamespace,null.AndroidLintKotlinPropertyAccess,JAVA.MalformedRegex,JAVA.SuspiciousToArrayCall,JAVA.MethodParameterOfConcreteClass,JAVA.SingleCharacterStartsWith,JAVA.JUnit5Converter,null.AndroidLintDevModeObsolete,JAVA.ProtectedMemberInFinalClass,JAVA.InstanceVariableOfConcreteClass,null.AndroidLintNewerVersionAvailable,JAVA.UndeclaredTests,Groovy.GroovyNestedAssignment,null.AndroidLintTooDeepLayout,kotlin.CanSealedSubClassBeObject,kotlin.RedundantAsync,null.AndroidLintSetWorldWritable,null.AndroidLintProguardSplit,kotlin.ConvertSecondaryConstructorToPrimary,null.AndroidLintObsoleteSdkInt,Groovy.GroovySynchronizationOnThis,JAVA.ImplicitDefaultCharsetUsage,JAVA.LoggerInitializedWithForeignClass,null.AndroidLintTooManyViews,JAVA.AssignmentToNull,kotlin.LeakingThis,null.AndroidLintNewApi,Groovy.GroovyNestedSynchronizedStatement,JAVA.ToArrayCallWithZeroLengthArrayArgument,JAVA.ParameterHidesMemberVariable,kotlin.ConvertPairConstructorToToFunction,JAVA.SuspiciousNameCombination,JAVA.MethodOverridesInaccessibleMethodOfSuper,JAVA.Java9UndeclaredServiceUsage,Groovy.GroovyReturnFromFinallyBlock,RegExp.RegExpSingleCharAlternation,JAVA.MetaAnnotationWithoutRuntimeRetention,null.AndroidLintExtraText,JAVA.LongLiteralEndingWithLowercaseL,JAVA.ClassExplicitlyExtendsObject,Groovy.GroovyContinue,JAVA.StaticMethodReferencedViaSubclass,null.AndroidLintRange,JAVA.ReflectionForUnavailableAnnotation,null.AndroidLintStringShouldBeInt,kotlin.LiftReturnOrAssignment,JAVA.BreakStatementWithLabel,JAVA.ArrayCreationWithoutNewKeyword,kotlin.RedundantModalityModifier,kotlin.RedundantCompanionReference,JAVA.CallToSimpleSetterFromWithinClass,null.AndroidLintUnknownId,JAVA.unused,kotlin.ReplaceSizeZeroCheckWithIsEmpty,null.AndroidLintPackagedPrivateKey,kotlin.MemberVisibilityCanBePrivate,null.AndroidLintGetInstance,null.AndroidLintIncompatibleMediaBrowserServiceCompatVersion,JAVA.CloneInNonCloneableClass,kotlin.WhenWithOnlyElse,JAVA.StringConcatenation,JAVA.CallToSystemGetenv,Groovy.GroovyListSetCanBeKeyedAccess,JAVA.LoadLibraryWithNonConstantString,null.AndroidLintDefaultLocale,JAVA.AbstractMethodOverridesConcreteMethod,JAVA.MigrateAssertToMatcherAssert,Groovy.GroovyUncheckedAssignmentOfMemberOfRawType,kotlin.CanBeVal,JAVA.AwaitWithoutCorrespondingSignal,null.AndroidLintSecureRandom,JAVA.UseOfIndexZeroInJDBCResultSet,JAVA.ClassWithTooManyMethods,JAVA.UnnecessaryQualifierForThis,kotlin.UnusedReceiverParameter,null.AndroidLintFindViewByIdCast,JAVA.ProtectedInnerClass,null.AndroidLintExportedPreferenceActivity,JAVA.UnnecessaryConstantArrayCreationExpression,XML.XmlUnboundNsPrefix,null.AndroidLintMissingLeanbackSupport,null.AndroidLintClickableViewAccessibility,JAVA.InstanceVariableMayNotBeInitialized,JAVA.InnerClassMayBeStatic,JAVA.NonFinalUtilityClass,JAVA.ConstantOnLeftSideOfComparison,JAVA.CollectionAddedToSelf,null.AndroidLintConvertToWebp,Groovy.GroovyOverlyComplexArithmeticExpression,JAVA.FrequentlyUsedInheritorInspection,kotlin.RedundantVisibilityModifier,null.AndroidLintIconNoDpi,JAVA.IfStatementWithTooManyBranches,RegExp.RegExpRedundantEscape,null.AndroidLintUnusedIds,Groovy.GroovyUnsynchronizedMethodOverridesSynchronizedMethod,RegExp.RegExpRepeatedSpace,kotlin.Destructure,null.AndroidLintInvalidWakeLockTag,null.AndroidLintViewConstructor,JAVA.StreamToLoop,JAVA.SerializableHasSerializationMethods,null.AndroidLintInvalidUsesTagAttribute,JAVA.ClassReferencesSubclass,JAVA.AbsoluteAlignmentInUserInterface,JAVA.LoggingConditionDisagreesWithLogStatement,null.AndroidLintByteOrderMark,JAVA.MultipleTopLevelClassesInFile,JAVA.MultipleVariablesInDeclaration,null.AndroidLintGradleGetter,JAVA.BadOddness,null.AndroidLintIconMissingDensityFolder,kotlin.RemoveEmptyParenthesesFromLambdaCall,JAVA.ComparableImplementedButEqualsNotOverridden,null.AndroidLintStaticFieldLeak,JAVA.ForeachStatement,JAVA.NamedResource,JAVA.StringConcatenationArgumentToLogCall,null.AndroidLintUnsafeProtectedBroadcastReceiver,JAVA.FinalizeCalledExplicitly,kotlin.IntroduceWhenSubject,Groovy.GroovyVariableCanBeFinal,JAVA.UnqualifiedStaticUsage,JAVA.UnnecessaryLabelOnBreakStatement,JAVA.AssignmentToCatchBlockParameter,JAVA.ApiParameter,Groovy.GroovyConstructorNamedArguments,null.AndroidLintExportedContentProvider,kotlin.NestedLambdaShadowedImplicitParameter,JAVA.CallToSystemRunFinalizersOnExit,JAVA.ThrowCaughtLocally,JAVA.ConstantJUnitAssertArgument,JAVA.TestMethodWithIncorrectSignature,JAVA.ReturnOfNull,JAVA.SwitchStatementWithTooManyBranches,Groovy.TypeCustomizer,JAVA.OverwrittenKey,null.AndroidLintShowToast,null.AndroidLintManifestResource,JAVA.ResultOfObjectAllocationIgnored,Groovy.GroovyListGetCanBeKeyedAccess,null.AndroidLintInconsistentLayout,JAVA.CloneDoesntDeclareCloneNotSupportedException,kotlin.CanBePrimaryConstructorProperty,null.AndroidLintUniquePermission,JAVA.SimplifyCollector,null.AndroidLintInstantApps,Groovy.MultipleRepositoryUrls,null.AndroidLintKeyboardInaccessibleWidget,JAVA.SimplifiableIfStatement,JAVA.WhileLoopReplaceableByForEach,JAVA.JDBCExecuteWithNonConstantString,JAVA.IntLiteralMayBeLongLiteral,null.AndroidLintInvalidNavigation,JAVA.EqualsHashCodeCalledOnUrl,null.AndroidLintInefficientWeight,JAVA.EqualsOnSuspiciousObject,XML.XmlDuplicatedId,null.AndroidLintScrollViewSize,kotlin.EmptyRange,JAVA.ClassExtendsConcreteCollection,null.AndroidLintWorldReadableFiles,JAVA.UseCompareMethod,JAVA.BooleanVariableAlwaysNegated,JAVA.CollectionDeclaredAsConcreteClass,Groovy.GroovySynchronizedMethod,null.AndroidLintConstantLocale,null.ProblematicWhitespace,kotlin.ImplicitThis,null.AndroidLintMissingConstraints,kotlin.RemoveRedundantCallsOfConversionMethods,JAVA.AbstractMethodWithMissingImplementations,JAVA.ClassExplicitlyExtendsThread,JAVA.FinalStaticMethod,JAVA.MethodName,null.GroovyUnusedDeclaration,JAVA.VariableNotUsedInsideIf,JAVA.SingleClassImport,JAVA.ExtendsThrowable,XML.AndroidMissingOnClickHandler,JAVA.BoxingBoxedValue,JAVA.SwitchStatementWithTooFewBranches,null.AndroidLintMockLocation,null.AndroidLintVectorRaster,kotlin.RedundantNotNullExtensionReceiverOfInline,JAVA.MissingDeprecatedAnnotation,JAVA.EqualsWhichDoesntCheckParameterClass,JAVA.UseOfStringTokenizer,JAVA.ParameterTypePreventsOverriding,JAVA.ReplaceAllDot,null.AndroidLintOutdatedLibrary,kotlin.ReplacePutWithAssignment,JAVA.TypeMayBeWeakened,null.AndroidLintMissingDefaultResource,JAVA.MethodParameterType,JAVA.NestedTryStatement,kotlin.RedundantUnitExpression,kotlin.SuspiciousEqualsCombination,JAVA.ObjectEqualsCanBeEquality,JAVA.CopyConstructorMissesField,null.AndroidLintNestedScrolling,JAVA.Java8ListSort,kotlin.RedundantReturnLabel,JAVA.DynamicRegexReplaceableByCompiledPattern,kotlin.SimplifiableCallChain,JAVA.OverlyStrongTypeCast,JAVA.Singleton,null.AndroidLintGradleDeprecated,JAVA.LockAcquiredButNotSafelyReleased,null.AndroidLintNamespaceTypo,null.AndroidLintLogTagMismatch,JAVA.LambdaParameterNamingConvention,XML.CheckXmlFileWithXercesValidator,JAVA.DiamondCanBeReplacedWithExplicitTypeArguments,JAVA.ClassWithTooManyFields,null.AndroidLintWifiManagerPotentialLeak,JAVA.EnumSwitchStatementWhichMissesCases,kotlin.RedundantSuspendModifier,null.NonAsciiCharacters,null.AndroidLintInOrMmUsage,JAVA.IfStatementWithNegatedCondition,kotlin.PublicApiImplicitType,JAVA.MethodOnlyUsedFromInnerClass,null.AndroidLintMissingTvBanner,JAVA.NonBooleanMethodNameMayNotStartWithQuestion,kotlin.RedundantSetter,XML.AndroidUnknownAttribute,JAVA.UseOfSystemOutOrSystemErr,JAVA.PublicStaticArrayField,JAVA.PointlessBitwiseExpression,JAVA.ExpectedExceptionNeverThrownTestNG,JAVA.SameParameterValue,null.AndroidLintRelativeOverlap,JAVA.FinalizeNotProtected,JAVA.AccessingNonPublicFieldOfAnotherObject,Groovy.GroovyResultOfIncrementOrDecrementUsed,null.AndroidLintCustomViewStyleable,kotlin.EnumEntryName,Groovy.GrUnnecessaryAlias,JAVA.FunctionalExpressionCanBeFolded,JAVA.ComparatorNotSerializable,Groovy.GroovyUnnecessaryContinue,JAVA.UnnecessaryLabelOnContinueStatement,kotlin.TypeParameterFindViewById,null.AndroidLintInvalidAnalyticsName,JAVA.UnnecessaryThis,Groovy.GrMethodMayBeStatic,JAVA.UseOfAWTPeerClass,null.AndroidLintButtonOrder,Groovy.GroovyOctalInteger,JAVA.Convert2MethodRef,JAVA.JUnit4AnnotatedMethodInJUnit3TestCase,null.AndroidLintInflateParams,kotlin.ImplicitNullableNothingType,JAVA.MethodCanBeVariableArityMethod,kotlin.UnusedSymbol,JAVA.WaitWithoutCorrespondingNotify,JAVA.UnnecessarilyQualifiedStaticallyImportedElement,JAVA.UnnecessaryCallToStringValueOf,JAVA.DisjointPackage,JAVA.ParameterNameDiffersFromOverriddenParameter,kotlin.Reformat,null.AndroidLintUnsafeNativeCodeLocation,JAVA.ObjectEquality,Groovy.GroovyAccessToStaticFieldLockedOnInstance,kotlin.ObjectPropertyName,null.AndroidLintOverrideAbstract,XML.XmlPathReference,JAVA.IOResourceOpenedButNotSafelyClosed,Groovy.GroovyLocalVariableNamingConvention,JAVA.rawtypes,JAVA.InstanceGuardedByStatic,JAVA.InnerClassFieldHidesOuterClassField,RegExp.RegExpUnexpectedAnchor,RegExp.RegExpDuplicateAlternationBranch,Groovy.GroovyConstantIfStatement,Groovy.GroovyAccessibility,kotlin.FoldInitializerAndIfToElvis,JAVA.ReplaceNullCheck,JAVA.DialogTitleCapitalization,null.AndroidLintHardcodedDebugMode,Groovy.GroovyLoopStatementThatDoesntLoop,JAVA.RedundantComparatorComparing,null.AndroidLintGetLocales,Groovy.GroovyPointlessArithmetic,JAVA.NativeMethod,JAVA.AutoUnboxing,null.AndroidLintIconDipSize,JAVA.Java8CollectionRemoveIf,JAVA.UseOfSunClasses,JAVA.UnqualifiedMethodAccess,JAVA.ClassOnlyUsedInOnePackage,Groovy.GroovyAssignabilityCheck,JAVA.EqualsReplaceableByObjectsCall,JAVA.ConfusingArgumentToVarargsMethod,JAVA.ClassTooDeepInInheritanceTree,JAVA.MalformedFormatString,JAVA.AssertAsIdentifier,JAVA.StaticInitializerReferencesSubClass,JAVA.ExtendsUtilityClass,JAVA.EmptyClass,null.AndroidLintGradlePluginVersion,Groovy.GroovyTrivialConditional,null.AndroidLintValidActionsXml,JAVA.CallToDateToString,Groovy.GroovySynchronizationOnNonFinalField,JAVA.NonConstantFieldWithUpperCaseName,Groovy.GroovySillyAssignment,null.AndroidLintSetTextI18n,HTML.HtmlMissingClosingTag,kotlin.OverridingDeprecatedMember,JAVA.Convert2streamapi,null.AndroidLintMissingTranslation,null.AndroidLintGradleDependency,kotlin.JoinDeclarationAndAssignment,null.AndroidLintObsoleteLayoutParam,JAVA.StaticPseudoFunctionalStyleMethod,JAVA.MethodOverridesStaticMethodOfSuperclass,JAVA.InjectionNotApplicable,JAVA.UnnecessaryLocalVariable,kotlin.KotlinDoubleNegation,Groovy.GroovyReturnFromClosureCanBeImplicit,null.AndroidLintTestAppLink,JAVA.WeakerAccess,JAVA.InvalidComparatorMethodReference,JAVA.OptionalUsedAsFieldOrParameterType,JAVA.ConditionalCanBePushedInsideExpression,JAVA.OctalAndDecimalIntegersInSameArray,JAVA.SocketOpenedButNotSafelyClosed,JAVA.InstanceVariableUsedBeforeInitialized,JAVA.BooleanMethodNameMustStartWithQuestion,JAVA.StandardVariableNames,Groovy.GroovyContinueOrBreakFromFinallyBlock,JAVA.fallthrough,JAVA.UnnecessaryExplicitNumericCast,JAVA.FieldMayBeStatic,null.AndroidLintScrollViewCount,null.AndroidLintOverride,kotlin.ReplaceWithOperatorAssignment,kotlin.ConvertCallChainIntoSequence,null.AndroidLintTypographyDashes,JAVA.SingleCharacterStringConcatenation,null.AndroidLintDeprecated,JAVA.AbstractClassNeverImplemented,null.AndroidLintAppCompatResource,JAVA.ObjectInstantiationInEqualsHashCode,JAVA.ParameterizedParametersStaticCollection,Groovy.GroovyWaitCallNotInLoop,Groovy.GroovyMapPutCanBeKeyedAccess,Groovy.GroovyBreak,JAVA.CaughtExceptionImmediatelyRethrown,null.AndroidLintIconLocation,JAVA.StringBufferMayBeStringBuilder,JAVA.NumberEquality,kotlin.PlatformExtensionReceiverOfInline,JAVA.DuplicateCondition,Groovy.GroovyDoubleNegation,JAVA.UnnecessaryInitCause,JAVA.SerialPersistentFieldsWithWrongSignature,JAVA.PackageInfoWithoutPackage,JAVA.VariableArgumentMethod,kotlin.PropertyName,JAVA.IntegerDivisionInFloatingPointContext,null.AndroidLintWrongViewCast,null.IncompatibleAPI,JAVA.NonExceptionNameEndsWithException,null.AndroidLintNotSibling,Groovy.GroovyVariableNotAssigned,null.AndroidLintValidFragment,JAVA.EnumClass,kotlin.ReplaceArrayOfWithLiteral,JAVA.DefaultAnnotationParam,kotlin.ProtectedInFinal,JAVA.JUnitTestMethodInProductSource,JAVA.Convert2Diamond,kotlin.ReplaceStringFormatWithLiteral,JAVA.MethodReturnOfConcreteClass,JAVA.MethodMayBeSynchronized,null.AndroidLintStringFormatCount,JAVA.SerializableNonStaticInnerClassWithoutSerialVersionUID,JAVA.ConnectionOpenedButNotSafelyClosed,JAVA.ErrorNotRethrown,JAVA.CodeBlock2Expr,Properties.WrongPropertyKeyValueDelimiter,kotlin.ReplaceToWithInfixForm,null.AndroidLintGradleIdeError,JAVA.SynchronizedMethod,kotlin.UnnecessaryVariable,JAVA.ReturnInsideFinallyBlock,null.AndroidLintUnprotectedSMSBroadcastReceiver,JAVA.PublicConstructorInNonPublicClass,JAVA.InvalidParameterAnnotations,JAVA.RedundantMethodOverride,null.AndroidLintPendingBindings,JAVA.CyclicPackageDependency,JAVA.SimplifiableJUnitAssertion,null.AndroidLintLambdaLast,JAVA.SerialVersionUIDWithWrongSignature,null.AndroidLintSyntheticAccessor,kotlin.ReplaceGetOrSet,JAVA.UnsecureRandomNumberGeneration,JAVA.StringConcatenationInsideStringBufferAppend,null.AndroidLintWrongRegion,JAVA.ExpectedExceptionNeverThrown,JAVA.removal,JAVA.ThreadLocalNotStaticFinal,JAVA.UnnecessaryFinalOnLocalVariableOrParameter,null.AndroidLintAccidentalOctal,JAVA.LambdaCanBeReplacedWithAnonymous,JAVA.UnqualifiedFieldAccess,null.AndroidLintManifestOrder,JAVA.AnonymousInnerClass,JAVA.SwitchStatementWithoutDefaultBranch,JAVA.InfiniteRecursion,null.AndroidLintUnusedQuantity,null.AndroidLintStringEscaping,null.AndroidLintHalfFloat,JAVA.UnnecessaryCallToSuper,JAVA.MalformedXPath,null.AndroidLintParcelCreator,JAVA.InstanceofConcreteClass,JAVA.NonAtomicOperationOnVolatileField,JAVA.StatementWithEmptyBody,null.AndroidLintSSLCertificateSocketFactoryCreateSocket,Groovy.GroovyThreadStopSuspendResume,JAVA.MethodReturnAlwaysConstant,null.AndroidLintProxyPassword,null.AndroidLintOverdraw,null.UnnecessaryModuleDependencyInspection,JAVA.UseOfObsoleteAssert,JAVA.ObjectAllocationInLoop,JAVA.AccessOfSystemProperties,JSON.JsonStandardCompliance,JAVA.RedundantThrows,JAVA.MethodNameSameAsParentName,Groovy.GroovyMapGetCanBeKeyedAccess,JAVA.NonFinalFieldReferenceInEquals,JAVA.JUnitTestNG,Groovy.DifferentKotlinGradleVersion,JAVA.SuiteNotDeclaredStatic,Groovy.GroovyMissingReturnStatement,null.AndroidLintCommitTransaction,null.AndroidLintAlwaysShowAction,Properties.InconsistentResourceBundle,XML.CheckTagEmptyBody,null.AndroidLintWorldWriteableFiles,JAVA.ClassWithOnlyPrivateConstructors,JAVA.CollectionContainsUrl,null.AndroidLintContentDescription,Groovy.SecondUnsafeCall,Groovy.GroovyStaticVariableNamingConvention,JAVA.BreakStatement,JAVA.TryWithIdenticalCatches,null.AndroidLintDuplicateDivider,JAVA.TestNGDataProvider,XML.XmlWrongRootElement,Groovy.GroovyDivideByZero,null.AndroidLintGradleDynamicVersion,kotlin.RedundantWith,null.AndroidLintRegistered,JAVA.AnonymousHasLambdaAlternative,JAVA.ExternalizableClassWithSerializationMethods,JAVA.OverlyComplexClass,null.AndroidLintAnimatorKeep,kotlin.ConstPropertyName,Groovy.GrUnnecessarySemicolon,JAVA.MethodWithMultipleReturnPoints,kotlin.RedundantIf,JAVA.WaitOrAwaitWithoutTimeout,null.AndroidLintIconDensities,Groovy.GroovyMethodParameterCount,JAVA.ConfusingOctalEscapeSequence,Groovy.GroovyUnnecessaryReturn,JAVA.MethodWithMultipleLoops,JAVA.UnnecessaryFullyQualifiedName,JAVA.DoubleNegation,Groovy.GradleKotlinxCoroutinesDeprecation,JAVA.PackageInMultipleModules,HTML.HtmlUnknownTag,JAVA.SynchronizationOnLocalVariableOrMethodParameter,JAVA.CallToThreadRun,JAVA.EmptyMethod,kotlin.KDocMissingDocumentation,JAVA.ConcatenationWithEmptyString,JAVA.UsingRandomNextDoubleForRandomInteger,kotlin.MigrateDiagnosticSuppression,JAVA.UncheckedExceptionClass,JAVA.UnknownLanguage,JAVA.TrivialFunctionalExpressionUsage,JAVA.MismatchedQueryAndUpdateOfStringBuilder,JAVA.unchecked,null.AndroidLintRtlSymmetry,null.AndroidLintExpiredTargetSdkVersion,JAVA.StringEquality,JAVA.InterfaceMethodClashesWithObject,JAVA.unchecked,JAVA.FinalMethod,JAVA.SimpleDateFormatWithoutLocale,JAVA.CallToTimeToString,JAVA.ReplaceInefficientStreamCount,ObjectiveC.JniParameters,JAVA.FieldAccessedSynchronizedAndUnsynchronized,null.AndroidLintImpliedTouchscreenHardware,null.AndroidLintWebViewLayout,JAVA.SingleElementAnnotation,JAVA.UnknownGuard,JAVA.CastToIncompatibleInterface,Properties.IncompleteProperty,null.AndroidLintMergeMarker,JAVA.TransientFieldNotInitialized,null.AndroidLintWrongThreadInterprocedural,JAVA.AnnotationClass,JAVA.PointlessIndexOfComparison,null.AndroidLintWrongConstant,XML.HtmlUnknownAnchorTarget,JAVA.CallToNumericToString,null.AndroidLintMissingQuantity,null.AndroidLintCanvasSize,JAVA.TypeParameterHidesVisibleType,null.AndroidLintUseAlpha2,null.AndroidLintHandlerLeak,JAVA.NonFinalFieldOfException,kotlin.AddVarianceModifier,JAVA.ThrowableNotThrown,JAVA.ListIndexOfReplaceableByContains,JAVA.AtomicFieldUpdaterNotStaticFinal,null.AndroidLintShiftFlags,kotlin.SimplifyAssertNotNull,JAVA.AccessToNonThreadSafeStaticField,JAVA.CachedNumberConstructorCall,JAVA.SerializableDeserializableClassInSecureContext,JAVA.ThisEscapedInObjectConstruction,null.AndroidLintWearableBindListener,null.RedundantSuppression,RegExp.RegExpEmptyAlternationBranch,UAST.ImplicitSubclassInspection,null.AndroidLintGoogleAppIndexingApiWarning,JAVA.RedundantExplicitClose,JAVA.OverloadedVarargsMethod,JAVA.DoubleLiteralMayBeFloatLiteral,null.AndroidLintUntranslatable,Groovy.GroovyIfStatementWithIdenticalBranches,null.AndroidLintUseSparseArrays,JAVA.UnusedReturnValue,Groovy.GroovyNestedConditional,JAVA.JUnit5MalformedRepeated,JAVA.CallToRuntimeExecWithNonConstantString,JAVA.LambdaCanBeMethodCall,JAVA.MethodWithMoreThanThreeNegations,JAVA.MethodDoesntCallSuperMethod,null.AndroidLintAppIndexingService,HTML.HtmlExtraClosingTag,JAVA.ConditionalExpressionWithIdenticalBranches,JAVA.ProblematicVarargsMethodOverride,null.AndroidLintAllowBackup,null.AndroidLintIconColors,null.AndroidLintReferenceType,JAVA.ShiftOutOfRange,null.AndroidLintHardwareIds,JAVA.CyclicClassDependency,null.AndroidLintObjectAnimatorBinding,JAVA.SleepWhileHoldingLock,JAVA.AmbiguousFieldAccess,null.AndroidLintRtlEnabled,JAVA.NumericOverflow,null.AndroidLintAppCompatCustomView,JAVA.QuestionableName,Properties.SuspiciousLocalesLanguages,JAVA.ChannelOpenedButNotSafelyClosed,JAVA.ComparatorMethodParameterNotUsed,JAVA.ClassIndependentOfModule,JAVA.MisorderedAssertEqualsArguments,null.AndroidLintMenuTitle,JAVA.NestedAssignment,JAVA.HardcodedFileSeparator,JAVA.VariablesOfDifferentTypesInDeclaration,JAVA.UnnecessaryInheritDoc,Groovy.GroovyDuplicateSwitchBranch,JAVA.OverlyComplexMethod,Groovy.GroovyEmptyStatementBody,JAVA.CloneReturnsClassType,null.AndroidLintDuplicateUsesFeature,JAVA.UnnecessaryUnaryMinus,JAVA.NewExceptionWithoutArguments,JAVA.OverlyBroadCatchBlock,JAVA.AssignmentToSuperclassField,JAVA.Convert2Lambda,JAVA.ConstantTestNGAssertArgument,JAVA.JUnitRule,JAVA.UnnecessaryCodeBlock,JAVA.UnnecessaryReturnStatement,JAVA.FieldAccessNotGuarded,JAVA.NonThreadSafeLazyInitialization,JAVA.OverlyComplexAnonymousInnerClass,JAVA.StaticVariableMayNotBeInitialized,kotlin.RedundantSamConstructor,JAVA.ComparatorResultComparison,Groovy.ChangeToOperator,Groovy.GroovyOverlyComplexMethod,JAVA.ThreadDeathNotRethrown,JAVA.UnnecessaryUnboxing,null.AndroidLintCommitPrefEdits,JAVA.EqualsWithItself,JAVA.JavaDoc,XML.AndroidDomInspection,null.InjectedReferences,JAVA.EqualsCalledOnEnumConstant,null.AndroidLintNestedWeights,JAVA.WaitCalledOnCondition,JAVA.JavaReflectionInvocation,XML.RequiredAttributes,JAVA.OverridableMethodCallDuringObjectConstruction,null.AndroidLintSelectableText,Groovy.GroovyInArgumentCheck,JAVA.ProtectedField,JAVA.InterfaceMayBeAnnotatedFunctional,null.AndroidLintAppLinksAutoVerifyWarning,kotlin.TestFunctionName,JAVA.InstantiatingObjectToGetClassObject,kotlin.RemoveEmptySecondaryConstructorBody,HTML.HtmlUnknownAttribute,JAVA.ClassNamePrefixedWithPackageName,JAVA.IfCanBeAssertion,JAVA.MethodOverloadsMethodOfSuperclass,JAVA.NewMethodNamingConvention,JAVA.NestedSynchronizedStatement,JAVA.ArrayEquality,JAVA.FloatingPointEquality,JAVA.NonSynchronizedMethodOverridesSynchronizedMethod,Groovy.GroovyResultOfAssignmentUsed,JAVA.MapReplaceableByEnumMap,JAVA.UnnecessaryTemporaryOnConversionFromString,JAVA.AbstractClassWithoutAbstractMethods,JAVA.JavaLangImport,JAVA.UnnecessaryEnumModifier,JAVA.VolatileLongOrDoubleField,kotlin.SimplifyBooleanWithConstants,null.AndroidLintRtlHardcoded,JAVA.StringEqualsCharSequence,JAVA.FinalClass,JAVA.RedundantNoArgConstructor,JAVA.ImplicitArrayToString,null.AndroidLintAppLinksAutoVerifyError,null.AndroidLintHardcodedText,Groovy.GrReassignedInClosureLocalVar,JAVA.BigDecimalEquals,null.AndroidLintPermissionImpliesUnsupportedChromeOsHardware,null.AndroidLintVectorPath,kotlin.ConvertTryFinallyToUseCall,Groovy.GroovyUnusedAssignment,JAVA.LocalVariableNamingConvention,null.AndroidLintWakelockTimeout,null.AndroidLintUseCompoundDrawables,null.AndroidLintUsesMinSdkAttributes,JAVA.NestedMethodCall,kotlin.ReplaceAssertBooleanWithAssertEquality,null.UnresolvedReference,JAVA.SynchroniziationOnLockObject,null.AndroidLintAdapterViewChildren,kotlin.PackageDirectoryMismatch,null.AndroidLintSpUsage,JAVA.MethodRefCanBeReplacedWithLambda,JAVA.FinalMethodInFinalClass,JAVA.PackageVisibleField,JAVA.PointlessArithmeticExpression,kotlin.RemoveEmptyClassBody,null.UnusedLibrary,kotlin.UselessCallOnNotNull,XML.XmlUnusedNamespaceDeclaration,kotlin.ObjectLiteralToLambda,JAVA.AbstractClassWithOnlyOneDirectInheritor,null.AndroidLintWrongCall,kotlin.ClassName,JAVA.SimplifyOptionalCallChains,JAVA.UseOfObsoleteDateTimeApi,null.AndroidLintTextViewEdits,JAVA.LambdaParameterTypeCanBeSpecified,JAVA.NegatedEqualityExpression,JAVA.OverlyLongLambda,Groovy.DifferentStdlibGradleVersion,JAVA.SerializableStoresNonSerializable,JAVA.SerializableClassWithUnconstructableAncestor,JAVA.CollectionWithoutInitialCapacity,null.AndroidLintLongLogTag,JAVA.NonFinalStaticVariableUsedInClassInitialization,JAVA.MultiCatchCanBeSplit,JAVA.NonStaticInnerClassInSecureContext,null.AndroidLintLogConditional,JAVA.JniMissingFunction,JAVA.TransientFieldInNonSerializableClass,JAVA.SuspiciousIndentAfterControlStatement,null.AndroidLintFullBackupContent,JAVA.Contract,JAVA.SizeReplaceableByIsEmpty,JAVA.SingleCharacterStringConcatenation,JAVA.UseOfJDBCDriverClass,null.AndroidLintUnsafeDynamicallyLoadedCode,JAVA.JavadocHtmlLint,JAVA.Java8MapForEach,JAVA.NonSerializableFieldInSerializableClass,null.AndroidLintAppLinkUrlError,JAVA.CallToNotifyInsteadOfNotifyAll,JAVA.BigDecimalMethodWithoutRoundingCalled,null.AndroidLintAuthLeak,null.AndroidLintMissingVersion,JAVA.AssignmentOrReturnOfFieldWithMutableType,JAVA.ChainedMethodCall,Groovy.GroovyResultOfObjectAllocationIgnored,JAVA.ArrayEquals,JAVA.Java9ReflectionClassVisibility,JAVA.override,JAVA.NonPublicClone,JAVA.VolatileArrayField,Groovy.GroovyDoubleCheckedLocking,kotlin.DestructuringWrongName,JAVA.LambdaBodyCanBeCodeBlock,JAVA.IteratorHasNextCallsIteratorNext,kotlin.NullableBooleanElvis,null.AndroidLintShortAlarm,null.AndroidLintSSLCertificateSocketFactoryGetInsecure,JAVA.WrongPackageStatement,null.AndroidLintResourceType,JAVA.JavaReflectionMemberAccess,null.AndroidLintDeprecatedProvider,JAVA.ConditionalCanBeOptional,JAVA.AssertEqualsMayBeAssertSame,JAVA.PointlessBooleanExpression,kotlin.UseExpressionBody,JAVA.UnnecessaryContinue,JAVA.ApiName,Groovy.GroovyConstantConditional,JAVA.SynchronizationOnGetClass,JAVA.IncompatibleBitwiseMaskOperation,JAVA.UnnecessaryBreak,JAVA.MismatchedReadAndWriteOfArray,null.AndroidLintUseValueOf,null.AndroidLintInconsistentArrays,JAVA.PointlessNullCheck,JAVA.JDBCPrepareStatementWithNonConstantString,JAVA.ValueOfIncrementOrDecrementUsed,null.AndroidLintMissingPrefix,kotlin.RemoveSetterParameterType,JAVA.ZeroLengthArrayAllocation,JAVA.IfStatementWithIdenticalBranches,JAVA.SwitchStatementDensity,JAVA.MarkerInterface,null.AndroidLintMissingBackupPin,kotlin.ReplaceToStringWithStringTemplate,null.AndroidLintTranslucentOrientation,null.AndroidLintTypographyOther,null.AndroidLintDisableBaselineAlignment,RegExp.RegExpOctalEscape,Groovy.GrUnnecessaryDefModifier,JAVA.ExternalizableWithoutPublicNoArgConstructor,JAVA.LanguageMismatch,null.AndroidLintWifiManagerLeak,null.LoopToCallChain,null.AndroidLintNoHardKeywords,Groovy.DelegatesTo,Groovy.GroovyAssignmentCanBeOperatorAssignment,null.AndroidLintDuplicatePlatformClasses,Groovy.GroovyWaitWhileNotSynchronized,JAVA.ThrowInsideCatchBlockWhichIgnoresCaughtException,Groovy.GroovyTrivialIf,JAVA.AssignmentReplaceableWithOperatorAssignment,JAVA.SuspiciousGetterSetter,Groovy.GroovyNestedSwitch,JAVA.ModuleWithTooFewClasses,JAVA.IdempotentLoopBody,null.AndroidLintStringFormatMatches,JAVA.UnresolvedPropertyKey,null.AndroidLintSwitchIntDef,JAVA.Constructor,JAVA.BooleanMethodIsAlwaysInverted,null.AndroidLintUsingHttp,JAVA.DoubleBraceInitialization,JAVA.ConstantMathCall,JAVA.SuspiciousSystemArraycopy,Groovy.GrUnnecessaryPublicModifier,JAVA.ModuleWithTooManyClasses,null.AndroidLintGradleOverrides,JAVA.WaitNotifyWhileNotSynced,JAVA.MultiplyOrDivideByPowerOfTwo,kotlin.SelfAssignment,JAVA.NonPrivateFieldAccessedInSynchronizedContext,null.InconsistentLanguageLevel,Groovy.GroovyOverlyLongMethod,JAVA.BooleanExpressionMayBeConditional,JAVA.LimitedScopeInnerClass,null.AndroidLintImpliedQuantity,null.AndroidLintTypographyEllipsis,kotlin.RemoveForLoopIndices,null.AndroidLintOldTargetApi,null.AndroidLintGradleCompatible,JAVA.NonReproducibleMathCall,JAVA.NestedSwitchStatement,JAVA.AssertMessageNotString,JAVA.PublicConstructor,kotlin.JavaCollectionsStaticMethod,JAVA.BeforeOrAfterWithIncorrectSignature,JAVA.JavaLangInvokeHandleSignature,null.AndroidLintSupportAnnotationUsage,Groovy.GroovyGStringKey,JAVA.FieldNotUsedInToString,JAVA.JUnit5MalformedParameterized,null.AndroidLintExpiringTargetSdkVersion,JAVA.RedundantCollectionOperation,null.AndroidLintWearStandaloneAppFlag,null.AndroidLintUniqueConstants,Groovy.GroovyConditionalWithIdenticalBranches,JAVA.MethodWithTooManyParameters,JAVA.ClassWithTooManyDependents,JAVA.BooleanParameter,Groovy.GroovyInstanceMethodNamingConvention,Groovy.GroovyPublicFieldAccessedInSynchronizedContext,null.AndroidLintProguard,Groovy.GroovyIfStatementWithTooManyBranches,JAVA.StringConcatenationInLoop,JAVA.SyntheticAccessorCall,Groovy.GroovyStaticMethodNamingConvention,kotlin.SimplifyNegatedBinaryExpression,JAVA.ArrayLengthInLoopCondition,JAVA.SynchronizeOnNonFinalField,JAVA.DuplicatedDataProviderNames,JAVA.PublicStaticCollectionField,JAVA.ObjectEqualsNull,JAVA.OverlyLongMethod,JAVA.UnnecessarilyQualifiedInnerClassAccess,JAVA.JUnitTestMethodWithNoAssertions,null.AndroidLintStopShip,JAVA.serial,JAVA.StaticCollection,JAVA.CallToSystemExit,Groovy.GroovyOverlyComplexBooleanExpression,JAVA.NotifyWithoutCorrespondingWait,kotlin.ConvertReferenceToLambda,null.AndroidLintTextFields,JAVA.UnnecessaryDefault" collectionTime="1541063032371" />
+      <project id="home" values="JAVA.Convert2streamapi,null.AndroidLintProguardSplit,JAVA.ClassMayBeInterface,JAVA.StringBufferToStringInConcatenation,Groovy.GroovyInstanceMethodNamingConvention,JAVA.LocalVariableUsedAndDeclaredInDifferentSwitchBranches,JAVA.ResourceParameter,JAVA.PrimitiveArrayArgumentToVarargsMethod,null.AndroidLintOverdraw,null.AndroidLintAppIndexingService,Groovy.GroovyMapGetCanBeKeyedAccess,kotlin.RedundantExplicitType,kotlin.SimplifyNegatedBinaryExpression,JAVA.AmbiguousMethodCall,JAVA.ClassWithoutLogger,JAVA.UnnecessaryEnumModifier,JAVA.serial,XML.XmlUnboundNsPrefix,Properties.DuplicatePropertyInspection,Groovy.NewGroovyClassNamingConvention,JAVA.ProblematicVarargsMethodOverride,JAVA.NonSerializableObjectPassedToObjectStream,RegExp.RegExpAnonymousGroup,kotlin.RemoveRedundantCallsOfConversionMethods,kotlin.ReplaceStringFormatWithLiteral,null.AndroidLintLintBaseline,JAVA.StringBufferMayBeStringBuilder,JAVA.unchecked,Groovy.GroovyAccessToStaticFieldLockedOnInstance,XML.AndroidElementNotAllowed,JAVA.LockAcquiredButNotSafelyReleased,JAVA.StaticImport,kotlin.PackageName,JAVA.JUnitRule,null.AndroidLintAutofill,kotlin.MemberVisibilityCanBePrivate,JAVA.AssignmentToSuperclassField,null.AndroidLintMergeRootFrame,JAVA.OverlyStrongTypeCast,kotlin.RedundantWith,kotlin.JavaCollectionsStaticMethodOnImmutableList,Groovy.GroovyMultipleReturnPointsPerMethod,JAVA.StreamToLoop,Groovy.GroovyNegatedConditional,JAVA.RecordStoreOpenedButNotSafelyClosed,null.AndroidLintOldTargetApi,JAVA.DoubleLiteralMayBeFloatLiteral,JAVA.ConnectionOpenedButNotSafelyClosed,null.AndroidLintGradleDeprecated,kotlin.ImplicitNullableNothingType,Groovy.GroovyUncheckedAssignmentOfMemberOfRawType,null.AndroidLintParcelClassLoader,JAVA.override,RegExp.RegExpUnexpectedAnchor,Groovy.GrPackage,JAVA.CyclicClassDependency,JAVA.PackageInfoWithoutPackage,JAVA.OverloadedMethodsWithSameNumberOfParameters,kotlin.KDocMissingDocumentation,kotlin.WrapUnaryOperator,JAVA.OverlyComplexMethod,JAVA.UseBulkOperation,null.AndroidLintMissingSuperCall,JAVA.LocalVariableNamingConvention,JAVA.MagicCharacter,JAVA.EmptyTryBlock,Groovy.GrFinalVariableAccess,JAVA.EqualsWhichDoesntCheckParameterClass,kotlin.CanBeVal,null.AndroidLintAddJavascriptInterface,JAVA.NonPublicClone,JAVA.StaticCollection,null.AndroidLintPropertyEscape,null.AndroidLintPackageManagerGetSignatures,null.AndroidLintMissingApplicationIcon,JAVA.SuspiciousLiteralUnderscore,null.AndroidLintLabelFor,JAVA.SuspiciousIndentAfterControlStatement,Groovy.MultipleRepositoryUrls,null.AndroidLintInvalidResourceFolder,JAVA.MessageMissingOnJUnitAssertion,JAVA.StaticInheritance,ObjectiveC.JniParameters,JAVA.ProtectedField,JAVA.SimplifiedTestNGAssertion,JAVA.FinalizeCalledExplicitly,JAVA.ThrowableNotThrown,JAVA.ProtectedMemberInFinalClass,JAVA.Annotation,JAVA.JDBCExecuteWithNonConstantString,JAVA.ConditionalExpression,null.AndroidLintResourceCycle,JAVA.ClassWithTooManyTransitiveDependents,JAVA.SerialVersionUIDWithWrongSignature,Groovy.SecondUnsafeCall,null.LoopToCallChain,JAVA.LocalCanBeFinal,JAVA.PublicInnerClass,JAVA.CollectionContainsUrl,JAVA.AbstractMethodOverridesConcreteMethod,JAVA.UnnecessaryLabelOnContinueStatement,JAVA.OverwrittenKey,Groovy.GroovyNotifyWhileNotSynchronized,kotlin.ReplaceGetOrSet,null.AndroidLintExportedContentProvider,JAVA.ReplaceAllDot,kotlin.RedundantSuspendModifier,null.AndroidLintNetworkSecurityConfig,Groovy.GroovyResultOfObjectAllocationIgnored,null.AndroidLintManifestResource,JAVA.RedundantExplicitVariableType,null.AndroidLintInlinedApi,JAVA.ClassWithoutConstructor,JAVA.divzero,null.AndroidLintWrongConstant,JAVA.SingleCharacterStringConcatenation,JAVA.AssertMessageNotString,Groovy.GrDeprecatedAPIUsage,JAVA.ArraysAsListWithZeroOrOneArgument,JAVA.UnnecessaryBoxing,JAVA.SimplifiableJUnitAssertion,JAVA.HibernateResourceOpenedButNotSafelyClosed,kotlin.KotlinUnusedImport,null.AndroidLintGradleIdeError,JAVA.MethodRefCanBeReplacedWithLambda,JAVA.StringEqualsEmptyString,JAVA.Constructor,JAVA.RedundantComparatorComparing,kotlin.TypeParameterFindViewById,JAVA.UnnecessaryTemporaryOnConversionFromString,JAVA.CopyConstructorMissesField,JAVA.IncompatibleBitwiseMaskOperation,JAVA.SimplifiableBooleanExpression,JAVA.AnonymousInnerClassMayBeStatic,Groovy.GroovyMethodWithMoreThanThreeNegations,null.AndroidLintExifInterface,JAVA.ConstantForZeroLengthArrayAllocation,null.AndroidLintIconLocation,null.AndroidLintNotificationIconCompatibility,JAVA.ReturnOfInnerClass,null.AndroidLintWebViewLayout,JAVA.MultipleExceptionsDeclaredOnTestMethod,null.AndroidLintJobSchedulerService,JAVA.ClassOnlyUsedInOnePackage,XML.XmlUnusedNamespaceDeclaration,JAVA.NestedConditionalExpression,Groovy.GroovyDuplicateSwitchBranch,JAVA.CollectionsFieldAccessReplaceableByMethodCall,JAVA.CastToConcreteClass,JAVA.WaitNotifyWhileNotSynced,JAVA.RedundantArrayCreation,Groovy.GroovyThreadStopSuspendResume,null.AndroidLintInvalidWearFeatureAttribute,null.NonAsciiCharacters,Groovy.GrUnnecessaryAlias,HTML.HtmlUnknownAttribute,JAVA.LambdaParameterNamingConvention,null.AndroidLintUntranslatable,JAVA.CallToStringConcatCanBeReplacedByOperator,JAVA.NonFinalGuard,null.AndroidLintInvalidVectorPath,null.AndroidLintSmallSp,Groovy.GroovyInfiniteLoopStatement,null.AndroidLintAllCaps,JAVA.StaticMethodReferencedViaSubclass,Groovy.GroovyGStringKey,JAVA.removal,JAVA.JavaLangInvokeHandleSignature,null.AndroidLintTextViewEdits,JAVA.NakedNotify,JAVA.RedundantStringFormatCall,JAVA.ReplaceInefficientStreamCount,JAVA.Anonymous2MethodRef,JAVA.LambdaCanBeReplacedWithAnonymous,JAVA.ClassExplicitlyExtendsObject,null.AndroidLintDeviceAdmin,JAVA.ClassNameSameAsAncestorName,kotlin.MoveSuspiciousCallableReferenceIntoParentheses,kotlin.ClassName,JAVA.UseOfProcessBuilder,JAVA.ShiftOutOfRange,JAVA.AssertEqualsBetweenInconvertibleTypesTestNG,JAVA.UseOfPropertiesAsHashtable,JAVA.ConstructorNotProtectedInAbstractClass,JAVA.ThrowsRuntimeException,JAVA.CheckForOutOfMemoryOnLargeArrayAllocation,kotlin.ConvertToStringTemplate,JAVA.ControlFlowStatementWithoutBraces,null.AndroidLintShiftFlags,null.AndroidLintAppCompatCustomView,null.AndroidLintExportedReceiver,JAVA.EnumAsIdentifier,null.AndroidLintTestAppLink,JAVA.ManualArrayCopy,JAVA.CallToDateToString,JAVA.CallToNativeMethodWhileLocked,null.AndroidLintHighAppVersionCode,null.AndroidLintRestrictedApi,JAVA.ModuleWithTooManyClasses,JAVA.EqualsHashCodeCalledOnUrl,JAVA.PropertyValueSetToItself,null.AndroidLintOnClick,JAVA.ForLoopReplaceableByForEach,JAVA.BadOddness,JAVA.ExpectedExceptionNeverThrownTestNG,null.AndroidLintObjectAnimatorBinding,JAVA.EmptyMethod,JAVA.MalformedSetUpTearDown,null.AndroidLintStringShouldBeInt,JAVA.ReadResolveAndWriteReplaceProtected,null.AndroidLintAlwaysShowAction,JAVA.NegatedConditionalExpression,JAVA.SuspiciousMethodCalls,JAVA.SerializableNonStaticInnerClassWithoutSerialVersionUID,JAVA.IteratorNextCanNotThrowNoSuchElementException,null.AndroidLintFontValidationError,null.AndroidLintMissingTranslation,kotlin.UnsafeCastFromDynamic,Groovy.GroovyStaticVariableNamingConvention,JAVA.FloatingPointEquality,JAVA.StaticVariableOfConcreteClass,JAVA.ListIndexOfReplaceableByContains,null.AndroidLintUnknownIdInLayout,null.AndroidLintRelativeOverlap,JAVA.UtilityClassCanBeEnum,null.AndroidLintCheckResult,Groovy.GroovySystemRunFinalizersOnExit,null.AndroidLintTypographyDashes,Properties.InconsistentResourceBundle,JAVA.ArrayHashCode,XML.XmlWrongFileType,JAVA.OverlyNestedMethod,JAVA.FinalMethodInFinalClass,JAVA.StaticNonFinalField,JAVA.TypeParameterExtendsFinalClass,null.AndroidLintProguard,JAVA.PackageVisibleInnerClass,kotlin.DestructuringWrongName,Groovy.GroovyRangeTypeCheck,JAVA.InnerClassOfInterface,null.AndroidLintGoogleAppIndexingApiWarning,null.AndroidLintInconsistentArrays,JAVA.ReuseOfLocalVariable,XML.RequiredAttributes,JAVA.UnnecessarySemicolon,kotlin.ConvertTwoComparisonsToRangeCheck,JAVA.CanBeFinal,null.AndroidLintAppCompatMethod,JAVA.ConstantOnRightSideOfComparison,XML.XmlInvalidId,Groovy.GroovyAssignmentCanBeOperatorAssignment,JAVA.CodeBlock2Expr,null.AndroidLintFloatMath,JAVA.UnnecessaryCallToStringValueOf,JAVA.FuseStreamOperations,null.AndroidLintLongLogTag,JAVA.ExtendsThrowable,JAVA.AnonymousClassVariableHidesContainingMethodVariable,RegExp.RegExpSingleCharAlternation,Groovy.GroovyParameterNamingConvention,JAVA.MarkerInterface,null.AndroidLintExtraText,Groovy.GroovyNestedConditional,Groovy.GroovyConstantNamingConvention,JAVA.UnclearExpression,null.AndroidLintUsesMinSdkAttributes,JAVA.IteratorHasNextCallsIteratorNext,JAVA.NamedResource,JAVA.UseOfObsoleteCollectionType,JAVA.SingleClassImport,null.AndroidLintInvalidPermission,JAVA.UnnecessaryCallToSuper,JAVA.CachedNumberConstructorCall,JAVA.ClassOnlyUsedInOneModule,JAVA.SuspiciousGetterSetter,JAVA.UseOfIndexZeroInJDBCResultSet,JAVA.UnconditionalWait,JAVA.AutoUnboxing,JAVA.TooBroadScope,JAVA.IntegerDivisionInFloatingPointContext,RegExp.RegExpOctalEscape,JAVA.ObjectToString,JAVA.WhileLoopSpinsOnField,JAVA.MethodWithMoreThanThreeNegations,null.AndroidLintTooManyViews,null.AndroidLintApplySharedPref,kotlin.RedundantVisibilityModifier,JAVA.Java9UndeclaredServiceUsage,null.AndroidLintWifiManagerLeak,Groovy.GroovyContinueOrBreakFromFinallyBlock,JAVA.CloneReturnsClassType,kotlin.RemoveExplicitTypeArguments,JAVA.ReplaceNullCheck,Groovy.GroovyWaitWhileNotSynchronized,JAVA.groupsTestNG,kotlin.ReplaceCallWithBinaryOperator,null.AndroidLintButtonCase,Properties.UnusedMessageFormatParameter,JAVA.NestedAssignment,null.AndroidLintWrongThread,null.AndroidLintUnpackedNativeCode,JAVA.ClassWithOnlyPrivateConstructors,JAVA.CallToThreadStopSuspendOrResumeManager,JAVA.JUnit5MalformedRepeated,null.AndroidLintAuthLeak,kotlin.NestedLambdaShadowedImplicitParameter,JAVA.StringConcatenationMissingWhitespace,JAVA.EqualsAndHashcode,null.InconsistentLineSeparators,Groovy.GroovyVariableCanBeFinal,JAVA.CallToSimpleSetterFromWithinClass,JAVA.RedundantTypeArguments,JAVA.MethodNameSameAsClassName,JAVA.ReflectionForUnavailableAnnotation,JAVA.DataProviderReturnType,JAVA.ListenerMayUseAdapter,JAVA.ConcatenationWithEmptyString,kotlin.SimplifyBooleanWithConstants,Groovy.GroovyMissingReturnStatement,null.AndroidLintReferenceType,null.AndroidLintWrongFolder,JAVA.EmptyFinallyBlock,JAVA.IOResourceOpenedButNotSafelyClosed,JAVA.UnusedReturnValue,JAVA.SuspiciousNameCombination,JAVA.Convert2Lambda,JAVA.BusyWait,null.AndroidLintAnimatorKeep,null.AndroidLintViewTag,JAVA.DoubleNegation,kotlin.RedundantReturnLabel,JAVA.FunctionalExpressionCanBeFolded,null.AndroidLintParcelCreator,JAVA.Java8ArraySetAll,JAVA.NewMethodNamingConvention,JAVA.LoadLibraryWithNonConstantString,kotlin.RecursiveEqualsCall,Groovy.GroovyConditional,null.AndroidLintNotSibling,JAVA.UnconstructableJUnitTestCase,JAVA.StringBufferReplaceableByString,Groovy.GroovyResultOfAssignmentUsed,JAVA.AbstractClassNeverImplemented,JAVA.VolatileArrayField,JAVA.MalformedRegex,kotlin.ReplaceArrayEqualityOpWithArraysEquals,JAVA.FinalPrivateMethod,JAVA.NonFinalFieldReferencedInHashCode,JAVA.CallToRuntimeExecWithNonConstantString,JAVA.NegativelyNamedBooleanVariable,Groovy.GroovySynchronizationOnVariableInitializedWithLiteral,null.AndroidLintMissingPermission,JAVA.InstanceVariableOfConcreteClass,JAVA.ApiParameter,JAVA.ImplicitDefaultCharsetUsage,null.IllegalIdentifier,JAVA.CallToSystemSetSecurityManager,JAVA.ClassUnconnectedToPackage,JAVA.SimplifyCollector,null.AndroidLintInOrMmUsage,null.AndroidLintMergeMarker,JAVA.InvalidParameterAnnotations,null.AndroidLintValidRestrictions,Groovy.GroovyAssignmentToMethodParameter,JAVA.SubtractionInCompareTo,JAVA.ParameterTypePreventsOverriding,null.AndroidLintConstantLocale,JAVA.ChainedEqualityComparisons,JAVA.NonPrivateSerializationMethod,JAVA.ComparatorResultComparison,JAVA.CovariantEquals,JAVA.NonBooleanMethodNameMayNotStartWithQuestion,kotlin.RedundantModalityModifier,kotlin.RemoveRedundantSpreadOperator,JAVA.NonAtomicOperationOnVolatileField,JAVA.fallthrough,null.AndroidLintSelectableText,null.AndroidLintScrollViewSize,JAVA.SynchronizedMethod,JAVA.FinalStaticMethod,JAVA.BeforeOrAfterWithIncorrectSignature,JAVA.Java8MapApi,JAVA.KeySetIterationMayUseEntrySet,JAVA.AssignmentToForLoopParameter,JAVA.MultipleTopLevelClassesInFile,JAVA.ChannelOpenedButNotSafelyClosed,kotlin.JavaCollectionsStaticMethod,null.AndroidLintDevModeObsolete,null.AndroidLintDuplicateActivity,Groovy.GroovyConstantIfStatement,JAVA.DialogTitleCapitalization,null.AndroidLintSdCardPath,JAVA.ConstantValueVariableUse,null.AndroidLintStringFormatCount,JAVA.JUnitTestMethodInProductSource,JAVA.ConstantConditionalExpression,null.AndroidLintInconsistentLayout,kotlin.UselessCallOnNotNull,JAVA.OverlyBroadCatchBlock,null.AndroidLintOverrideAbstract,JAVA.RedundantStreamOptionalCall,JAVA.UnnecessaryInitCause,JAVA.EqualsReplaceableByObjectsCall,null.AndroidLintSecureRandom,null.AndroidLintDuplicateIncludedIds,JAVA.StringConcatenationArgumentToLogCall,JAVA.ValueOfIncrementOrDecrementUsed,kotlin.RedundantObjectTypeCheck,JAVA.BigDecimalMethodWithoutRoundingCalled,JAVA.NestedMethodCall,JAVA.IgnoredJUnitTest,JAVA.RestSignature,JAVA.ConstantDeclaredInAbstractClass,JAVA.CheckedExceptionClass,JAVA.UnnecessaryUnboxing,null.AndroidLintWorldWriteableFiles,null.AndroidLintAssert,null.AndroidLintMissingMediaBrowserServiceIntentFilter,null.AndroidLintMissingTvBanner,kotlin.ConstPropertyName,JAVA.DoubleBraceInitialization,JAVA.unused,JAVA.InfiniteRecursion,JAVA.UnnecessaryContinue,null.AndroidLintByteOrderMark,JAVA.JniMissingFunction,JAVA.DuplicateCondition,JAVA.LambdaUnfriendlyMethodOverload,JAVA.SerialPersistentFieldsWithWrongSignature,JAVA.AwaitWithoutCorrespondingSignal,JAVA.WaitWhileHoldingTwoLocks,null.AndroidLintImpliedQuantity,JAVA.JUnitTestCaseInProductSource,JAVA.InstantiationOfUtilityClass,JAVA.ThrowablePrintedToSystemOut,null.AndroidLintMangledCRLF,JAVA.ParameterizedParametersStaticCollection,null.AndroidLintWebpUnsupported,null.AndroidLintHalfFloat,JAVA.MethodOnlyUsedFromInnerClass,JAVA.ArrayCreationWithoutNewKeyword,JAVA.LoggerInitializedWithForeignClass,JAVA.FieldHasSetterButNoGetter,JAVA.NonFinalFieldOfException,Groovy.GroovyConditionalCanBeElvis,JAVA.LoopConditionNotUpdatedInsideLoop,JAVA.NonThreadSafeLazyInitialization,null.AndroidLintStringEscaping,JAVA.ClassWithTooManyFields,JAVA.SyntheticAccessorCall,JAVA.SwitchStatement,null.AndroidLintUseAlpha2,JAVA.CloneableClassInSecureContext,JAVA.InstanceofThis,JAVA.PackageWithTooFewClasses,JAVA.StatementWithEmptyBody,JAVA.JDBCPrepareStatementWithNonConstantString,null.AndroidLintCommitPrefEdits,Groovy.GroovyMapPutCanBeKeyedAccess,null.AndroidLintUnsupportedTvHardware,kotlin.KotlinDeprecation,JAVA.MethodReturnOfConcreteClass,JAVA.CallToNumericToString,kotlin.RemoveForLoopIndices,null.AndroidLintNotInterpolated,kotlin.SortModifiers,kotlin.RedundantIf,JAVA.NonFinalStaticVariableUsedInClassInitialization,JAVA.RedundantCollectionOperation,JAVA.OptionalContainsCollection,Groovy.GroovyReturnFromClosureCanBeImplicit,JAVA.LanguageMismatch,JAVA.ConditionalBreakInInfiniteLoop,JAVA.deprecation,null.AndroidLintIconMixedNinePatch,null.AndroidLintViewHolder,JAVA.FinalMethod,kotlin.ObjectLiteralToLambda,null.AndroidLintObsoleteSdkInt,null.AndroidLintAppLinksAutoVerifyWarning,JAVA.RedundantCast,JAVA.TailRecursion,JAVA.NonShortCircuitBooleanExpression,JAVA.ClassNameDiffersFromFileName,JAVA.UnnecessaryFullyQualifiedName,JAVA.AccessToNonThreadSafeStaticField,kotlin.ReplaceSizeCheckWithIsNotEmpty,null.AndroidLintGradleOverrides,kotlin.KotlinDoubleNegation,null.AndroidLintUnknownNullness,kotlin.RedundantAsync,JAVA.MapReplaceableByEnumMap,JAVA.CharUsedInArithmeticContext,JAVA.ParameterCanBeLocal,kotlin.ForEachParameterNotUsed,null.AndroidLintUseSparseArrays,JAVA.ConstructorWithTooManyParameters,null.AndroidLintLocaleFolder,JAVA.UnnecessaryQualifierForThis,Groovy.GrUnnecessarySemicolon,kotlin.UsePropertyAccessSyntax,null.AndroidLintRecycle,null.AndroidLintIncludeLayoutParam,null.AndroidLintAppLinkUrlError,JAVA.JUnit5AssertionsConverter,JAVA.StringEqualsCharSequence,null.UnresolvedReference,JAVA.IdempotentLoopBody,Groovy.GroovyUntypedAccess,null.AndroidLintMissingLeanbackSupport,RoomSql.AndroidRoomQuestionMarkBindParameter,kotlin.ReplaceRangeToWithUntil,JAVA.OverridableMethodCallDuringObjectConstruction,JAVA.MethodNameSameAsParentName,JAVA.AnonymousInnerClassWithTooManyMethods,kotlin.FoldInitializerAndIfToElvis,HTML.HtmlUnknownBooleanAttribute,null.AndroidLintAllowAllHostnameVerifier,null.AndroidLintEllipsizeMaxLines,null.AndroidLintGradleGetter,kotlin.TestFunctionName,JAVA.JUnit4AnnotatedMethodInJUnit3TestCase,null.AndroidLintKotlinPropertyAccess,JAVA.RedundantStringConstructorCall,JAVA.OptionalAssignedToNull,null.AndroidLintGradlePath,JAVA.InnerClassReferencedViaSubclass,JAVA.JDBCResourceOpenedButNotSafelyClosed,JAVA.ForeachStatement,JAVA.UnqualifiedStaticUsage,JAVA.NullThrown,Groovy.ClashingGetters,null.AndroidLintMissingIntentFilterForMediaSearch,null.AndroidLintEnqueueWork,null.AndroidLintAppLinksAutoVerifyError,JAVA.IndexOfReplaceableByContains,kotlin.CascadeIf,JAVA.ObjectAllocationInLoop,JAVA.InstantiatingAThreadWithDefaultRunMethod,JAVA.MagicConstant,Groovy.DifferentKotlinGradleVersion,JAVA.HtmlTagCanBeJavadocTag,JAVA.Convert2Diamond,JAVA.PackageVisibleField,JAVA.NonConstantLogger,null.AndroidLintGifUsage,null.AndroidLintUnprotectedSMSBroadcastReceiver,null.AndroidLintValidFragment,null.AndroidLintRtlCompat,kotlin.FunctionName,JAVA.SuppressionAnnotation,JAVA.JUnit5MalformedParameterized,JAVA.ConstantJUnitAssertArgument,kotlin.SimplifyAssertNotNull,null.AndroidLintRange,JAVA.ConstantDeclaredInInterface,JAVA.ThrowFromFinallyBlock,null.AndroidLintUselessLeaf,JAVA.EnumSwitchStatementWhichMissesCases,null.AndroidLintUseOfBundledGooglePlayServices,JAVA.MisorderedAssertEqualsArguments,JAVA.SingleElementAnnotation,JAVA.AccessStaticViaInstance,null.AndroidLintManifestOrder,JAVA.CallToSuspiciousStringMethod,JAVA.ConstantExpression,JAVA.ThreadLocalNotStaticFinal,null.AndroidLintExtraTranslation,JAVA.CollectionAddAllCanBeReplacedWithConstructor,null.AndroidLintDeprecatedProvider,JAVA.HardcodedFileSeparator,null.AndroidLintTypos,null.AndroidLintWearableBindListener,XML.XmlDefaultAttributeValue,kotlin.NullChecksToSafeCall,null.AndroidLintNoHardKeywords,JAVA.MalformedXPath,null.AndroidLintMissingConstraints,JAVA.FieldAccessNotGuarded,JAVA.dependsOnMethodTestNG,JAVA.CallToPrintStackTrace,JAVA.CallToSystemRunFinalizersOnExit,null.AndroidLintMinSdkTooLow,kotlin.ConstantConditionIf,JAVA.UnnecessaryBreak,JAVA.IfStatementWithIdenticalBranches,JAVA.ArrayEquality,JAVA.EnumerationCanBeIteration,null.AndroidLintTypographyFractions,JAVA.ExcessiveLambdaUsage,JAVA.SimplifiableEqualsExpression,JAVA.PublicConstructorInNonPublicClass,JAVA.StaticVariableUsedBeforeInitialization,kotlin.ObjectPropertyName,JAVA.ObjectEqualsNull,null.AndroidLintInvalidAnalyticsName,Groovy.GroovyNegatedIf,JAVA.UnnecessaryInheritDoc,RegExp.RegExpEscapedMetaCharacter,kotlin.RemoveRedundantBackticks,JAVA.IfStatementWithTooManyBranches,JAVA.UnnecessarilyQualifiedStaticUsage,null.AndroidLintUnsafeProtectedBroadcastReceiver,kotlin.DeprecatedCallableAddReplaceWith,null.AndroidLintTextFields,Groovy.GrMethodMayBeStatic,JAVA.TryStatementWithMultipleResources,JAVA.UseOfAWTPeerClass,null.AndroidLintResAuto,JAVA.UnnecessaryThis,null.AndroidLintDuplicateIds,null.AndroidLintPxUsage,JAVA.MagicNumber,null.AndroidLintIconDuplicatesConfig,Groovy.GroovySillyAssignment,kotlin.ConvertCallChainIntoSequence,null.AndroidLintLogConditional,null.AndroidLintUnusedIds,XML.AndroidUnknownAttribute,null.AndroidLintGradleCompatible,JAVA.LoggingConditionDisagreesWithLogStatement,UAST.ImplicitSubclassInspection,JAVA.ConfusingMainMethod,JAVA.AssignmentToMethodParameter,JAVA.DiamondCanBeReplacedWithExplicitTypeArguments,JAVA.FinalClass,JAVA.SimplifyStreamApiCallChains,JAVA.SynchronizationOnLocalVariableOrMethodParameter,kotlin.SimplifyWhenWithBooleanConstantCondition,JAVA.AssertAsIdentifier,null.AndroidLintInefficientWeight,JAVA.SerializableClassWithUnconstructableAncestor,JAVA.NumberEquality,null.AndroidLintVectorDrawableCompat,JAVA.BoxingBoxedValue,JAVA.InstanceGuardedByStatic,JAVA.FakeJvmFieldConstant,JAVA.Convert2MethodRef,JAVA.SimpleDateFormatWithoutLocale,JAVA.MessageMissingOnTestNGAssertion,null.AndroidLintRegistered,JAVA.SuspiciousArrayMethodCall,JAVA.RedundantLambdaParameterType,JAVA.InterfaceWithOnlyOneDirectInheritor,JAVA.UnaryPlus,null.AndroidLintNestedScrolling,JAVA.FieldMayBeFinal,JAVA.MultiCatchCanBeSplit,kotlin.UnusedLambdaExpressionBody,Groovy.GroovyWaitCallNotInLoop,JAVA.AssertionCanBeIf,Groovy.GroovyInfiniteRecursion,JAVA.ParameterHidesMemberVariable,JAVA.FinalizeNotProtected,JAVA.ReturnOfThis,null.AndroidLintBadHostnameVerifier,JAVA.DeprecatedIsStillUsed,JAVA.ArrayEquals,kotlin.SimplifiableCallChain,JAVA.ObjectEqualsCanBeEquality,JAVA.BigDecimalLegacyMethod,null.AndroidLintRiskyLibrary,null.AndroidLintDrawAllocation,JAVA.JUnit5Platform,RegExp.RegExpRepeatedSpace,JAVA.MethodDoesntCallSuperMethod,JAVA.InstanceVariableMayNotBeInitialized,null.AndroidLintMissingId,JAVA.ImplicitNumericConversion,RoomSql.AndroidUnresolvedRoomSqlReference,XML.CheckEmptyScriptTag,null.AndroidLintSetWorldWritable,JAVA.CallToSystemGC,JAVA.RedundantFieldInitialization,JAVA.Java9RedundantRequiresStatement,kotlin.SuspiciousAsDynamic,null.AndroidLintNewApi,JAVA.SerializableDeserializableClassInSecureContext,kotlin.MoveLambdaOutsideParentheses,JAVA.SuspiciousSystemArraycopy,JAVA.WrongPackageStatement,JAVA.MethodMayBeSynchronized,Groovy.GroovyFallthrough,kotlin.SelfAssignment,JAVA.Java9CollectionFactory,kotlin.DeferredResultUnused,kotlin.EqualsOrHashCode,null.AndroidLintSSLCertificateSocketFactoryCreateSocket,JAVA.Singleton,JAVA.SwitchStatementWithTooFewBranches,JAVA.NumericCastThatLosesPrecision,null.AndroidLintPrivateResource,null.AndroidLintSyntheticAccessor,JAVA.MoveFieldAssignmentToInitializer,null.AndroidLintRtlSymmetry,JAVA.AssertWithSideEffects,JAVA.LogStatementGuardedByLogCondition,JAVA.MultipleVariablesInDeclaration,JAVA.ExplicitArgumentCanBeLambda,null.AndroidLintMissingOnPlayFromSearch,JAVA.MathRandomCastToInt,JAVA.LoopStatementThatDoesntLoop,JAVA.ConfusingElseBranch,Groovy.GroovyOverlyComplexMethod,JAVA.InterfaceNeverImplemented,JAVA.PackageInMultipleModules,JAVA.ModuleWithTooFewClasses,JAVA.LiteralAsArgToStringEquals,JAVA.MethodOverridesStaticMethodOfSuperclass,JAVA.EmptyClass,Groovy.GroovyLocalVariableNamingConvention,JAVA.ClassWithTooManyDependents,JAVA.UtilityClassWithoutPrivateConstructor,null.AndroidLintGradleDynamicVersion,JAVA.EqualsOnSuspiciousObject,null.UnnecessaryModuleDependencyInspection,JAVA.SingleCharacterStringConcatenation,kotlin.Destructure,JAVA.JNDIResourceOpenedButNotSafelyClosed,JAVA.CatchMayIgnoreException,JAVA.UnpredictableBigDecimalConstructorCall,JAVA.StringBufferField,JAVA.BreakStatement,null.AndroidLintShowToast,JAVA.DisjointPackage,kotlin.ProtectedInFinal,XML.CheckXmlFileWithXercesValidator,Groovy.GroovyUnnecessaryContinue,JAVA.LimitedScopeInnerClass,JAVA.ComparisonToNaN,JAVA.OnDemandImport,null.AndroidLintStateListReachable,null.AndroidLintWearStandaloneAppFlag,JAVA.NotifyCalledOnCondition,JAVA.UnknownLanguage,JAVA.UseOfObsoleteAssert,JAVA.SuperTearDownInFinally,JAVA.DuplicateStringLiteralInspection,Groovy.GroovyDoubleCheckedLocking,Groovy.GroovyConditionalCanBeConditionalCall,JAVA.CloneDoesntDeclareCloneNotSupportedException,kotlin.ConvertLambdaToReference,JAVA.InterfaceMethodClashesWithObject,null.AndroidLintWrongThreadInterprocedural,JAVA.EmptySynchronizedStatement,JAVA.SocketOpenedButNotSafelyClosed,kotlin.RemoveSetterParameterType,kotlin.ReplaceSingleLineLet,Groovy.GroovyEmptySyncBlock,JAVA.PublicConstructor,JAVA.JavadocReference,kotlin.RedundantSetter,null.AndroidLintAppCompatResource,JAVA.FinalizeDeclaration,JAVA.ClassLoaderInstantiation,Groovy.GroovyEmptyTryBlock,Properties.IncompleteProperty,null.AndroidLintMipmapIcons,null.AndroidLintNegativeMargin,JAVA.UnnecessaryExplicitNumericCast,JAVA.ConditionalExpressionWithIdenticalBranches,JAVA.CallToDriverManagerGetConnection,JAVA.NonFinalFieldInEnum,JAVA.OctalAndDecimalIntegersInSameArray,JAVA.RedundantConditionalExpression,JAVA.SwitchStatementWithoutDefaultBranch,JAVA.JavaLangImport,JAVA.InterfaceMayBeAnnotatedFunctional,JAVA.NativeMethod,JAVA.AbstractClassWithOnlyOneDirectInheritor,JAVA.DuplicatedDataProviderNames,JAVA.AssertStatement,JAVA.CollectionAddedToSelf,JAVA.FullJavaName,JAVA.rawtypes,JAVA.CStyleArrayDeclaration,JAVA.WaitCalledOnCondition,JAVA.Dependency,Groovy.GroovyWhileLoopSpinsOnField,JAVA.FieldNameHidesFieldInSuperclass,JAVA.TrivialFunctionalExpressionUsage,JAVA.InstanceVariableMayNotBeInitializedByReadObject,Groovy.GrUnnecessaryDefModifier,JAVA.UnnecessaryParentheses,JAVA.StringConcatenationInMessageFormatCall,Groovy.GroovyNestedSynchronizedStatement,null.AndroidLintRequiresFeature,null.AndroidLintCanvasSize,JAVA.ObjectEquality,JAVA.CallToThreadYield,Groovy.GrReassignedInClosureLocalVar,JAVA.ObviousNullCheck,Properties.AlphaUnsortedPropertiesFile,JAVA.ConfusingArgumentToVarargsMethod,JAVA.JavaRequiresAutoModule,JAVA.ArrayObjectsEquals,JAVA.FieldNamingConvention,JAVA.LocalVariableHidesMemberVariable,null.AndroidLintExpiredTargetSdkVersion,JAVA.NonExceptionNameEndsWithException,JAVA.RedundantExplicitClose,JAVA.StaticFieldReferencedViaSubclass,JAVA.CallToThreadRun,null.AndroidLintIconDipSize,JAVA.PackageNamingConvention,JAVA.UnsecureRandomNumberGeneration,null.AndroidLintStaticFieldLeak,Groovy.GroovyResultOfIncrementOrDecrementUsed,Groovy.ClashingTraitMethods,kotlin.EmptyRange,JAVA.ProhibitedExceptionThrown,null.AndroidLintMissingLeanbackLauncher,Groovy.GroovyOctalInteger,JAVA.NumericOverflow,JAVA.ImplicitArrayToString,JAVA.CloneableClassWithoutClone,JAVA.OverriddenMethodCallDuringObjectConstruction,null.AndroidLintGoogleAppIndexingWarning,JAVA.ReturnSeparatedFromComputation,null.AndroidLintAaptCrash,JAVA.CharacterComparison,kotlin.LiftReturnOrAssignment,null.AndroidLintMenuTitle,JAVA.ObjectInstantiationInEqualsHashCode,JAVA.InstanceofIncompatibleInterface,JAVA.MethodParameterNamingConvention,JAVA.SwitchStatementDensity,JAVA.StaticGuardedByInstance,JAVA.UnnecessaryTemporaryOnConversionToString,JAVA.CallToTimeToString,kotlin.UnusedReceiverParameter,kotlin.OverridingDeprecatedMember,JAVA.ManualArrayToCollectionCopy,null.AndroidLintIncompatibleMediaBrowserServiceCompatVersion,JAVA.ClassWithTooManyMethods,JAVA.ClassExtendsConcreteCollection,JAVA.UnusedLabel,JAVA.JUnitTestMethodWithNoAssertions,JAVA.StringConcatenationInFormatCall,JAVA.EmptyClassInitializer,JAVA.MethodWithTooExceptionsDeclared,Groovy.GrUnnecessaryPublicModifier,JAVA.RedundantIfStatement,null.AndroidLintSpUsage,JAVA.StringConcatenationInLoop,JAVA.NestedSynchronizedStatement,null.AndroidLintWakelockTimeout,Groovy.GroovySynchronizationOnThis,JAVA.MethodWithTooManyParameters,JAVA.TestNGDataProvider,JAVA.CallToThreadDumpStack,JAVA.ParameterNameDiffersFromOverriddenParameter,JAVA.InfiniteLoopStatement,JAVA.AssignmentToCatchBlockParameter,JAVA.AbsoluteAlignmentInUserInterface,JAVA.InnerClassFieldHidesOuterClassField,Groovy.GroovyAssignabilityCheck,JAVA.InstantiatingObjectToGetClassObject,JAVA.SingleStatementInBlock,null.AndroidLintOrientation,JAVA.PatternOverriddenByNonAnnotatedMethod,JAVA.DynamicRegexReplaceableByCompiledPattern,JAVA.WaitOrAwaitWithoutTimeout,JAVA.KotlinInternalInJava,JAVA.ClassHasNoToStringMethod,JAVA.MethodOverloadsMethodOfSuperclass,JAVA.OctalInteger,JAVA.UtilityClass,null.AndroidLintWorldReadableFiles,Properties.WrongPropertyKeyValueDelimiter,JAVA.OverloadedVarargsMethod,kotlin.ReplaceAssertBooleanWithAssertEquality,JAVA.UnnecessaryLabelOnBreakStatement,null.AndroidLintDuplicateDivider,JAVA.JavadocHtmlLint,JAVA.ConfusingOctalEscapeSequence,JAVA.WeakerAccess,null.DefaultFileTemplate,kotlin.RedundantSemicolon,null.AndroidLintUniqueConstants,kotlin.UseExpressionBody,JAVA.UnnecessaryLocalVariable,Groovy.GroovyDivideByZero,kotlin.MigrateDiagnosticSuppression,JAVA.FeatureEnvy,JAVA.SizeReplaceableByIsEmpty,null.AndroidLintStringFormatInvalid,null.AndroidLintMockLocation,JAVA.LambdaParameterHidesMemberVariable,Groovy.GroovyReturnFromFinallyBlock,JAVA.TypeMayBeWeakened,JAVA.ConstantMathCall,JAVA.DuplicateBooleanBranch,JAVA.UnnecessaryInterfaceModifier,JAVA.OverlyCoupledClass,JAVA.LambdaParameterTypeCanBeSpecified,JAVA.UnqualifiedMethodAccess,JAVA.MismatchedQueryAndUpdateOfStringBuilder,null.AndroidLintHandlerLeak,Groovy.ChangeToMethod,JAVA.UnnecessaryDefault,JAVA.LambdaCanBeMethodCall,JAVA.SignalWithoutCorrespondingAwait,null.AndroidLintWrongCase,JAVA.PublicMethodWithoutLogging,JAVA.FieldAccessedSynchronizedAndUnsynchronized,kotlin.ConvertReferenceToLambda,Groovy.GroovyDocCheck,null.AndroidLintSwitchIntDef,kotlin.IfThenToElvis,JAVA.MissingDeprecatedAnnotation,JAVA.ExternalizableWithoutPublicNoArgConstructor,JAVA.TryWithIdenticalCatches,JAVA.AssertEqualsBetweenInconvertibleTypes,JAVA.LawOfDemeter,JAVA.JUnit5Converter,kotlin.RedundantCompanionReference,JAVA.SerializableHasSerializationMethods,JAVA.VariablesOfDifferentTypesInDeclaration,JAVA.unchecked,JAVA.VariableTypeCanBeExplicit,JAVA.ZeroLengthArrayAllocation,JAVA.AssignmentUsedAsCondition,JAVA.TransientFieldInNonSerializableClass,null.AndroidLintBottomAppBar,null.AndroidLintNestedWeights,null.AndroidLintInvalidWakeLockTag,kotlin.ConvertTryFinallyToUseCall,JAVA.CloneInNonCloneableClass,JAVA.SleepWhileHoldingLock,kotlin.LocalVariableName,JAVA.PointlessBooleanExpression,null.AndroidLintVectorRaster,JAVA.ConstantConditions,JAVA.UnnecessarilyQualifiedStaticallyImportedElement,RegExp.RegExpDuplicateAlternationBranch,JAVA.StandardVariableNames,kotlin.CanBePrimaryConstructorProperty,JAVA.StaticInitializerReferencesSubClass,HTML.HtmlUnknownTag,JAVA.UnqualifiedInnerClassAccess,JAVA.MethodCanBeVariableArityMethod,JAVA.SimplifyOptionalCallChains,kotlin.NullableBooleanElvis,JAVA.ExtendsUtilityClass,kotlin.RedundantLambdaArrow,null.AndroidLintDuplicateDefinition,JAVA.CompareToUsesNonFinalVariable,JAVA.SetReplaceableByEnumSet,JAVA.MethodReturnType,JAVA.AssignmentToNull,JAVA.BooleanMethodNameMustStartWithQuestion,JAVA.OverlyComplexBooleanExpression,JAVA.HardcodedLineSeparator,JAVA.InstanceofCatchParameter,JAVA.AnonymousHasLambdaAlternative,JAVA.ThreadDeathNotRethrown,JAVA.UseOfJDBCDriverClass,JAVA.ExceptionClassNameDoesntEndWithException,null.AndroidLintPinSetExpiry,JAVA.Contract,JAVA.RedundantInterfaceDeclaration,XML.CheckDtdRefs,Groovy.GroovySynchronizedMethod,Groovy.TypeCustomizer,null.PermissionUsageInspection,null.AndroidLintPackagedPrivateKey,null.SyntaxError,null.AndroidLintBackButton,JAVA.resource,null.HardCodedStringLiteral,JAVA.ConstantTestNGAssertArgument,JAVA.NonReproducibleMathCall,JAVA.CustomSecurityManager,JAVA.ClassWithTooManyDependencies,JAVA.UnnecessaryUnaryMinus,kotlin.DataClassPrivateConstructor,kotlin.UselessCallOnCollection,null.AndroidLintDeletedProvider,null.AndroidLintFindViewByIdCast,kotlin.ExplicitThis,JAVA.ConditionalExpressionWithNegatedCondition,kotlin.RedundantUnitReturnType,null.AndroidLintMultipleUsesSdk,null.AndroidLintRecyclerView,Groovy.NewInstanceOfSingleton,kotlin.ConflictingExtensionProperty,JAVA.SynchronizationOnGetClass,Groovy.GroovyLoopStatementThatDoesntLoop,null.AndroidLintClickableViewAccessibility,null.AndroidLintContentDescription,JAVA.BigDecimalEquals,JAVA.ClassWithoutNoArgConstructor,Groovy.GroovyUnreachableStatement,JAVA.UseOfStringTokenizer,JAVA.AccessToStaticFieldLockedOnInstance,JAVA.ClassInitializerMayBeStatic,JAVA.NonSerializableObjectBoundToHttpSession,null.AndroidLintGetInstance,null.AndroidLintIconExpectedSize,JAVA.PointlessBitwiseExpression,Groovy.GroovyUnusedAssignment,JAVA.Java8ListSort,JAVA.EqualsCalledOnEnumConstant,JAVA.OverlyComplexAnonymousInnerClass,JAVA.MethodParameterType,Groovy.GroovyTrivialConditional,JAVA.SingleCharacterStartsWith,XML.XmlDuplicatedId,JAVA.ConditionalCanBeOptional,null.AndroidLintCutPasteId,null.AndroidLintExportedPreferenceActivity,JAVA.NonConstantFieldWithUpperCaseName,JAVA.SimplifiableConditionalExpression,JAVA.DesignForExtension,JAVA.NonSerializableClassWithSerialVersionUID,null.AndroidLintDuplicatePlatformClasses,null.AndroidLintPendingBindings,JAVA.OptionalUsedAsFieldOrParameterType,JAVA.NonFinalFieldInImmutable,null.AndroidLintTypographyOther,null.AndroidLintCustomViewStyleable,JAVA.BreakStatementWithLabel,null.AndroidLintMissingBackupPin,JAVA.EndlessStream,null.AndroidLintUnusedQuantity,Groovy.DifferentStdlibGradleVersion,null.AndroidLintRtlHardcoded,JAVA.AnonymousInnerClass,JAVA.EqualsWithItself,JAVA.OverlyLongLambda,JAVA.FieldMayBeStatic,XML.DeprecatedClassUsageInspection,JAVA.MisorderedAssertEqualsArgumentsTestNG,kotlin.RedundantUnitExpression,null.AndroidLintButtonOrder,JAVA.RedundantStringOperation,JAVA.PlaceholderCountMatchesArgumentCount,null.AndroidLintSupportAnnotationUsage,Groovy.GroovyThrowFromFinallyBlock,Groovy.GroovyNonShortCircuitBoolean,JAVA.TryFinallyCanBeTryWithResources,null.IncompatibleAPI,kotlin.ReplaceWithOperatorAssignment,null.AndroidLintHardcodedDebugMode,JAVA.PublicField,JAVA.MethodCallInLoopCondition,null.LossyEncoding,null.AndroidLintJavascriptInterface,null.AndroidLintNamespaceTypo,null.AndroidLintIconColors,null.AndroidLintSetJavaScriptEnabled,Groovy.GroovyListGetCanBeKeyedAccess,kotlin.PublicApiImplicitType,Manifest.MisspelledHeader,JAVA.MultiplyOrDivideByPowerOfTwo,JAVA.EmptyDirectory,Groovy.GroovyDoubleNegation,JAVA.SameParameterValue,JAVA.SerializableInnerClassWithNonSerializableOuterClass,null.UnusedLibrary,JAVA.UnqualifiedFieldAccess,null.AndroidLintUnknownId,JAVA.PatternValidation,JAVA.NewStringBufferWithCharArgument,XML.AndroidDomInspection,JAVA.SynchronizationOnStaticField,null.AndroidLintProtectedPermissions,JAVA.SynchronizeOnNonFinalField,JAVA.ReturnInsideFinallyBlock,JAVA.TestOnlyProblems,JAVA.NestedSwitchStatement,JAVA.UnnecessarilyQualifiedInnerClassAccess,kotlin.LeakingThis,kotlin.RemoveEmptyClassBody,Groovy.GroovyMethodParameterCount,JAVA.UsingRandomNextDoubleForRandomInteger,null.AndroidLintUsingHttp,kotlin.CanBeParameter,JAVA.AutoBoxing,null.InjectedReferences,JAVA.InnerClassMayBeStatic,JAVA.ClassWithTooManyTransitiveDependencies,null.AndroidLintIconLauncherShape,null.AndroidLintIntentReset,kotlin.UnusedSymbol,JAVA.ClassEscapesDefinedScope,null.AndroidLintUnsafeDynamicallyLoadedCode,null.AndroidLintPermissionImpliesUnsupportedHardware,JAVA.ClassReferencesSubclass,JAVA.TypeParameterExplicitlyExtendsObject,null.AndroidLintInnerclassSeparator,JAVA.EqualsBetweenInconvertibleTypes,XML.HtmlUnknownTarget,JAVA.SerializableStoresNonSerializable,JAVA.ClassIndependentOfModule,kotlin.PropertyName,JAVA.CallToSignalInsteadOfSignalAll,null.AndroidLintResourceType,null.AndroidLintObsoleteLayoutParam,null.AndroidLintMissingPrefix,JAVA.ThisEscapedInObjectConstruction,null.AndroidLintWrongCall,null.AndroidLintSuspicious0dp,null.AndroidLintUnsafeNativeCodeLocation,Groovy.GroovyPointlessBoolean,JAVA.JavacQuirks,kotlin.RedundantNotNullExtensionReceiverOfInline,null.AndroidLintUselessParent,Properties.UnusedProperty,JAVA.ConvertJavadoc,null.AndroidLintTrustAllX509TrustManager,kotlin.RedundantGetter,null.AndroidLintRtlEnabled,null.AndroidLintOutdatedLibrary,null.AndroidLintUnusedAttribute,null.AndroidLintIconXmlAndPng,JAVA.UseCompareMethod,Groovy.GroovyConstantConditional,JSON.JsonStandardCompliance,JAVA.BooleanConstructorCall,null.AndroidLintIconDensities,null.AndroidLintFullBackupContent,null.AndroidLintIconExtension,null.AndroidLintImpliedTouchscreenHardware,null.AndroidLintGetLocales,null.AndroidLintTranslucentOrientation,Groovy.GroovyOverlyLongMethod,null.LongLine,JAVA.SuspiciousToArrayCall,JAVA.ClassExplicitlyExtendsThread,kotlin.SuspiciousEqualsCombination,Properties.SuspiciousLocalesLanguages,kotlin.Reformat,JAVA.VariableNotUsedInsideIf,kotlin.UnusedEquals,null.AndroidLintStopShip,XML.XmlWrongRootElement,JAVA.IfCanBeAssertion,JAVA.JUnit3StyleTestMethodInJUnit4Class,JAVA.BooleanParameter,JAVA.ThrowCaughtLocally,JAVA.ExpectedExceptionNeverThrown,JAVA.BooleanExpressionMayBeConditional,JAVA.NewClassNamingConvention,null.AndroidLintVisibleForTests,JAVA.OverlyCoupledMethod,Groovy.GroovySynchronizationOnNonFinalField,JAVA.AndroidNonConstantResIdsInSwitch,null.AndroidLintAdapterViewChildren,null.AndroidLintSQLiteString,null.AndroidLintStringFormatMatches,Groovy.DeprecatedGradleDependency,RegExp.RegExpEmptyAlternationBranch,null.AndroidLintUniquePermission,JAVA.FrequentlyUsedInheritorInspection,JAVA.JavaReflectionMemberAccess,null.AndroidLintConvertToWebp,kotlin.CopyWithoutNamedArguments,JAVA.MisspelledEquals,JAVA.TestMethodWithIncorrectSignature,JAVA.MissortedModifiers,null.AndroidLintGetContentDescriptionOverride,JAVA.AmbiguousFieldAccess,JAVA.CallToSystemExit,JAVA.LambdaBodyCanBeCodeBlock,JAVA.MethodReturnAlwaysConstant,JAVA.AbstractMethodCallInConstructor,JAVA.NonStaticInitializer,JAVA.InvalidComparatorMethodReference,JAVA.DanglingJavadoc,JAVA.ConfusingFloatingPointLiteral,JAVA.NonFinalClone,JAVA.AssignmentToStaticFieldFromInstanceMethod,JAVA.ResultOfObjectAllocationIgnored,null.AndroidLintServiceCast,null.AndroidLintUnlocalizedSms,JAVA.CallToSimpleGetterFromWithinClass,JAVA.ClassWithTooManyConstructors,JAVA.CallToThreadStartDuringObjectConstruction,JAVA.OverlyLongMethod,null.AndroidLintButtonStyle,JAVA.JUnitTestNG,JAVA.SynchronizeOnThis,kotlin.CanSealedSubClassBeObject,JAVA.finally,JAVA.BeforeOrAfterWithIncorrectSignature,JAVA.PointlessNullCheck,JAVA.BlockMarkerComments,JAVA.ErrorNotRethrown,JAVA.NestedTryStatement,null.SSBasedInspection,Groovy.GroovyEmptyStatementBody,null.AndroidLintMissingVersion,JAVA.UseOfObsoleteDateTimeApi,null.AndroidLintInvalidUsesTagAttribute,JAVA.RawTypeCanBeGeneric,null.AndroidLintDefaultLocale,null.AndroidLintGradleDependency,Groovy.GroovyBusyWait,JAVA.ConditionalCanBePushedInsideExpression,null.GroovyUnusedDeclaration,null.AndroidLintProxyPassword,JAVA.UnknownGuard,Groovy.GroovySwitchStatementWithNoDefault,JAVA.IntLiteralMayBeLongLiteral,JAVA.NonFinalFieldReferenceInEquals,null.AndroidLintTooDeepLayout,JAVA.MismatchedReadAndWriteOfArray,null.AndroidLintInflateParams,JAVA.Guava,Groovy.GrUnresolvedAccess,null.UseWithIndex,null.AndroidLintVectorPath,Groovy.DelegatesTo,null.AndroidLintLibraryCustomView,JAVA.ProhibitedExceptionDeclared,JAVA.TextLabelInSwitchStatement,JAVA.JUnitTestCaseWithNonTrivialConstructors,JAVA.MetaAnnotationWithoutRuntimeRetention,kotlin.HasPlatformType,Groovy.GroovyPointlessArithmetic,XML.CheckValidXmlInScriptTagBody,kotlin.FromClosedRangeMigration,JAVA.ClassNamePrefixedWithPackageName,null.AndroidLintTypographyEllipsis,kotlin.RemoveEmptyParenthesesFromLambdaCall,Groovy.GroovyInArgumentCheck,JAVA.StringEquality,Groovy.GroovyOverlyComplexBooleanExpression,JAVA.AbstractMethodWithMissingImplementations,JAVA.CallToThreadSetPriority,null.AndroidLintResourceName,Properties.TrailingSpacesInProperty,HTML.HtmlExtraClosingTag,XML.XmlHighlighting,JAVA.OverlyLargePrimitiveArrayInitializer,kotlin.MayBeConstant,JAVA.CollectionWithoutInitialCapacity,Groovy.GroovyAccessibility,JAVA.ComparatorMethodParameterNotUsed,null.AndroidLintIllegalResourceRef,JAVA.TypeParameterHidesVisibleType,JAVA.ExternalizableClassWithSerializationMethods,XML.HtmlUnknownAnchorTarget,kotlin.IntroduceWhenSubject,JAVA.CollectionDeclaredAsConcreteClass,JAVA.IfStatementWithNegatedCondition,Groovy.GroovyUnsynchronizedMethodOverridesSynchronizedMethod,JAVA.CastToIncompatibleInterface,kotlin.PlatformExtensionReceiverOfInline,null.AndroidLintShortAlarm,JAVA.IfMayBeConditional,null.KotlinInvalidBundleOrProperty,JAVA.BooleanVariableAlwaysNegated,kotlin.ScopeFunctionConversion,JAVA.ClassExplicitlyAnnotation,Groovy.GroovyAssignmentToForLoopParameter,JAVA.ReturnOfNull,null.AndroidLintInstantApps,Groovy.UnnecessaryQualifiedReference,JAVA.JavaDoc,JAVA.NonConstantStringShouldBeStringBuffer,Groovy.ChangeToOperator,JAVA.SharedThreadLocalRandom,null.AndroidLintScrollViewCount,JAVA.MethodMayBeStatic,JAVA.CallToNotifyInsteadOfNotifyAll,JAVA.RedundantNoArgConstructor,JAVA.OverlyComplexArithmeticExpression,JAVA.FieldCanBeLocal,Groovy.GroovyListSetCanBeKeyedAccess,kotlin.RemoveEmptySecondaryConstructorBody,Groovy.GroovyUnconditionalWait,JAVA.CyclicPackageDependency,JAVA.ImplicitCallToSuper,JAVA.NoopMethodInAbstractClass,null.AndroidLintGrantAllUris,JAVA.IfCanBeSwitch,HTML.PackageDotHtmlMayBePackageInfo,null.AndroidLintMissingDefaultResource,JAVA.NullableProblems,JAVA.FieldNotUsedInToString,JAVA.AbstractClassExtendsConcreteClass,JAVA.CallToRuntimeExec,JAVA.TransientFieldNotInitialized,JAVA.UnresolvedPropertyKey,JAVA.MismatchedQueryAndUpdateOfCollection,Groovy.GroovyLabeledStatement,JAVA.NonSynchronizedMethodOverridesSynchronizedMethod,null.AndroidLintKeyboardInaccessibleWidget,kotlin.RemoveCurlyBracesFromTemplate,null.AndroidLintMissingQuantity,JAVA.UseOfSunClasses,JAVA.MethodNamesDifferingOnlyByCase,kotlin.UnnecessaryVariable,null.AndroidLintIconDuplicates,kotlin.ConvertSecondaryConstructorToPrimary,Groovy.GroovyEmptyCatchBlock,JAVA.CaughtExceptionImmediatelyRethrown,JAVA.PatternNotApplicable,kotlin.ReplacePutWithAssignment,Groovy.GroovyOverlyComplexArithmeticExpression,null.AndroidLintSignatureOrSystemPermissions,JAVA.ProhibitedExceptionCaught,null.AndroidLintPermissionImpliesUnsupportedChromeOsHardware,JAVA.ToArrayCallWithZeroLengthArrayArgument,null.AndroidLintExpiringTargetSdkVersion,null.AndroidLintHardcodedText,JAVA.SuiteNotDeclaredStatic,JAVA.PackageWithTooManyClasses,JAVA.UnnecessaryFinalOnLocalVariableOrParameter,JAVA.CustomClassloader,Groovy.GroovyNestedAssignment,JAVA.MigrateAssertToMatcherAssert,null.UnusedDefine,JAVA.SynchroniziationOnLockObject,null.AndroidLintWrongViewCast,JAVA.AnnotationClass,null.AndroidLintSuspiciousImport,JAVA.ProtectedInnerClass,XML.CheckTagEmptyBody,null.AndroidLintDeprecated,JAVA.UnnecessaryToStringCall,Groovy.GroovyConditionalWithIdenticalBranches,JAVA.UncheckedExceptionClass,kotlin.WhenWithOnlyElse,JAVA.SimplifiableIfStatement,JAVA.ClassTooDeepInInheritanceTree,JAVA.ComparatorNotSerializable,JAVA.ClassNewInstance,JAVA.StringTokenizerDelimiter,JAVA.UndeclaredTests,JAVA.WhileLoopReplaceableByForEach,JAVA.SillyAssignment,kotlin.PackageDirectoryMismatch,JAVA.LabeledStatement,JAVA.AccessOfSystemProperties,JAVA.StringBufferWithoutInitialCapacity,JAVA.ChainedMethodCall,JAVA.UnnecessaryReturnStatement,JAVA.NewExceptionWithoutArguments,JAVA.UnusedAssignment,kotlin.ObsoleteExperimentalCoroutines,JAVA.Java8MapForEach,null.AndroidLintDuplicateUsesFeature,Groovy.GroovyConstructorNamedArguments,JAVA.StringConcatenation,JAVA.OverlyComplexClass,JAVA.AtomicFieldUpdaterIssues,JAVA.ResultOfMethodCallIgnored,JAVA.ClassWithMultipleLoggers,JAVA.CastConflictsWithInstanceof,JAVA.ComparableImplementedButEqualsNotOverridden,XML.XmlPathReference,null.AndroidLintPluralsCandidate,JAVA.InstanceofConcreteClass,HTML.HtmlMissingClosingTag,JAVA.AssertEqualsCalledOnArray,null.AndroidLintLocalSuppress,Groovy.GroovyTrivialIf,Groovy.GroovyStaticMethodNamingConvention,null.AndroidLintSetWorldReadable,JAVA.MalformedFormatString,kotlin.MainFunctionReturnUnit,JAVA.ConstantAssertCondition,JAVA.LocalVariableOfConcreteClass,null.AndroidLintIconNoDpi,null.AndroidLintPrivateApi,kotlin.RedundantSamConstructor,JAVA.ForLoopWithMissingComponent,kotlin.RemoveExplicitSuperQualifier,JAVA.JavaReflectionInvocation,JAVA.StringConcatenationInsideStringBufferAppend,Manifest.MissingFinalNewline,null.AndroidLintValidActionsXml,JAVA.ComparisonOfShortAndChar,JAVA.UseOfClone,JAVA.PublicMethodNotExposedInInterface,Groovy.GroovyUnusedIncOrDec,kotlin.IfThenToSafeAccess,kotlin.ReplaceToStringWithStringTemplate,JAVA.UNUSED_IMPORT,null.AndroidLintOverride,null.AndroidLintSlices,JAVA.AssignmentOrReturnOfFieldWithMutableType,JAVA.NotifyWithoutCorrespondingWait,Groovy.GroovyNestedSwitch,Groovy.GroovyUnusedCatchParameter,JAVA.PointlessIndexOfComparison,JAVA.AccessingNonPublicFieldOfAnotherObject,JAVA.PublicStaticArrayField,kotlin.RemoveEmptyPrimaryConstructor,null.AndroidLintWrongRegion,JAVA.UnnecessaryJavaDocLink,JAVA.ContinueStatementWithLabel,null.AndroidLintFontValidationWarning,JAVA.ContinueStatement,JAVA.ApiName,JSON.JsonDuplicatePropertyKeys,JAVA.NonFinalUtilityClass,null.AndroidLintGridLayout,JAVA.UnnecessarySuperQualifier,JAVA.ThrowInsideCatchBlockWhichIgnoresCaughtException,kotlin.AddVarianceModifier,JAVA.RedundantMethodOverride,null.AndroidLintAllowBackup,JAVA.AwaitNotInLoop,JAVA.JUnitTestCaseWithNoTests,JAVA.StaticVariableMayNotBeInitialized,JAVA.SameReturnValue,Groovy.GroovyUnnecessaryReturn,kotlin.EnumEntryName,JAVA.LoopWithImplicitTerminationCondition,null.AndroidLintBatteryLife,null.AndroidLintCommitTransaction,kotlin.JoinDeclarationAndAssignment,JAVA.AbstractMethodOverridesAbstractMethod,JAVA.OverlyBroadThrowsClause,null.AndroidLintEasterEgg,null.AndroidLintInvalidId,JAVA.SuspiciousArrayCast,Groovy.GroovyInstanceVariableNamingConvention,JAVA.ApiNamespace,JAVA.UseOfSystemOutOrSystemErr,JAVA.DoubleCheckedLocking,kotlin.ReplaceSizeZeroCheckWithIsEmpty,XML.AndroidMissingOnClickHandler,JAVA.SamePackageImport,JAVA.LongLiteralEndingWithLowercaseL,Groovy.GroovyBreak,JAVA.PublicStaticCollectionField,JAVA.InnerClassTooDeeplyNested,JAVA.UtilityClassWithPublicConstructor,JAVA.MethodWithMultipleReturnPoints,Groovy.GroovyVariableNotAssigned,JAVA.StaticMethodOnlyUsedInOneClass,null.AndroidLintViewConstructor,null.AndroidLintLogTagMismatch,JAVA.RedundantThrows,null.AndroidLintUseCompoundDrawables,JAVA.InstanceVariableUsedBeforeInitialized,Groovy.GrEqualsBetweenInconvertibleTypes,JAVA.ArrayLengthInLoopCondition,kotlin.KotlinRedundantOverride,null.AndroidLintUseCheckPermission,JAVA.QuestionableName,kotlin.KDocUnresolvedReference,kotlin.ImplicitThis,null.AndroidLintNewerVersionAvailable,JAVA.WaitWithoutCorrespondingNotify,Groovy.GradleKotlinxCoroutinesDeprecation,JAVA.StringToUpperCaseOrToLowerCaseWithoutLocale,Groovy.GroovyOverlyNestedMethod,JAVA.SimplifiableAnnotation,JAVA.AssignmentToLambdaParameter,JAVA.SynchronizedOnLiteralObject,JAVA.EnumClass,JAVA.CloneCallsConstructors,null.AndroidLintSetTextI18n,JAVA.Java9ReflectionClassVisibility,JAVA.MethodWithMultipleLoops,JAVA.MethodParameterOfConcreteClass,null.AndroidLintUseValueOf,null.AndroidLintUnusedResources,JAVA.IntegerMultiplicationImplicitCastToLong,JAVA.ConstantOnLeftSideOfComparison,JAVA.AssertEqualsMayBeAssertSame,null.AndroidLintNfcTechWhitespace,null.AndroidLintDisableBaselineAlignment,null.Annotator,JAVA.BooleanMethodIsAlwaysInverted,JAVA.VariableArgumentMethod,JAVA.AtomicFieldUpdaterNotStaticFinal,kotlin.RemoveToStringInStringTemplate,Groovy.GroovyEmptyFinallyBlock,Groovy.SingletonConstructor,null.TodoComment,null.RedundantSuppression,null.AndroidLintIconMissingDensityFolder,null.ProblematicWhitespace,JAVA.UnnecessaryUnicodeEscape,JAVA.InjectionNotApplicable,JAVA.FullMethodName,null.AndroidLintMissingFirebaseInstanceTokenRefresh,kotlin.RemoveSingleExpressionStringTemplate,kotlin.ReplaceToWithInfixForm,JAVA.ChainOfInstanceofChecks,Groovy.GroovyIfStatementWithIdenticalBranches,null.AndroidLintExportedService,RegExp.RegExpRedundantEscape,kotlin.ReplaceArrayOfWithLiteral,JAVA.MissingPackageInfo,JAVA.NonStaticInnerClassInSecureContext,null.AndroidLintHardwareIds,JAVA.MethodName,JAVA.SimplifyForEach,null.SpellCheckingInspection,kotlin.ConvertPairConstructorToToFunction,null.AndroidLintGradlePluginVersion,JAVA.ComparatorCombinators,Groovy.JavaStylePropertiesInvocation,JAVA.OptionalIsPresent,JAVA.PointlessArithmeticExpression,JAVA.DollarSignInName,null.AndroidLintWifiManagerPotentialLeak,JAVA.ContinueOrBreakFromFinallyBlock,null.AndroidLintRequiredSize,JAVA.VolatileLongOrDoubleField,null.AndroidLintResourceAsColor,JAVA.DefaultNotLastCaseInSwitch,JAVA.CapturingCleaner,null.AndroidLintSSLCertificateSocketFactoryGetInsecure,null.AndroidLintSimpleDateFormat,null.AndroidLintAccidentalOctal,JAVA.NegatedEqualityExpression,JAVA.MethodOverridesInaccessibleMethodOfSuper,Groovy.GroovyIfStatementWithTooManyBranches,kotlin.PrivatePropertyName,null.AndroidLintEnforceUTF8,JAVA.Java8CollectionRemoveIf,JAVA.ExceptionPackage,JAVA.DuplicateThrows,null.AndroidLintInvalidNavigation,Groovy.GroovyPublicFieldAccessedInSynchronizedContext,JAVA.AssignmentReplaceableWithOperatorAssignment,JAVA.NonPrivateFieldAccessedInSynchronizedContext,JAVA.WaitNotInLoop,kotlin.ArrayInDataClass,null.AndroidLintLambdaLast,JAVA.StaticPseudoFunctionalStyleMethod,null.AndroidLintUnsupportedChromeOsHardware,JAVA.SwitchStatementWithTooManyBranches,JAVA.ConvertOldAnnotations,null.AndroidLintInvalidImeActionId,JAVA.AbstractClassWithoutAbstractMethods,JAVA.UnnecessaryConstantArrayCreationExpression,null.InconsistentLanguageLevel,JAVA.DefaultAnnotationParam,JAVA.ForLoopReplaceableByWhile,JAVA.NonSerializableClassWithSerializationMethods,JAVA.NonSerializableFieldInSerializableClass,JAVA.UnnecessaryCodeBlock,kotlin.RecursivePropertyAccessor,JAVA.CallToSystemGetenv,null.AndroidLintTypographyQuotes,JAVA.JUnitDatapoint,Groovy.GroovyContinue" collectionTime="1540785796625" />
+    </group>
+    <group name="Editor">
+      <project id="StudyPython" values="autoOptimizeImports" collectionTime="1542784484010" />
+      <project id="home" values="autoOptimizeImports" collectionTime="1540785796619" />
+    </group>
+    <group name="module type">
+      <project id="StudyPython" values="PYTHON_MODULE" collectionTime="1542784484010" />
+      <project id="av" values="JAVA_MODULE" collectionTime="1541063032362" />
+      <project id="home" values="JAVA_MODULE" collectionTime="1540785796619" />
+    </group>
+    <group name="py-interpreter">
+      <project id="StudyPython" values="Python 3.6.6 [virtualenv]" collectionTime="1542784484010" />
+    </group>
+    <group name="frameworks">
+      <project id="av" values="android,android-gradle,java-gradle" collectionTime="1541063032361" />
+      <project id="home" values="android,android-gradle,java-gradle" collectionTime="1540785796619" />
+    </group>
+    <group name="vcs-stats">
+      <project id="StudyPython" values="vcs.roots.count.0,ignored.files.count.0,unversioned.files.count.0,active.changelists.count.1,has.default.vcs.root.mapping.enabled" collectionTime="1542784484008" />
+      <project id="av" values="vcs.roots.count.1,ignored.files.count.0,active.changelists.count.1,has.default.vcs.root.mapping.enabled,unversioned.files.count.1" collectionTime="1541063032229" />
+      <project id="home" values="unversioned.files.count.0,has.default.vcs.root.mapping.enabled,vcs.roots.count.1,ignored.files.count.1,active.changelists.count.1" collectionTime="1540785796569" />
+    </group>
+    <group name="javaScript Scope Usages">
+      <project id="StudyPython" values="Project" collectionTime="1542784484010" />
+    </group>
+    <group name="Git">
+      <project id="av" values="config.warn.about.detached.enabled,config.ssh.enabled,version.2.17.1-UNIX,config.push.update.all.roots.enabled,data.remote.branches.count.30+,config.warn.about.crlf.enabled,config.save.policy.STASH,config.update.type.BRANCH_DEFAULT,config.push.autoupdate.disabled,config.cherry-pick.autocommit.disabled,config.repo.sync.NOT_DECIDED,data.local.branches.count.2+,data.remotes.in.project.1" collectionTime="1541063035196" />
+      <project id="home" values="config.save.policy.STASH,config.repo.sync.NOT_DECIDED,version.2.17.1-UNIX,data.remote.branches.count.15+,config.push.update.all.roots.enabled,config.update.type.BRANCH_DEFAULT,config.push.autoupdate.disabled,config.ssh.enabled,config.cherry-pick.autocommit.disabled,config.warn.about.detached.enabled,data.local.branches.count.1,data.remotes.in.project.1,config.warn.about.crlf.enabled" collectionTime="1540785856826" />
+    </group>
+    <group name="Docker View">
+      <project id="StudyPython" values="docker.view.available,docker.view.total" collectionTime="1542784484010" />
+    </group>
+    <group name="vcs-options">
+      <project id="StudyPython" values="commit.before.check.non.empty.comment.disabled,show.changes.preview.disabled,commit.before.check.code.smell.disabled,commit.before.reformat.project.disabled,offer.move.partially.committed.disabled,commit.before.check.todo.enabled,commit.before.optimize.imports.disabled,changelist.make.new.active.disabled,perform.update.in.background.enabled,perform.rollback.in.background.disabled,changelist.preselect.existing.disabled,offer.remove.empty.changelist.show_confirmation,commit.clear.initial.comment.disabled,offer.move.failed.committed.do_nothing_silently,perform.checkout.in.background.enabled,perform.edit.in.background.enabled,commit.before.check.code.cleanup.disabled,commit.use.right.margin.enabled,commit.before.rearrange.disabled,check.conflicts.in.background.disabled,commit.show.unversioned.enabled,perform.add_remove.in.background.enabled,include.text.into.shelf.enabled,perform.commit.in.background.enabled" collectionTime="1542784484008" />
+      <project id="av" values="offer.remove.empty.changelist.show_confirmation,changelist.preselect.existing.disabled,perform.edit.in.background.enabled,changelist.make.new.active.disabled,commit.before.check.non.empty.comment.disabled,perform.update.in.background.enabled,include.text.into.shelf.enabled,show.changes.preview.disabled,commit.show.unversioned.enabled,commit.before.optimize.imports.disabled,perform.add_remove.in.background.enabled,check.conflicts.in.background.disabled,commit.before.check.todo.enabled,offer.move.failed.committed.do_nothing_silently,perform.rollback.in.background.disabled,offer.move.partially.committed.disabled,commit.use.right.margin.enabled,perform.commit.in.background.enabled,commit.before.rearrange.disabled,commit.before.check.code.smell.enabled,commit.before.check.code.cleanup.disabled,perform.checkout.in.background.enabled,commit.before.reformat.project.disabled,commit.clear.initial.comment.disabled" collectionTime="1541063032226" />
+      <project id="home" values="perform.checkout.in.background.enabled,perform.rollback.in.background.disabled,commit.clear.initial.comment.disabled,offer.remove.empty.changelist.show_confirmation,offer.move.failed.committed.do_nothing_silently,commit.before.reformat.project.disabled,commit.before.check.code.smell.enabled,changelist.make.new.active.disabled,offer.move.partially.committed.disabled,show.changes.preview.disabled,perform.edit.in.background.enabled,include.text.into.shelf.enabled,changelist.preselect.existing.disabled,commit.before.check.code.cleanup.disabled,commit.before.optimize.imports.disabled,commit.before.check.todo.enabled,commit.before.rearrange.disabled,commit.show.unversioned.enabled,perform.add_remove.in.background.enabled,perform.update.in.background.enabled,check.conflicts.in.background.disabled,perform.commit.in.background.enabled,commit.use.right.margin.enabled,commit.before.check.non.empty.comment.disabled" collectionTime="1540785796568" />
+    </group>
+  </component>
+  <component name="ToolWindowCollector">
+    <counts>
+      <entry toolWindow="Debug by Activation" count="70" />
+      <entry toolWindow="Event Log by Activation" count="2" />
+      <entry toolWindow="Find by Activation" count="1" />
+      <entry toolWindow="Project by Activation" count="23" />
+      <entry toolWindow="Python Console by Activation" count="14" />
+      <entry toolWindow="Run by Activation" count="481" />
+      <entry toolWindow="Terminal by Activation" count="2" />
+    </counts>
+  </component>
+  <component name="ToolWindowsCollector">
+    <counts>
+      <entry toolWindow="Concurrent Activities Diagram by Activation" count="1" />
+      <entry toolWindow="Coverage by Activation" count="5" />
+      <entry toolWindow="Debug by Activation" count="9" />
+      <entry toolWindow="Documentation by Activation" count="11" />
+      <entry toolWindow="Event Log by Activation" count="4" />
+      <entry toolWindow="Project by Activation" count="26" />
+      <entry toolWindow="Python Console by Activation" count="41" />
+      <entry toolWindow="Run by Activation" count="80" />
+      <entry toolWindow="SciView by Activation" count="1" />
+      <entry toolWindow="TODO by Activation" count="1" />
+      <entry toolWindow="Terminal by Activation" count="5" />
+    </counts>
+  </component>
+  <component name="ToolbarClicksCollector">
+    <counts>
+      <entry action="$Redo@MainToolbar" count="8" />
+      <entry action="$ShowInstantTranslationDialogAction@MainToolbar" count="22" />
+      <entry action="$ShowTranslationDialogAction@MainToolbar" count="4" />
+      <entry action="$Undo@MainToolbar" count="3" />
+      <entry action="AliP3CInspectionAction@MainToolbar" count="1" />
+      <entry action="Android.RunAndroidSdkManager@MainToolbar" count="6" />
+      <entry action="Android.SyncProject@MainToolbar" count="40" />
+      <entry action="Back@MainToolbar" count="26" />
+      <entry action="ChangesView.Refresh@ChangesViewToolbar" count="2" />
+      <entry action="CheckinProject@MainToolbar" count="1" />
+      <entry action="Compare.SameVersion@MainToolbar" count="14" />
+      <entry action="Debug@MainToolbar" count="13" />
+      <entry action="FileChooser.GotoDesktop@FileChooserDialog" count="2" />
+      <entry action="Forward@MainToolbar" count="1" />
+      <entry action="GenerateTests@MainToolbar" count="3" />
+      <entry action="Gradle.ExecuteTask@Gradle View Toolbar" count="1" />
+      <entry action="MaterialTheme.Accents@MainToolbar" count="2" />
+      <entry action="MaterialTheme.Components@MainToolbar" count="9" />
+      <entry action="MaterialTheme.Panels@MainToolbar" count="13" />
+      <entry action="MaterialTheme.ThemeChooser@MainToolbar" count="8" />
+      <entry action="Rerun@DebuggerToolbar" count="25" />
+      <entry action="Rerun@RunnerToolbar" count="444" />
+      <entry action="Resume@DebuggerToolbar" count="1" />
+      <entry action="Run@MainToolbar" count="23" />
+      <entry action="Show Options@ToolWindowHeader" count="9" />
+      <entry action="ShowSettings@MainToolbar" count="1" />
+      <entry action="StepInto@DebuggerToolbar" count="465" />
+      <entry action="StepIntoMyCode@DebuggerToolbar" count="20" />
+      <entry action="StepOut@DebuggerToolbar" count="2" />
+      <entry action="StepOver@DebuggerToolbar" count="2" />
+      <entry action="Stop@DebuggerToolbar" count="5" />
+      <entry action="Stop@MainToolbar" count="1" />
+      <entry action="Stop@RunnerToolbar" count="6" />
+      <entry action="Synchronize@MainToolbar" count="1" />
+      <entry action="Vcs.Log.Refresh@Vcs.Log.Toolbar" count="34" />
+      <entry action="Vcs.Log.ShowDetailsAction@ChangesBrowser" count="3" />
+      <entry action="Vcs.Log.ShowLongEdges@Vcs.Log.Toolbar" count="1" />
+      <entry action="Vcs.ShowTabbedFileHistory@MainToolbar" count="11" />
+      <entry action="Vcs.UpdateProject@MainToolbar" count="1" />
+      <entry action="com.android.tools.adtui.actions.DropDownAction@toolbar" count="31" />
+      <entry action="com.android.tools.adtui.workbench.AttachedToolWindow$HideAction@TOOL_WINDOW_TOOLBAR" count="1" />
+      <entry action="com.android.tools.idea.actions.AndroidNewModuleAction@AndroidProjectStructureConfigurable" count="1" />
+      <entry action="com.android.tools.idea.common.actions.SetZoomAction@NlRhsConfigToolbar" count="17" />
+      <entry action="com.android.tools.idea.configurations.DeviceMenuAction@toolbar" count="16" />
+      <entry action="com.android.tools.idea.configurations.OrientationMenuAction@toolbar" count="11" />
+      <entry action="com.android.tools.idea.configurations.TargetMenuAction@toolbar" count="1" />
+      <entry action="com.android.tools.idea.gradle.structure.AndroidProjectStructureConfigurable$DeleteModuleAction@AndroidProjectStructureConfigurable" count="4" />
+      <entry action="com.intellij.application.options.schemes.AbstractSchemesPanel$ShowSchemesActionsListAction@NavBarToolbar" count="1" />
+      <entry action="com.intellij.build.AbstractViewManager$CloseBuildContentAction@BuildView" count="4" />
+      <entry action="com.intellij.execution.actions.StopProcessAction@PyConcurrencyVisualizer" count="1" />
+      <entry action="com.intellij.execution.impl.ConsoleViewImpl$ClearAllAction@RunnerToolbar" count="2" />
+      <entry action="com.intellij.find.EditorSearchSession$ReplaceAllAction@EditorToolbar" count="11" />
+      <entry action="com.intellij.find.SearchTextArea$ClearAction@unknown" count="47" />
+      <entry action="com.intellij.find.SearchTextArea$NewLineAction@unknown" count="5" />
+      <entry action="com.intellij.find.editorHeaderActions.FindAllAction@EditorToolbar" count="2" />
+      <entry action="com.intellij.find.editorHeaderActions.NextOccurrenceAction@EditorToolbar" count="525" />
+      <entry action="com.intellij.find.editorHeaderActions.PrevOccurrenceAction@EditorToolbar" count="238" />
+      <entry action="com.intellij.find.editorHeaderActions.SelectAllAction@EditorToolbar" count="1" />
+      <entry action="com.intellij.find.editorHeaderActions.TogglePreserveCaseAction@EditorToolbar" count="2" />
+      <entry action="com.intellij.find.editorHeaderActions.ToggleRegex@EditorToolbar" count="2" />
+      <entry action="com.intellij.find.editorHeaderActions.ToggleSelectionOnlyAction@EditorToolbar" count="1" />
+      <entry action="com.intellij.find.impl.FindPopupPanel$MySelectScopeToggleAction@EditorToolbar" count="2" />
+      <entry action="com.intellij.ide.fileTemplates.impl.AllFileTemplatesConfigurable$5@FileTemplatesConfigurable" count="1" />
+      <entry action="com.intellij.ide.fileTemplates.impl.AllFileTemplatesConfigurable$6@FileTemplatesConfigurable" count="2" />
+      <entry action="com.intellij.ide.hierarchy.HierarchyBrowserBase$CloseAction@TypeHierarchyViewToolbar" count="1" />
+      <entry action="com.intellij.ide.plugins.InstalledPluginsManagerMain$MyFilterEnabledAction@PluginManager" count="5" />
+      <entry action="com.intellij.ide.plugins.PluginManagerMain$RefreshAction@PluginManager" count="1" />
+      <entry action="com.intellij.ide.plugins.newui.TabHeaderComponent$3@NavBarToolbar" count="2" />
+      <entry action="com.intellij.ide.structureView.newStructureView.TreeActionWrapper@StructureViewToolbar" count="1" />
+      <entry action="com.intellij.notification.EventLogConsole$ClearLogAction@EventLog" count="3" />
+      <entry action="com.intellij.notification.EventLogToolWindowFactory$ToggleSoftWraps@EventLog" count="2" />
+      <entry action="com.intellij.openapi.actionSystem.DefaultActionGroup@EditorToolbar" count="2" />
+      <entry action="com.intellij.openapi.actionSystem.impl.ChameleonAction@MainToolbar" count="27" />
+      <entry action="com.intellij.openapi.actionSystem.impl.ChameleonAction@NavBarToolbar" count="1" />
+      <entry action="com.intellij.openapi.vcs.actions.ShowPrevChangeMarkerAction@toolbar" count="1" />
+      <entry action="com.intellij.openapi.vcs.ex.RollbackLineStatusRangeAction@toolbar" count="1" />
+      <entry action="com.intellij.openapi.wm.impl.ToolWindowHeader$HideAction@ToolwindowTitle" count="22" />
+      <entry action="com.intellij.openapi.wm.impl.ToolWindowHeader$ShowOptionsAction@ToolwindowTitle" count="1" />
+      <entry action="com.intellij.ui.AnActionButton$AnActionButtonWrapper@ToolbarDecorator" count="1" />
+      <entry action="com.intellij.ui.CommonActionsPanel$MyActionButton@ToolbarDecorator" count="20" />
+      <entry action="com.jetbrains.python.console.PydevConsoleRunnerImpl$6@PydevConsoleRunner" count="7" />
+      <entry action="com.jetbrains.python.console.PydevConsoleRunnerImpl$RestartAction@PydevConsoleRunner" count="29" />
+      <entry action="com.jetbrains.python.debugger.concurrency.tool.panels.ConcurrencyToolWindowPanel$CloseToolWindowAction@PyConcurrencyVisualizer" count="1" />
+    </counts>
+  </component>
+  <component name="UsageTrigger">
+    <counts>
+      <entry feature="AbstractNewProjectStep.Pure Python" count="1" />
+      <entry feature="CreateFile.CreateFileAction" count="23" />
+      <entry feature="StripeButton[Android Profiler].hidden" count="21" />
+      <entry feature="StripeButton[Docker].hidden" count="1" />
+      <entry feature="StripeButton[Version Control].shown" count="3" />
+      <entry feature="diff.DirDiffTableModel" count="1" />
+      <entry feature="diff.DirDiffViewer" count="1" />
+      <entry feature="execute.PythonConfigurationType.Debug" count="39" />
+      <entry feature="execute.PythonConfigurationType.Run" count="433" />
+      <entry feature="git.branch.checkout.local" count="5" />
+      <entry feature="git.branch.compare" count="1" />
+      <entry feature="git.branch.delete.local" count="2" />
+      <entry feature="git.branch.merge" count="3" />
+      <entry feature="git.branch.rebase" count="3" />
+      <entry feature="ide.help.Cython_Speedups" count="4" />
+      <entry feature="ide.settings.Android Logcat" count="1" />
+      <entry feature="ide.settings.Appearance" count="18" />
+      <entry feature="ide.settings.Auto Import" count="5" />
+      <entry feature="ide.settings.Code Completion" count="1" />
+      <entry feature="ide.settings.Code Style" count="4" />
+      <entry feature="ide.settings.Editor Tabs" count="1" />
+      <entry feature="ide.settings.File and Code Templates" count="22" />
+      <entry feature="ide.settings.Font" count="5" />
+      <entry feature="ide.settings.General" count="3" />
+      <entry feature="ide.settings.Java" count="4" />
+      <entry feature="ide.settings.Keymap" count="8" />
+      <entry feature="ide.settings.Plugins" count="2" />
+      <entry feature="ide.settings.Project Interpreter" count="1" />
+      <entry feature="ide.settings.Project Structure" count="5" />
+      <entry feature="ide.settings.Smart Keys" count="1" />
+      <entry feature="ide.settings.System Settings" count="1" />
+      <entry feature="ide.settings.Updates" count="1" />
+      <entry feature="ideaapp.started" count="52" />
+      <entry feature="project.view.pane.AndroidView" count="4" />
+      <entry feature="project.view.pane.PackagesPane" count="1" />
+      <entry feature="project.view.pane.ProjectPane" count="22" />
+      <entry feature="python.console.local" count="6" />
+      <entry feature="show.recent.tests.action" count="1" />
+      <entry feature="terminal.linux" count="14" />
+      <entry feature="tips.of.the.day.next" count="12" />
+      <entry feature="vcs.log.GraphNodeClick" count="3" />
+      <entry feature="vcs.log.Refresh" count="34" />
+      <entry feature="vcs.log.ShowDiff" count="10" />
+      <entry feature="welcome.screen.About" count="2" />
+      <entry feature="welcome.screen.WelcomScreen.ManageLicense" count="2" />
+      <entry feature="welcome.screen.WelcomeScreen.Configure" count="13" />
+      <entry feature="welcome.screen.WelcomeScreen.CreateNewProject" count="1" />
+      <entry feature="welcome.screen.WelcomeScreen.Documentation" count="3" />
+      <entry feature="welcome.screen.WelcomeScreen.OpenProject" count="1" />
+      <entry feature="welcome.screen.WelcomeScreen.Plugins" count="1" />
+      <entry feature="welcome.screen.WelcomeScreen.Settings" count="1" />
+      <entry feature="welcome.screen.WelcomeScreen.Update" count="3" />
+      <entry feature="welcome.screen.null" count="2" />
+    </counts>
+  </component>
+  <component name="UsagesStatistic" time="1543568647207" show-notification="false" />
+</application>

@@ -1,0 +1,92 @@
+<application>
+  <component name="ProjectManager">
+    <defaultProject>
+      <component name="CMakeSettings">
+        <configurations>
+          <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+        </configurations>
+      </component>
+      <component name="CodeInsightWorkspaceSettings">
+        <option name="optimizeImportsOnTheFly" value="true" />
+      </component>
+      <component name="Encoding" addBOMForNewFiles="with NO BOM" />
+      <component name="ProjectCodeStyleConfiguration">
+        <code_scheme name="Project" version="173">
+          <Objective-C-extensions>
+            <file>
+              <option name="com.jetbrains.cidr.lang.util.OCDeclarationKind" value="Import" />
+              <option name="com.jetbrains.cidr.lang.util.OCDeclarationKind" value="Macro" />
+              <option name="com.jetbrains.cidr.lang.util.OCDeclarationKind" value="Typedef" />
+              <option name="com.jetbrains.cidr.lang.util.OCDeclarationKind" value="Enum" />
+              <option name="com.jetbrains.cidr.lang.util.OCDeclarationKind" value="Constant" />
+              <option name="com.jetbrains.cidr.lang.util.OCDeclarationKind" value="Global" />
+              <option name="com.jetbrains.cidr.lang.util.OCDeclarationKind" value="Struct" />
+              <option name="com.jetbrains.cidr.lang.util.OCDeclarationKind" value="FunctionPredecl" />
+              <option name="com.jetbrains.cidr.lang.util.OCDeclarationKind" value="Function" />
+            </file>
+            <class>
+              <option name="com.jetbrains.cidr.lang.util.OCDeclarationKind" value="Property" />
+              <option name="com.jetbrains.cidr.lang.util.OCDeclarationKind" value="Synthesize" />
+              <option name="com.jetbrains.cidr.lang.util.OCDeclarationKind" value="InitMethod" />
+              <option name="com.jetbrains.cidr.lang.util.OCDeclarationKind" value="StaticMethod" />
+              <option name="com.jetbrains.cidr.lang.util.OCDeclarationKind" value="InstanceMethod" />
+              <option name="com.jetbrains.cidr.lang.util.OCDeclarationKind" value="DeallocMethod" />
+            </class>
+            <extensions>
+              <pair source="cpp" header="h" fileNamingConvention="NONE" />
+              <pair source="c" header="h" fileNamingConvention="NONE" />
+            </extensions>
+          </Objective-C-extensions>
+        </code_scheme>
+      </component>
+      <component name="ProjectDictionaryState">
+        <dictionary name="zhanglei" />
+      </component>
+      <component name="ProjectInspectionProfilesVisibleTreeState">
+        <entry key="Project Default">
+          <profile-state>
+            <expanded-state>
+              <State>
+                <id />
+              </State>
+              <State>
+                <id>Spelling</id>
+              </State>
+            </expanded-state>
+            <selected-state>
+              <State>
+                <id>SpellCheckingInspection</id>
+              </State>
+            </selected-state>
+          </profile-state>
+        </entry>
+      </component>
+      <component name="PropertiesComponent">
+        <property name="android.project.structure.last.selected" value="SDK Location" />
+        <property name="android.project.structure.proportion" value="0.15" />
+        <property name="android.sdk.path" value="$USER_HOME$/Android/Sdk" />
+        <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+        <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+        <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+      </component>
+      <component name="VcsContentAnnotationSettings">
+        <option name="myLimit" value="2678400000" />
+      </component>
+      <component name="masterDetails">
+        <states>
+          <state key="ScopeChooserConfigurable.UI">
+            <settings>
+              <splitter-proportions>
+                <option name="proportions">
+                  <list>
+                    <option value="0.2" />
+                  </list>
+                </option>
+              </splitter-proportions>
+            </settings>
+          </state>
+        </states>
+      </component>
+    </defaultProject>
+  </component>
+</application>

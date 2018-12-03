@@ -1,0 +1,15 @@
+<application>
+  <component name="SexyEditor">
+    <option name="configs">
+      <list>
+        <BackgroundConfiguration>
+          <option name="fileNames">
+            <array />
+          </option>
+          <option name="opacity" value="0.5" />
+          <option name="shrinkToFit" value="true" />
+        </BackgroundConfiguration>
+      </list>
+    </option>
+  </component>
+</application>

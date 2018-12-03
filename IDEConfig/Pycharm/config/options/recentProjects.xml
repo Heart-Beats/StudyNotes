@@ -1,0 +1,184 @@
+<application>
+  <component name="RecentProjectsManager">
+    <option name="recentPaths">
+      <list>
+        <option value="$USER_HOME$/3T/home/zhanglei/zl_RC3/ivi/packages/apps/av" />
+        <option value="$USER_HOME$/3T/home/zhanglei/zl_RC3/ivi/packages/uibase" />
+        <option value="$USER_HOME$/3T/home/zhanglei/zl_treble/ivi/packages/uibase" />
+        <option value="$USER_HOME$/3T/home/zhanglei/zl_poc/ivi/packages/apps/av" />
+        <option value="$USER_HOME$/3T/home/zhanglei/zl_poc/ivi/packages/apps/av/app" />
+        <option value="$USER_HOME$/3T/home/zhanglei/zl_RC3/ivi/packages/apps/home" />
+        <option value="$USER_HOME$/3T/home/zhanglei/zl_RC3/ivi/packages/uibase/app" />
+        <option value="$USER_HOME$/3T/home/zhanglei/zl_RC3/ivi/packages/uibase/gradle" />
+        <option value="$USER_HOME$/3T/home/zhanglei/zl_treble/ivi/packages/apps/av" />
+        <option value="$USER_HOME$/3T/home/zhanglei/zl_rc3/ivi/packages/apps/av" />
+      </list>
+    </option>
+    <option name="openPaths">
+      <list>
+        <option value="$USER_HOME$/3T/home/zhanglei/zl_RC3/ivi/packages/apps/av" />
+      </list>
+    </option>
+    <option name="lastPath" value="$USER_HOME$/3T/home/zhanglei/zl_RC3/ivi/packages/apps/av" />
+    <option name="pid" value="" />
+    <option name="additionalInfo">
+      <map>
+        <entry key="$USER_HOME$/3T/home/zhanglei/zl_RC3/ivi/packages/apps/av">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="AI-181.5540.7.32.5056338" />
+              <option name="productionCode" value="AI" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1543826078801" />
+              <option name="buildTimestamp" value="1539049450809" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/3T/home/zhanglei/zl_RC3/ivi/packages/apps/home">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="AI-181.5540.7.32.5056338" />
+              <option name="productionCode" value="AI" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1540894969841" />
+              <option name="buildTimestamp" value="1539049449211" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/3T/home/zhanglei/zl_RC3/ivi/packages/uibase">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="AI-181.5540.7.32.5056338" />
+              <option name="productionCode" value="AI" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1543288807458" />
+              <option name="buildTimestamp" value="1539049480798" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/3T/home/zhanglei/zl_RC3/ivi/packages/uibase/app">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="AI-181.5540.7.32.5056338" />
+              <option name="productionCode" value="AI" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1540454093947" />
+              <option name="buildTimestamp" value="1539049450591" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/3T/home/zhanglei/zl_RC3/ivi/packages/uibase/gradle">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="AI-181.5540.7.32.5056338" />
+              <option name="productionCode" value="AI" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1540452541051" />
+              <option name="buildTimestamp" value="1539049450591" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/3T/home/zhanglei/zl_poc/ivi/packages/apps/av">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="AI-181.5540.7.32.5056338" />
+              <option name="productionCode" value="AI" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1541577568556" />
+              <option name="buildTimestamp" value="1539049444152" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/3T/home/zhanglei/zl_poc/ivi/packages/apps/av/app">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="AI-181.5540.7.32.5056338" />
+              <option name="productionCode" value="AI" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1541556639003" />
+              <option name="buildTimestamp" value="1539049444152" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/3T/home/zhanglei/zl_rc3/ivi/packages/apps/av">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="AI-181.5540.7.32.5056338" />
+              <option name="productionCode" value="AI" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1539943518922" />
+              <option name="buildTimestamp" value="1539049450591" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/3T/home/zhanglei/zl_treble/ivi/packages/apps/av">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="AI-181.5540.7.32.5056338" />
+              <option name="productionCode" value="AI" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1540436103776" />
+              <option name="buildTimestamp" value="1539049450591" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/3T/home/zhanglei/zl_treble/ivi/packages/uibase">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="AI-181.5540.7.32.5056338" />
+              <option name="productionCode" value="AI" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1543287730751" />
+              <option name="buildTimestamp" value="1539049480798" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/AndroidStudioProjects/MyApplication">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="AI-173.4907809" />
+              <option name="productionCode" value="AI" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1535962608687" />
+              <option name="buildTimestamp" value="1532380499197" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/zl_POC/ivi/packages/apps/av/app">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="AI-173.4907809" />
+              <option name="productionCode" value="AI" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1538301978689" />
+              <option name="buildTimestamp" value="1532380460650" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/zl_rc3/ivi/packages/apps/av">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="AI-181.5540.7.32.5014246" />
+              <option name="productionCode" value="AI" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1539069436481" />
+              <option name="buildTimestamp" value="1537211832862" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/zl_rc3/ivi/packages/apps/home">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="AI-181.5540.7.32.5014246" />
+              <option name="productionCode" value="AI" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1539155838720" />
+              <option name="buildTimestamp" value="1537211832862" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="lastProjectLocation" value="$USER_HOME$/3T/home/zhanglei/zl_RC3/ivi/packages" />
+  </component>
+</application>

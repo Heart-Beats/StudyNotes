@@ -3680,3 +3680,186 @@ IO编程中，Stream（流）是一个很重要的概念，可以把流想象成
 
 
 #### 10.2  StringIO和BytesIO
+
+- **StringIO**
+
+    很多时候，数据读写不一定是文件，也可以在内存中读写。
+
+    **StringIO顾名思义就是在内存中读写str**。
+
+    要把str写入StringIO，我们需要先创建一个StringIO，然后，**像文件一样写入**即可：
+
+    ```python
+    >>> from io import StringIO
+    >>> f = StringIO()
+    >>> f.write('hello')
+    5
+    >>> f.write(' ')
+    1
+    >>> f.write('world!')
+    6
+    >>> print(f.getvalue())
+    hello world!
+    ```
+
+    **`getvalue()`方法用于获得写入后的str。**
+
+    要读取StringIO，可以用一个str初始化StringIO，然后，**像读文件一样读取**：
+
+    ```python
+    >>> from io import StringIO
+    >>> f = StringIO('Hello!\nHi!\nGoodbye!')
+    >>> while True:
+    ...     s = f.readline()
+    ...     if s == '':
+    ...         break
+    ...     print(s.strip())
+    ...
+    Hello!
+    Hi!
+    Goodbye!
+    ```
+
+- **BytesIO**
+
+    StringIO操作的只能是str，如果要操作二进制数据，就需要使用BytesIO。
+
+    **BytesIO实现了在内存中读写bytes**，我们创建一个BytesIO，然后写入一些bytes：
+
+    ```python
+    >>> from io import BytesIO
+    >>> f = BytesIO()
+    >>> f.write('中文'.encode('utf-8'))
+    6
+    >>> print(f.getvalue())
+    b'\xe4\xb8\xad\xe6\x96\x87'
+    ```
+
+    请注意，写入的不是str，而是经过UTF-8编码的bytes。
+
+    **和StringIO类似，可以用一个bytes初始化BytesIO**，然后，像读文件一样读取：
+
+    ```python
+    >>> from io import BytesIO
+    >>> f = BytesIO(b'\xe4\xb8\xad\xe6\x96\x87')
+    >>> f.read()
+    b'\xe4\xb8\xad\xe6\x96\x87'
+    ```
+
+
+
+#### 10.3  操作文件和目录
+
+Python内置的`os`模块可以直接调用操作系统提供的接口函数。
+
+打开Python交互式命令行，我们来看看如何使用`os`模块的基本功能：
+
+```python
+>>> import os
+>>> os.name # 操作系统类型
+'posix'
+```
+
+如果是`posix`，说明系统是`Linux`、`Unix`或`Mac OS X`，如果是`nt`，就是`Windows`系统。
+
+要获取详细的系统信息，可以调用**`uname()`**函数：
+
+```python
+>>> os.uname()
+posix.uname_result(sysname='Darwin', nodename='MichaelMacPro.local', release='14.3.0', version='Darwin Kernel Version 14.3.0: Mon Mar 23 11:59:05 PDT 2015; root:xnu-2782.20.48~5/RELEASE_X86_64', machine='x86_64')
+```
+
+注意`uname()`函数在Windows上不提供，也就是说，`os`模块的某些函数是跟操作系统相关的。
+
+
+
+- **环境变量**
+
+    **在操作系统中定义的环境变量，全部保存在`os.environ`这个变量中**，可以直接查看：
+
+    ```python
+    >>> os.environ
+    environ({'VERSIONER_PYTHON_PREFER_32_BIT': 'no', 'TERM_PROGRAM_VERSION': '326', 'LOGNAME': 'michael', 'USER': 'michael', 'PATH': '/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/X11/bin:/usr/local/mysql/bin', ...})
+    ```
+
+    **要获取某个环境变量的值，可以调用`os.environ.get('key')`**：
+
+    ```python
+    >>> os.environ.get('PATH')
+    '/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/X11/bin:/usr/local/mysql/bin'
+    >>> os.environ.get('x', 'default')
+    'default'
+    ```
+
+- **操作文件和目录**
+
+    操作文件和目录的函数一部分放在`os`模块中，一部分放在`os.path`模块中，这一点要注意一下。查看、创建和删除目录可以这么调用：
+
+    ```python
+    # 查看当前目录的绝对路径:
+    >>> os.path.abspath('.')
+    '/Users/michael'
+    # 在某个目录下创建一个新目录，首先把新目录的完整路径表示出来:
+    >>> os.path.join('/Users/michael', 'testdir')
+    '/Users/michael/testdir'
+    # 然后创建一个目录:
+    >>> os.mkdir('/Users/michael/testdir')
+    # 删掉一个目录:
+    >>> os.rmdir('/Users/michael/testdir')
+    ```
+
+    **把两个路径合成一个时，不要直接拼字符串，而要通过`os.path.join()`函数，这样可以正确处理不同操作系统的路径分隔符**。在Linux/Unix/Mac下，`os.path.join()`返回这样的字符串：
+
+    ```python
+    part-1/part-2
+    ```
+
+    而Windows下会返回这样的字符串：
+
+    ```python
+    part-1\part-2
+    ```
+
+    同样的道理，**要拆分路径时，也不要直接去拆字符串，而要通过`os.path.split()`函数，这样可以把一个**
+
+    **路径拆分为两部分，后一部分总是最后级别的目录或文件名**：
+
+    ```python
+    >>> os.path.split('/Users/michael/testdir/file.txt')
+    ('/Users/michael/testdir', 'file.txt')
+    ```
+
+    **`os.path.splitext()`可以直接让你得到文件扩展名**，很多时候非常方便：
+
+    ```python
+    >>> os.path.splitext('/path/to/file.txt')
+    ('/path/to/file', '.txt')
+    ```
+
+    **注意：** 这些合并、拆分路径的函数并不要求目录和文件要真实存在，它们只对字符串进行操作。
+
+    文件操作使用下面的函数。假定当前目录下有一个`test.txt`文件：
+
+    ```python
+    # 对文件重命名:
+    >>> os.rename('test.txt', 'test.py')
+    # 删掉文件:
+    >>> os.remove('test.py')
+    ```
+
+    **注意：** `os`模块中未提供复制文件函数，可以通过`IO`操作和`shutil`模块的`copyfile()`实现文件复制。
+
+    最后看看如何**利用Python的特性来过滤文件**。比如我们要列出当前目录下的所有目录，只需要一行代码：
+
+    ```python
+    >>> [x for x in os.listdir('.') if os.path.isdir(x)]
+    ['.lein', '.local', '.m2', '.npm', '.ssh', '.Trash', '.vim', 'Applications', 'Desktop', ...]
+    ```
+
+    要列出所有的`.py`文件，也只需一行代码：
+
+    ```python
+    >>> [x for x in os.listdir('.') if os.path.isfile(x) and os.path.splitext(x)[1]=='.py']
+    ['apis.py', 'config.py', 'models.py', 'pymonitor.py', 'test_db.py', 'urls.py', 'wsgiapp.py']
+    ```
+

@@ -3863,3 +3863,364 @@ posix.uname_result(sysname='Darwin', nodename='MichaelMacPro.local', release='14
     ['apis.py', 'config.py', 'models.py', 'pymonitor.py', 'test_db.py', 'urls.py', 'wsgiapp.py']
     ```
 
+    **注意：** **`listdir()`**获取的是目录下的所有文件名和文件夹名，只是相对路径，若要遍历使用最好使用绝对路径。
+
+
+
+#### 10.4  序列化
+
+我们把**对象从内存中变成可存储或传输的过程称之为序列化**，序列化之后，就可以把序列化后的内容写入磁盘，或者通过网络传输到别的机器上。反过来，把**序列化的对象重新读到内存里称之为反序列化**，在Python中序列化叫pickling，反序列化叫unpickling。
+
+
+
+Python提供了`pickle`模块来实现序列化。
+
+- **序列化**
+
+    首先，我们尝试把一个对象序列化并写入文件：
+
+    ```python
+    >>> import pickle
+    >>> d = dict(name='Bob', age=20, score=88)
+    >>> pickle.dumps(d)
+    b'\x80\x03}q\x00(X\x03\x00\x00\x00ageq\x01K\x14X\x05\x00\x00\x00scoreq\x02KXX\x04\x00\x00\x00nameq\x03X\x03\x00\x00\x00Bobq\x04u.'
+    ```
+
+    **`pickle.dumps()`方法把任意对象序列化成一个`bytes`**，然后，就可以把这个`bytes`写入文件。或者用另一个方法**`pickle.dump()`直接把对象序列化后写入一个file-like Object**：
+
+    ```python
+    >>> f = open('dump.txt', 'wb')
+    >>> pickle.dump(d, f)
+    >>> f.close()
+    ```
+
+    看看写入的`dump.txt`文件，一堆乱七八糟的内容，这些都是Python保存的对象内部信息。
+
+- **反序列化**
+
+    当我们要把对象从磁盘读到内存时，可以先把内容读到一个`bytes`，然后用**`pickle.loads()`**方法反序列化出对象，也可以直接用**`pickle.load()`**方法从一个`file-like Object`中直接反序列化出对象。
+
+    ```python
+    >>> f = open('dump.txt', 'rb')
+    >>> d = pickle.load(f)
+    >>> f.close()
+    >>> d
+    {'age': 20, 'score': 88, 'name': 'Bob'}
+    ```
+
+    变量的内容又回来了！当然，这个变量和原来的变量是完全不相干的对象，它们只是内容相同而已。
+
+- **JSON**
+
+    如果我们**要在不同的编程语言之间传递对象，就必须把对象序列化为标准格式**，比如XML，但更好的方法是序列化为JSON。
+
+    JSON表示的对象就是标准的JavaScript语言的对象，JSON和Python内置的数据类型对应如下：
+
+    |  JSON类型  | Python类型 |
+    | :--------: | :--------: |
+    |     {}     |    dict    |
+    |     []     |    list    |
+    |  "string"  |    str     |
+    |  1234.56   | int或float |
+    | true/false | True/False |
+    |    null    |    None    |
+
+    Python内置的`json`模块提供了非常完善的Python对象到JSON格式的转换。我们先看看如何把Python对象变成一个JSON：
+
+    ```python
+    >>> import json
+    >>> d = dict(name='Bob', age=20, score=88)
+    >>> json.dumps(d)
+    '{"age": 20, "score": 88, "name": "Bob"}'
+    ```
+
+    **`dumps()`**方法返回一个`str`，内容就是标准的JSON。类似的，**`dump()`**方法可以直接把JSON写入一个`file-like Object`。
+
+    要把JSON反序列化为Python对象，用**`loads()`**或者对应的**`load()`**方法，前者把JSON的字符串反序列化，后者从`file-like Object`中读取字符串并反序列化：
+
+    ```python
+    >>> json_str = '{"age": 20, "score": 88, "name": "Bob"}'
+    >>> json.loads(json_str)
+    {'age': 20, 'score': 88, 'name': 'Bob'}
+    ```
+
+    由于JSON标准规定JSON编码是UTF-8，所以我们总是能正确地在Python的`str`与JSON的字符串之间转换。
+
+- **JSON进阶**
+
+    Python的`dict`对象可以直接序列化为JSON的`{}`，不过，很多时候，我们更喜欢用`class`表示对象，然后序列化。
+
+    `dumps()`提供了可选参数`default`来定制JSON序列化，比如，把任意`class`的实例变为`dict`再序列化为JSON：
+
+    ```python
+    print(json.dumps(s, default=lambda obj: obj.__dict__))
+    ```
+
+    因为通常`class`的实例都有一个`__dict__`属性，它就是一个`dict`，用来存储实例变量。也有少数例外，比如定义了`__slots__`的class。
+
+    **注意：**`default`也能指向自定义返回`dict`的函数。
+
+    同样的道理，如果我们要把JSON反序列化为一个`Student`对象实例，`loads()`方法首先转换出一个`dict`对象，然后，我们传入的`object_hook`函数负责把`dict`转换为`Student`实例：
+
+    ```python
+    def dict2student(d):
+        return Student(d['name'], d['age'], d['score'])
+    ```
+
+    运行结果如下：
+
+    ```python
+    >>> json_str = '{"age": 20, "score": 88, "name": "Bob"}'
+    >>> print(json.loads(json_str, object_hook=dict2student))
+    <__main__.Student object at 0x10cd3c190>
+    ```
+
+    打印出的是反序列化的`Student`实例对象。
+
+
+
+------
+
+
+
+### 11.  进程和线程
+
+线程是最小的执行单元，而进程由至少一个线程组成。如何调度进程和线程，完全由操作系统决定，程序自己不能决定什么时候执行，执行多长时间。
+
+
+
+#### 11.1  多进程
+
+- **fork()**
+
+    Unix/Linux操作系统提供了一个**`fork()`**系统调用，它非常特殊。普通的函数调用，调用一次，返回一次，但是**`fork()`调用一次，返回两次**，因为操作系统自动把当前进程（称为父进程）复制了一份（称为子进程），然后，分别在父进程和子进程内返回。
+
+    **子进程永远返回`0`，而父进程返回子进程的ID**。这样做的理由是，一个父进程可以fork出很多子进程，所以，父进程要记下每个子进程的ID，而**子进程只需要调用`getppid()`就可以拿到父进程的ID**。
+
+    可以使用`os`模块在Python程序中轻松地创建子进程：
+
+    ```python
+    import os
+    
+    print('Process (%s) start...' % os.getpid())
+    # Only works on Unix/Linux/Mac:
+    pid = os.fork()
+    if pid == 0:
+        print('I am child process (%s) and my parent is %s.' % (os.getpid(), os.getppid()))
+    else:
+        print('I (%s) just created a child process (%s).' % (os.getpid(), pid))
+    ```
+
+    运行结果如下：
+
+    ```python
+    Process (876) start...
+    I (876) just created a child process (877).
+    I am child process (877) and my parent is 876.
+    ```
+
+    由于Windows没有`fork`调用，上面的代码在Windows上无法运行。有了`fork`调用，一个进程在接到新任务时就可以复制出一个子进程来处理新任务。
+
+- **multiprocessing模块**
+
+    由于Python是跨平台的，因此也提供了一个跨平台的多进程支持的模块`multiprocessing`。**`multiprocessing`模块提供了一个`Process`类来代表一个进程对象**，下面的例子演示了启动一个子进程并等待其结束：
+
+    ```python
+    from multiprocessing import Process
+    import os
+    
+    # 子进程要执行的代码
+    def run_proc(name):
+        print('Run child process %s (%s)...' % (name, os.getpid()))
+    
+    if __name__=='__main__':
+        print('Parent process %s.' % os.getpid())
+        p = Process(target=run_proc, args=('test',))
+        print('Child process will start.')
+        p.start()
+        p.join()
+        print('Child process end.')
+    ```
+
+    执行结果如下：
+
+    ```python
+    Parent process 928.
+    Process will start.
+    Run child process test (929)...
+    Process end.
+    ```
+
+    **创建子进程时，只需要传入一个执行函数和函数的参数，创建一个`Process`实例，用`start()`方法启动**，这样创建进程比`fork()`还要简单。
+
+    **`join()`方法可以等待子进程结束后再继续往下运行，通常用于进程间的同步**。
+
+- 
+
+- **Pool**
+
+    如果要启动大量的子进程，可以用进程池的方式批量创建子进程：
+
+    ```python
+    from multiprocessing import Pool
+    import os, time, random
+    
+    def long_time_task(name):
+        print('Run task %s (%s)...' % (name, os.getpid()))
+        start = time.time()
+        time.sleep(random.random() * 3)
+        end = time.time()
+        print('Task %s runs %0.2f seconds.' % (name, (end - start)))
+    
+    if __name__=='__main__':
+        print('Parent process %s.' % os.getpid())
+        p = Pool(4)
+        for i in range(5):
+            p.apply_async(long_time_task, args=(i,))
+        print('Waiting for all subprocesses done...')
+        p.close()
+        p.join()
+        print('All subprocesses done.')
+    ```
+
+    执行结果如下：
+
+    ```python
+    Parent process 669.
+    Waiting for all subprocesses done...
+    Run task 0 (671)...
+    Run task 1 (672)...
+    Run task 2 (673)...
+    Run task 3 (674)...
+    Task 2 runs 0.14 seconds.
+    Run task 4 (673)...
+    Task 1 runs 0.27 seconds.
+    Task 3 runs 0.86 seconds.
+    Task 0 runs 1.41 seconds.
+    Task 4 runs 1.91 seconds.
+    All subprocesses done.
+    ```
+
+    **对`Pool`对象调用`join()`方法会等待所有子进程执行完毕，调用`join()`之前必须先调用`close()`，调用`close()`之后就不能继续添加新的`Process`了**。
+
+    请注意输出的结果，task `0`，`1`，`2`，`3`是立刻执行的，而task `4`要等待前面某个task完成后才执行，这是因为`Pool`的默认大小在我的电脑上是4，因此，最多同时执行4个进程。这是`Pool`有意设计的限制，并不是操作系统的限制。如果改成：
+
+    ```python
+    p = Pool(5)
+    ```
+
+    就可以同时跑5个进程。
+
+    **`Pool()`的默认大小是CPU的核数，可以指定它的大小，表示最多可以同时执行的进程数。**
+
+- **子进程**
+
+    很多时候，子进程并不是自身，而是一个外部进程。我们创建了子进程后，还需要控制子进程的输入和输出。
+
+    `subprocess`模块可以让我们非常方便地启动一个子进程，然后控制其输入和输出。
+
+    下面的例子演示了如何在Python代码中运行命令`nslookup www.python.org`，这和命令行直接运行的效果是一样的：
+
+    ```python
+    import subprocess
+    
+    print('$ nslookup www.python.org')
+    r = subprocess.call(['nslookup', 'www.python.org'])
+    print('Exit code:', r)
+    ```
+
+    运行结果：
+
+    ```python
+    $ nslookup www.python.org
+    Server:        192.168.19.4
+    Address:    192.168.19.4#53
+    
+    Non-authoritative answer:
+    www.python.org    canonical name = python.map.fastly.net.
+    Name:    python.map.fastly.net
+    Address: 199.27.79.223
+    
+    Exit code: 0
+    ```
+
+    如果子进程还需要输入，则可以通过`communicate()`方法输入：
+
+    ```python
+    import subprocess
+    
+    print('$ nslookup')
+    p = subprocess.Popen(['nslookup'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    output, err = p.communicate(b'set q=mx\npython.org\nexit\n')
+    print(output.decode('utf-8'))
+    print('Exit code:', p.returncode)
+    ```
+
+    上面的代码相当于在命令行执行命令`nslookup`，然后手动输入：
+
+    ```python
+    set q=mx
+    python.org
+    exit
+    ```
+
+- **进程间通信**
+
+    Python的`multiprocessing`模块包装了底层的机制，提供了`Queue`、`Pipes`等多种方式来交换数据。
+
+    我们以`Queue`为例，在父进程中创建两个子进程，一个往`Queue`里写数据，一个从`Queue`里读数据：
+
+    ```python
+    from multiprocessing import Process, Queue
+    import os, time, random
+    
+    # 写数据进程执行的代码:
+    def write(q):
+        print('Process to write: %s' % os.getpid())
+        for value in ['A', 'B', 'C']:
+            print('Put %s to queue...' % value)
+            q.put(value)
+            time.sleep(random.random())
+    
+    # 读数据进程执行的代码:
+    def read(q):
+        print('Process to read: %s' % os.getpid())
+        while True:
+            value = q.get(True)
+            print('Get %s from queue.' % value)
+    
+    if __name__=='__main__':
+        # 父进程创建Queue，并传给各个子进程：
+        q = Queue()
+        pw = Process(target=write, args=(q,))
+        pr = Process(target=read, args=(q,))
+        # 启动子进程pw，写入:
+        pw.start()
+        # 启动子进程pr，读取:
+        pr.start()
+        # 等待pw结束:
+        pw.join()
+        # pr进程里是死循环，无法等待其结束，只能强行终止:
+        pr.terminate()
+    ```
+
+    运行结果如下：
+
+    ```python
+    Process to write: 50563
+    Put A to queue...
+    Process to read: 50564
+    Get A from queue.
+    Put B to queue...
+    Get B from queue.
+    Put C to queue...
+    Get C from queue.
+    ```
+
+    在Unix/Linux下，`multiprocessing`模块封装了`fork()`调用，使我们不需要关注`fork()`的细节。由于Windows没有`fork`调用，因此，`multiprocessing`需要“模拟”出`fork`的效果，父进程所有Python对象都必须通过pickle序列化再传到子进程去，所有，如果`multiprocessing`在Windows下调用失败了，要先考虑是不是pickle失败了。
+
+    ##### 小结：
+
+    1. 在Unix/Linux下，可以使用`fork()`调用实现多进程。
+    2. 要实现跨平台的多进程，可以使用`multiprocessing`模块。
+    3. 进程间通信是通过`Queue`、`Pipes`等实现的。

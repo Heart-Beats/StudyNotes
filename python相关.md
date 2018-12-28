@@ -5477,7 +5477,7 @@ A ['A', 'A', 'a']
 
 
 
-#### 13.9  contextlib
+#### 13.8  contextlib
 
 在Python的中，读写文件这样的资源要特别注意，必须在使用完毕后正确关闭它们正确关闭文件资源的一个方法是使用。**`try...finally`**：
 
@@ -5499,7 +5499,7 @@ with open('/path/to/file', 'r') as f:
 
 而且并不是只有打开文件时才能使用`with`语句。实际上，任何对象，只要正确实现了上下文管理，就可以用于`with`语句。
 
-上下文管理通过`__enter__`和`__exit__`这两个方法实现，例如，下面的类实现了这两个方法：
+**上下文管理通过`__enter__`和`__exit__`这两个方法实现**，例如，下面的类实现了这两个方法：
 
 ```python
 class Query(object):
@@ -5605,6 +5605,253 @@ with Query('Bob') as q:
             thing.close()
     ```
 
-    它的作用就是把任意对象变为上下文对象，请立即获取iTunes并`with`语句。
 
-    `@contextlib`还有一些其他的装饰，便于我们编写更简洁的代码。
+
+
+#### 13.9  urllib
+
+urllib提供了一系列用于操作URL的功能。
+
+- **Get**
+
+    **`urllib`的`request`模块可以非常方便地抓取URL内容，也就是发送一个GET请求到指定的页面，然后返回HTTP的响应**：
+
+    例如，对豆瓣的一个URL`https://api.douban.com/v2/book/2129650`进行抓取，并返回响应：
+
+    ```python
+    from urllib import request
+    
+    with request.urlopen('https://api.douban.com/v2/book/2129650') as f:
+        data = f.read()
+        print('Status:', f.status, f.reason)
+        for k, v in f.getheaders():
+            print('%s: %s' % (k, v))
+        print('Data:', data.decode('utf-8'))
+    ```
+
+    可以看到HTTP响应的头和JSON数据：
+
+    ```python
+    Status: 200 OK
+    Server: nginx
+    Date: Tue, 26 May 2015 10:02:27 GMT
+    Content-Type: application/json; charset=utf-8
+    Content-Length: 2049
+    Connection: close
+    Expires: Sun, 1 Jan 2006 01:00:00 GMT
+    Pragma: no-cache
+    Cache-Control: must-revalidate, no-cache, private
+    X-DAE-Node: pidl1
+    Data: {"rating":{"max":10,"numRaters":16,"average":"7.4","min":0},"subtitle":"","author":["廖雪峰编著"],"pubdate":"2007-6",...}
+    ```
+
+    **如果我们要想模拟浏览器发送GET请求，就需要使用`Request`对象，通过往`Request`对象添加HTTP头，再使用`request.urlopen(req)`就可以把请求伪装成浏览器**。例如，模拟iPhone 6去请求豆瓣首页：
+
+    ```python
+    from urllib import request
+    
+    req = request.Request('http://www.douban.com/')
+    #User-Agent头用来标识浏览器
+    req.add_header('User-Agent', 'Mozilla/6.0 (iPhone; CPU iPhone OS 8_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/8.0 Mobile/10A5376e Safari/8536.25')
+    with request.urlopen(req) as f:
+        print('Status:', f.status, f.reason)
+        for k, v in f.getheaders():
+            print('%s: %s' % (k, v))
+        print('Data:', f.read().decode('utf-8'))
+    ```
+
+    这样豆瓣会返回适合iPhone的移动版网页：
+
+    ```python
+    ...
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+        <meta name="format-detection" content="telephone=no">
+        <link rel="apple-touch-icon" sizes="57x57" href="http://img4.douban.com/pics/cardkit/launcher/57.png" />
+    ...
+    ```
+
+- **Post**
+
+    **如果要以POST发送一个请求，只需要把参数`data`以bytes形式传入`request.urlopen(req, data)`中**。
+
+    我们模拟一个微博登录，先读取登录的邮箱和口令，然后按照weibo.cn的登录页的格式以`username=xxx&password=xxx`的编码传入：
+
+    ```python
+    from urllib import request, parse
+    
+    print('Login to weibo.cn...')
+    email = input('Email: ')
+    passwd = input('Password: ')
+    login_data = parse.urlencode([
+        ('username', email),
+        ('password', passwd),
+        ('entry', 'mweibo'),
+        ('client_id', ''),
+        ('savestate', '1'),
+        ('ec', ''),
+        ('pagerefer', 'https://passport.weibo.cn/signin/welcome?entry=mweibo&r=http%3A%2F%2Fm.weibo.cn%2F')
+    ])
+    
+    req = request.Request('https://passport.weibo.cn/sso/login')
+    req.add_header('Origin', 'https://passport.weibo.cn')
+    req.add_header('User-Agent', 'Mozilla/6.0 (iPhone; CPU iPhone OS 8_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/8.0 Mobile/10A5376e Safari/8536.25')
+    req.add_header('Referer', 'https://passport.weibo.cn/signin/login?entry=mweibo&res=wel&wm=3349&r=http%3A%2F%2Fm.weibo.cn%2F')
+    
+    with request.urlopen(req, data=login_data.encode('utf-8')) as f:
+        print('Status:', f.status, f.reason)
+        for k, v in f.getheaders():
+            print('%s: %s' % (k, v))
+        print('Data:', f.read().decode('utf-8'))
+    ```
+
+    如果登录成功，我们获得的响应如下：
+
+    ```python
+    Status: 200 OK
+    Server: nginx/1.2.0
+    ...
+    Set-Cookie: SSOLoginState=1432620126; path=/; domain=weibo.cn
+    ...
+    Data: {"retcode":20000000,"msg":"","data":{...,"uid":"1658384301"}}
+    ```
+
+    如果登录失败，我们获得的响应如下：
+
+    ```python
+    ...
+    Data: {"retcode":50011015,"msg":"\u7528\u6237\u540d\u6216\u5bc6\u7801\u9519\u8bef","data":{"username":"example@python.org","errline":536}}
+    ```
+
+- **Handler**
+
+    如果还需要更复杂的控制，比如通过一个Proxy去访问网站，我们需要利用`ProxyHandler`来处理，示例代码如下：
+
+    ```python
+    proxy_handler = urllib.request.ProxyHandler({'http': 'http://www.example.com:3128/'})
+    proxy_auth_handler = urllib.request.ProxyBasicAuthHandler()
+    proxy_auth_handler.add_password('realm', 'host', 'username', 'password')
+    opener = urllib.request.build_opener(proxy_handler, proxy_auth_handler)
+    with opener.open('http://www.example.com/login.html') as f:
+        pass
+    ```
+
+
+
+#### 13.10  XML
+
+- **DOM vs SAX**
+
+    操作XML有两种方法：DOM和SAX：
+
+    - DOM会把整个XML读入内存，解析为树，因此占用内存大，解析慢，优点是可以任意遍历树的节点。
+    - SAX是流模式，边读边解析，占用内存小，解析快，缺点是我们需要自己处理事件。
+
+    正常情况下，优先考虑SAX，因为DOM实在太占内存。
+
+    **在Python中使用SAX解析XML非常简洁，通常我们关心的事件是`start_element`，`end_element`和`char_data`，准备好这3个函数，然后就可以解析xml了**。
+
+    举个例子，当SAX解析器读到一个节点时：
+
+    ```xml
+    <a href="/">python</a>
+    ```
+
+    会产生3个事件：
+
+    1. start_element事件，在读取`<a href="/">`时；
+    2. char_data事件，在读取`python`时；
+    3. end_element事件，在读取`</a>`时。
+
+    用代码实验一下：
+
+    ```Python
+    from xml.parsers.expat import ParserCreate
+    
+    class DefaultSaxHandler(object):
+        def start_element(self, name, attrs):
+            print('sax:start_element: %s, attrs: %s' % (name, str(attrs)))
+    
+        def end_element(self, name):
+            print('sax:end_element: %s' % name)
+    
+        def char_data(self, text):
+            print('sax:char_data: %s' % text)
+    
+    xml = r'''<?xml version="1.0"?>
+    <ol>
+        <li><a href="/python">Python</a></li>
+        <li><a href="/ruby">Ruby</a></li>
+    </ol>
+    '''
+    
+    handler = DefaultSaxHandler()
+    parser = ParserCreate()
+    parser.StartElementHandler = handler.start_element
+    parser.EndElementHandler = handler.end_element
+    parser.CharacterDataHandler = handler.char_data
+    parser.Parse(xml)
+    ```
+
+    需要注意的是读取一大段字符串时，`CharacterDataHandler`可能被多次调用，所以需要自己保存起来，在`EndElementHandler`里面再合并。
+
+    除了解析XML外，如何生成XML呢？99%的情况下需要生成的XML结构都是非常简单的，因此，**最简单也是最有效的生成XML的方法是拼接字符串**：
+
+    ```python
+    L = []
+    L.append(r'<?xml version="1.0"?>')
+    L.append(r'<root>')
+    L.append(encode('some & data'))
+    L.append(r'</root>')
+    return ''.join(L)
+    ```
+
+    如果要生成复杂的XML呢？建议你不要用XML，改成JSON。
+
+
+
+#### 13.11  HTMLParser
+
+HTML本质上是XML的子集，但是HTML的语法没有XML那么严格，所以不能用标准的DOM或SAX来解析HTML。
+
+好在Python提供了HTMLParser来非常方便地解析HTML，只需简单几行代码：
+
+```python
+from html.parser import HTMLParser
+from html.entities import name2codepoint
+
+class MyHTMLParser(HTMLParser):
+
+    def handle_starttag(self, tag, attrs):
+        print('<%s>' % tag)
+
+    def handle_endtag(self, tag):
+        print('</%s>' % tag)
+
+    def handle_startendtag(self, tag, attrs):
+        print('<%s/>' % tag)
+
+    def handle_data(self, data):	#data为tag内的文本节点内容，包括不可见字符（换行符...）
+        print(data)
+
+    def handle_comment(self, data):  #该方法为处理注释事件，data为注释内容
+        print('<!--', data, '-->')
+
+    def handle_entityref(self, name):
+        print('&%s;' % name)
+
+    def handle_charref(self, name):
+        print('&#%s;' % name)
+
+parser = MyHTMLParser()
+parser.feed('''<html>
+<head></head>
+<body>
+<!-- test html parser -->
+    <p>Some <a href=\"#\">html</a> HTML&nbsp;tutorial...<br>END</p>
+</body></html>''')
+```
+
+**注意：**
+
+1. `feed()`方法可以多次调用，也就是不一定一次把整个HTML字符串都塞进去，可以一部分一部分塞进去。
+2. 特殊字符有两种，一种是英文表示的`&nbsp;`，一种是数字表示的`&#1234;`，这两种字符都可以通过Parser解析出来。

@@ -186,3 +186,20 @@ MVVM 架构里，将逻辑，数据，界面的处理划分为三个部分，模
     1. Debug 困难，由于 View 和 ViewModel 解耦，导致 Debug 时难以一眼看出 View 的事件传递
     2. 代码复杂性增大
 
+#### 5.5 MVVM在项目中划分
+
+![img](https://upload-images.jianshu.io/upload_images/6444381-d0227c73131096d3.png?imageMogr2/auto-orient/strip|imageView2/2/w/960/format/webp)
+
+- **View层：**Activity/Fragment，持有ViewModel引用，向ViewModel传递事件以及观察数据（LiveData）的变化
+
+- **ViewModel层：**逻辑控制层，各种画面的ViewModel，持有Repository的引用，向Repository请求数据并向下设置数据（LiveData）
+
+- **Model层：**数据层，各种repository存放不同类型的数据，并向外提供接口以复用
+
+    ​	有以下几种类型数据：
+
+    1. 网络数据：使用Retrofit + RxJava进行网络请求
+    2. 本地数据库：选择合适的ORM数据库框架进行增删改查
+    3. 本地文件：通过流访问
+    4. 缓存：主要缓存请求比较耗时的数据，这样再次请求数据时的顺序就变为：请求-->缓存-->文件或数据库-->网络请求
+

@@ -304,7 +304,7 @@ Git创建一个分支很快，因为除了增加一个`dev`指针，改改`HEAD`
 - ​	查看分支：**`git branch`**
 - ​	创建分支：**`git branch <branch-name>`**
 - ​	切换分支：**`git checkout <branch-name>`**
-- ​	创建+切换分支：**`git checkout -b <branch-name>`**
+- ​	创建+切换分支：**`git checkout -b <branch-name> [remote-branch-name]`**
 - ​	合并某分支到当前分支：**`git merge <branch-name>`**
 - ​	删除分支：**`git branch -d <branch-name>`**
 

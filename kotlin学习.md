@@ -1,6 +1,6 @@
-typora-copy-images-to: upload
-
 # Kotlin
+
+
 
 [TOC]
 
@@ -3059,7 +3059,7 @@ view.setOnClickListener({ v: View ->
 
 
 
-如果 Lambda 是函数的最后一个参数，你可以把 Lambda 写在括号的外面：
+如果 ==Lambda 是函数的最后一个参数，你可以把 Lambda 写在括号的外面==：
 
 ```kotlin
 view.setOnClickListener() { v: View ->
@@ -3067,7 +3067,7 @@ view.setOnClickListener() { v: View ->
 }
 ```
 
-而如果 Lambda 是函数唯一的参数，你还可以直接把括号去了：
+而如果 ==Lambda 是函数唯一的参数，你还可以直接把括号去了==：
 
 ```kotlin
 view.setOnClickListener { v: View ->
@@ -3075,7 +3075,7 @@ view.setOnClickListener { v: View ->
 }
 ```
 
-另外，如果这个 Lambda 是单参数的，那么它的这个参数也可以省略掉不写：
+另外，如果这个 ==Lambda 是单参数的，那么它的这个参数也可以省略掉不写==：
 
 ```kotlin
 view.setOnClickListener {
@@ -3571,3 +3571,704 @@ val RADIUS = 200f.dp
 
 
 
+### 9. 「协程 Coroutines」
+
+
+
+#### 9.1 协程是什么
+
+在 Java 中要实现并发操作通常需要开启一个 `Thread` ：
+
+```java
+☕️
+new Thread(new Runnable() {
+    @Override
+    public void run() {
+        ...
+    }
+}).start();
+```
+
+这里仅仅只是开启了一个新线程，至于它何时结束、执行结果怎么样，我们在主线程中是无法直接知道的。
+
+Kotlin 中同样可以通过线程的方式去写：
+
+```kotlin
+🏝️
+Thread({
+    ...
+}).start()
+```
+
+可以看到，和 Java 一样也摆脱不了直接使用 `Thead` 的那些困难和不方便：
+
+- 线程什么时候执行结束
+- 线程间的相互通信
+- 多个线程的管理
+
+我们可以用 Java 的 `Executor` 线程池来进行线程管理：
+
+```kotlin
+🏝️
+val executor = Executors.newCachedThreadPool()
+executor.execute({
+    ...
+})
+```
+
+用 Android 的 `AsyncTask` 来解决线程间通信：
+
+```kotlin
+🏝️
+object : AsyncTask<T0, T1, T2> { 
+    override fun doInBackground(vararg args: T0): String { ... }
+    override fun onProgressUpdate(vararg args: T1) { ... }
+    override fun onPostExecute(t3: T3) { ... }
+}
+```
+
+`AsyncTask` 是 Android 对线程池 `Executor` 的封装，但它的缺点也很明显：
+
+- 需要处理很多回调，如果业务多则容易陷入「回调地狱」。
+- 硬是把业务拆分成了前台、中间更新、后台三个函数。
+
+看到这里自然想到使用 RxJava 解决回调地狱，它确实可以很方便地解决上面的问题。
+
+RxJava，准确来讲是 ReactiveX 在 Java 上的实现，是一种响应式程序框架，我们通过它提供的「Observable」的编程范式进行链式调用，可以很好地消除回调。
+
+使用协程，同样可以像 Rx 那样有效地消除回调地狱，不过无论是设计理念，还是代码风格，两者是有很大区别的，协程在写法上和普通的顺序代码类似。
+
+
+下面的例子是使用协程进行网络请求获取用户信息并显示到 UI 控件上：
+
+```kotlin
+🏝️
+launch({
+    val user = api.getUser() // 👈 网络请求（IO 线程）
+    nameTv.text = user.name  // 👈 更新 UI（主线程）
+})
+```
+
+这里只是展示了一个代码片段，`launch` 并不是一个顶层函数，它必须在一个对象中使用，我们之后再讲，这里只关心它内部业务逻辑的写法。
+
+`launch` 函数加上实现在 `{}` 中具体的逻辑，就构成了一个协程。通常我们做网络请求，要不就传一个 callback，要不就是在 IO 线程里进行阻塞式的同步调用，而在这段代码中，上下两个语句分别工作在两个线程里，但写法上看起来和普通的单线程代码一样。
+
+这里的 `api.getUser` 是一个**挂起函数**，所以能够保证 `nameTv.text` 的正确赋值，这就涉及到了协程中最著名的==「非阻塞式挂起」==。
+
+因此，协程其实也就相当于一个线程框架，可以让我们「用同步的方式写异步的代码」。
+
+
+
+#### 9.2 协程的好处
+
+1. 闭包
+
+    调用 Kotlin 协程中的 API，经常会用到闭包写法。但闭包并不是 Kotlin 中的新概念，在 Java 8 中就已经支持。
+
+    我们先以 `Thread` 为例，来看看什么是闭包：
+
+    ```kotlin
+    🏝️
+    // 创建一个 Thread 的完整写法
+    Thread(object : Runnable {
+        override fun run() {
+            ...
+        }
+    })
+    
+    // 满足 SAM，先简化为
+    Thread({
+        ...
+    })
+    
+    // 使用闭包，再简化为
+    Thread {
+        ...
+    }
+    ```
+
+    形如 `Thread {...}` 这样的结构中 `{}` 就是一个闭包。在 Kotlin 中有这样一个语法糖：当函数的最后一个参数是 lambda 表达式时，可以将 lambda 写在括号外。这就是它的闭包原则。
+
+    对于上文所使用的 `launch` 函数，可以通过闭包来进行简化 ：
+
+    ```kotlin
+    🏝️
+    launch {
+        ...
+    }
+    ```
+
+2. 基本使用
+    前面提到，`launch` 函数不是顶层函数，是不能直接用的，可以使用下面三种方法来创建协程：
+
+    ```kotlin
+    🏝️
+    // 方法一，使用 runBlocking 顶层函数
+    runBlocking {
+        getImage(imageId)
+    }
+    
+    // 方法二，使用 GlobalScope 单例对象
+    //            👇 可以直接调用 launch 开启协程
+    GlobalScope.launch {
+        getImage(imageId)
+    }
+    
+    // 方法三，自行通过 CoroutineContext 创建一个 CoroutineScope 对象
+    //                                    👇 需要一个类型为 CoroutineContext 的参数
+    val coroutineScope = CoroutineScope(context)
+    coroutineScope.launch {
+        getImage(imageId)
+    }
+    ```
+
+    - 方法一：通常适用于单元测试的场景，而业务开发中不会用到这种方法，因为它是线程阻塞的。
+
+    - 方法二：和使用 `runBlocking` 的区别在于不会阻塞线程。但在 Android 开发中同样不推荐这种用法，因为它的生命周期会和 app 一致，且不能取消（什么是协程的取消后面的文章会讲）。
+
+    - 方法三：比较推荐的使用方法，我们可以通过 `context` 参数去管理和控制协程的生命周期（这里的 `context` 和 Android 里的不是一个东西，是一个更通用的概念，会有一个 Android 平台的封装来配合使用）。
+
+        
+
+    协程最常用的功能是并发，而并发的典型场景就是多线程。可以使用 `Dispatchers.IO` 参数把任务切到 IO 线程执行：
+
+    ```kotlin
+    🏝️
+    coroutineScope.launch(Dispatchers.IO) {
+        ...
+    }
+    ```
+    
+    也可以使用 `Dispatchers.Main` 参数切换到主线程：
+    
+    ```kotlin
+    🏝️
+    coroutineScope.launch(Dispatchers.Main) {
+        ...
+    }
+    ```
+    
+    所以在「协程是什么」一节中讲到的异步请求的例子完整写出来是这样的：
+    
+    ```kotlin
+    🏝️
+    coroutineScope.launch(Dispatchers.Main) {   // 在主线程开启协程
+        val user = api.getUser() // IO 线程执行网络请求
+        nameTv.text = user.name  // 主线程更新 UI
+    }
+    ```
+    
+     而通过 Java 实现以上逻辑，我们通常需要这样写：
+    
+    ```java
+    ☕️
+    api.getUser(new Callback<User>() {
+        @Override
+        public void success(User user) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    nameTv.setText(user.name);
+                }
+            })
+        }
+        
+        @Override
+        public void failure(Exception e) {
+            ...
+        }
+    });
+    ```
+    
+    这种回调式的写法，打破了代码的顺序结构和完整性，读起来相当难受。
+    
+3. 协程的「1 到 0」
+
+    对于回调式的写法，如果并发场景再复杂一些，代码的嵌套可能会更多，这样的话维护起来就非常麻烦。但如果你使用了 Kotlin 协程，多层网络请求只需要这么写：
+
+    ```kotlin
+    🏝️
+    coroutineScope.launch(Dispatchers.Main) {       // 开始协程：主线程
+        val token = api.getToken()                  // 网络请求：IO 线程
+        val user = api.getUser(token)               // 网络请求：IO 线程
+        nameTv.text = user.name                     // 更新 UI：主线程
+    }
+    ```
+
+    如果遇到的场景是多个网络请求需要等待所有请求结束之后再对 UI 进行更新。比如以下两个请求：
+
+    ```kotlin
+    🏝️
+    api.getAvatar(user, callback)
+    api.getCompanyLogo(user, callback)
+    ```
+
+    如果使用回调式的写法，那么代码可能写起来既困难又别扭。于是我们可能会选择妥协，通过先后请求代替同时请求：
+
+    ```kotlin
+    🏝️
+    api.getAvatar(user) { avatar ->
+        api.getCompanyLogo(user) { logo ->
+            show(merge(avatar, logo))
+        }
+    }
+    ```
+
+    在实际开发中如果这样写，本来能够并行处理的请求被强制通过串行的方式去实现，可能会导致等待时间长了一倍，也就是性能差了一倍。
+
+    而如果使用协程，可以直接把两个并行请求写成上下两行，最后再把结果进行合并即可：
+
+    ```kotlin
+    🏝️
+    coroutineScope.launch(Dispatchers.Main) {
+        //            👇  async 函数之后再讲
+        val avatar = async { api.getAvatar(user) }    // 获取用户头像
+        val logo = async { api.getCompanyLogo(user) } // 获取用户所在公司的 logo
+        val merged = suspendingMerge(avatar, logo)    // 合并结果
+        //                  👆
+        show(merged) // 更新 UI
+    }
+    ```
+
+    可以看到，即便是比较复杂的并行网络请求，也能够通过协程写出结构清晰的代码。需要注意的是 `suspendingMerge` 并不是协程 API 中提供的方法，而是我们自定义的一个可「挂起」的结果合并方法。
+
+    ==让复杂的并发代码，写起来变得简单且清晰，是协程的优势。==
+
+    这里，两个没有相关性的后台任务，因为用了协程，被安排得明明白白，互相之间配合得很好，也就是我们之前说的==「协作式任务」==。
+
+    本来需要回调，现在直接没有回调了，这种从 1 到 0 的设计思想真的妙哉。
+
+
+
+#### 9.3 协程怎么用
+
+##### 9.3.1 在项目中配置对 Kotlin 协程的支持
+
+在使用协程之前，我们需要在 `build.gradle` 文件中增加对 Kotlin 协程的依赖：
+
+- 项目根目录下的 `build.gradle` :
+
+```groovy
+buildscript {
+    ...
+    // 👇 定义依赖的kotlin协程版本号
+    ext.kotlin_coroutines = '1.3.1'
+    ...
+}
+```
+
+- Module 下的 `build.gradle` :
+
+```groovy
+dependencies {
+    ...
+    //                                       👇 依赖协程核心库
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines"
+    //                                       👇 依赖当前平台所对应的平台库
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines"
+    ...
+}
+```
+
+Kotlin 协程是以官方扩展库的形式进行支持的。而且，使用的「核心库」和 「平台库」的版本应该保持一致。
+
+- 核心库中包含的代码主要是协程的公共 API 部分。有了这一层公共代码，才使得协程在各个平台上的接口得到统一。
+- 平台库中包含的代码主要是协程框架在具体平台的具体实现方式。因为多线程在各个平台的实现方式是有所差异的。
+
+完成了以上的准备工作就可以开始使用协程了。
+
+
+
+##### 9.3.2 开始使用协程
+
+协程最简单的使用方法，其实在前面章节就已经看到了。我们可以通过一个 `launch` 函数实现线程切换的功能：
+
+```kotlin
+🏝️
+//               👇
+coroutineScope.launch(Dispatchers.IO) {
+    ...
+}
+```
+
+这个 ==`launch` 函数，它具体的含义是：我要创建一个新的协程，并在指定的线程上运行它==。这个被创建、被运行的所谓「协程」是谁？就是你传给 `launch` 的那些代码，这一段连续代码叫做一个「协程」。
+
+所以，什么时候用协程？当你需要切线程或者指定线程的时候。你要在后台执行任务？切！
+
+```kotlin
+🏝️
+launch(Dispatchers.IO) {
+    val image = getImage(imageId)
+}
+```
+
+然后需要在前台更新界面？再切！
+
+```kotlin
+🏝️
+coroutineScope.launch(Dispatchers.IO) {
+    val image = getImage(imageId)
+    launch(Dispatchers.Main) {
+        avatarIv.setImageBitmap(image)
+    }
+}
+```
+
+好像有点不对劲？这不还是有嵌套嘛。
+
+
+
+如果只是使用 `launch` 函数，协程并不能比线程做更多的事。不过协程中却有一个很实用的函数：==`withContext` 。这个函数可以切换到指定的线程，并在闭包内的逻辑执行结束之后，自动把线程切回去继续执行==。那么可以将上面的代码写成这样：
+
+```kotlin
+🏝️
+coroutineScope.launch(Dispatchers.Main) {      // 👈 在 UI 线程开始
+    val image = withContext(Dispatchers.IO) {  // 👈 切换到 IO 线程，并在执行完成后切回 UI 线程
+        getImage(imageId)                      // 👈 将会运行在 IO 线程
+    }
+    avatarIv.setImageBitmap(image)             // 👈 回到 UI 线程更新 UI
+} 
+```
+
+这种写法看上去好像和刚才那种区别不大，但如果你需要频繁地进行线程切换，这种写法的优势就会体现出来。可以参考下面的对比：
+
+```kotlin
+🏝️
+// 第一种写法
+coroutineScope.launch(Dispatchers.IO) {
+    ...
+    launch(Dispatchers.Main){
+        ...
+        launch(Dispatchers.IO) {
+            ...
+            launch(Dispatchers.Main) {
+                ...
+            }
+        }
+    }
+}
+
+// 通过第二种写法来实现相同的逻辑
+coroutineScope.launch(Dispatchers.Main) {
+    ...
+    withContext(Dispatchers.IO) {
+        ...
+    }
+    ...
+    withContext(Dispatchers.IO) {
+        ...
+    }
+    ...
+}
+```
+
+由于可以"自动切回来"，消除了并发代码在协作时的嵌套。由于消除了嵌套关系，我们甚至可以把 `withContext` 放进一个单独的函数里面：
+
+```kotlin
+🏝️
+launch(Dispatchers.Main) {              // 👈 在 UI 线程开始
+    val image = getImage(imageId)
+    avatarIv.setImageBitmap(image)     // 👈 执行结束后，自动切换回 UI 线程
+}
+//                               👇
+fun getImage(imageId: Int) = withContext(Dispatchers.IO) {
+    ...
+}
+```
+
+这就是之前说的「用同步的方式写异步的代码」了。不过如果只是这样写，编译器是会报错的：
+
+```kotlin
+🏝️
+fun getImage(imageId: Int) = withContext(Dispatchers.IO) {
+    // IDE 报错 Suspend function'withContext' should be called only from a coroutine or another suspend funcion
+}
+```
+
+意思是说，`withContext` 是一个 `suspend` 函数，它需要在协程或者是另一个 `suspend` 函数中调用。
+
+
+
+##### 9.3.3 `suspend`
+
+`suspend` 是 Kotlin 协程最核心的关键字，几乎所有介绍 Kotlin 协程的文章和演讲都会提到它。它的中文意思是「暂停」或者「可挂起」。如果你去看一些技术博客或官方文档的时候，大概可以了解到：==「代码执行到 `suspend` 函数的时候会『挂起』，并且这个『挂起』是非阻塞式的，它不会阻塞你当前的线程。」==
+
+上面报错的代码，其实只需要在前面加一个 `suspend` 就能够编译通过：
+
+```kotlin
+🏝️
+//👇
+suspend fun getImage(imageId: Int) = withContext(Dispatchers.IO) {
+    ...
+}
+```
+
+
+
+##### 9.3.4 `launch` 与 `async`
+
+接下来我们主要来对比 `launch` 与 `async` 这两个函数。
+
+- 相同点：它们都可以用来启动一个协程，返回的都是 `Coroutine`，我们这里不需要纠结具体是返回哪个类。
+- 不同点：`async` 返回的 `Coroutine` 多实现了 `Deferred` 接口。
+
+关于 `Deferred` 更深入的知识就不在这里过多阐述，它的意思就是延迟，也就是结果稍后才能拿到，调用 `Deferred.await()` 就可以得到结果了。
+
+
+
+接下来我们继续看看 `async` 是如何使用的，先回忆一下前面获取头像的场景：
+
+```kotlin
+🏝️
+coroutineScope.launch(Dispatchers.Main) {
+    //                      👇  async 函数启动新的协程
+    val avatar: Deferred = async { api.getAvatar(user) }    // 获取用户头像
+    val logo: Deferred = async { api.getCompanyLogo(user) } // 获取用户所在公司的 logo
+    //            👇          👇 获取返回值
+    show(avatar.await(), logo.await())                     // 更新 UI
+}
+```
+
+可以看到 avatar 和 logo 的类型可以声明为 `Deferred` ，通过 `await` 获取结果并且更新到 UI 上显示。`await` 函数签名如下：
+
+```kotlin
+🏝️
+public suspend fun await(): T
+```
+
+
+
+#### 9.4 「挂起」：`suspend`
+
+##### 9.4.1 挂起本质
+
+**挂起的对象是协程。**还记得协程是什么吗？==启动一个协程可以使用 `launch` 或者 `async` 函数，协程其实就是这两个函数中闭包的代码块==。
+
+`launch` ，`async` 或者其他函数创建的协程，在执行到某一个 `suspend` 函数的时候，这个协程会被「suspend」，也就是被挂起。那此时又是从哪里挂起？**从当前线程挂起。换句话说，就是这个协程从正在执行它的线程上脱离。**
+
+suspend 是有暂停的意思，但我们在协程中应该理解为：当线程执行到协程的 `suspend` 函数的时候，暂时就不继续执行协程代码了。
+
+
+
+我们先让时间静止，然后兵分两路，分别看看这两个互相脱离的线程和协程接下来将会发生什么事情：
+
+- **线程：**
+
+    协程的代码块中，线程执行到了 suspend 函数这里的时候，就暂时不再执行剩余的协程代码，跳出协程的代码块。那线程接下来会做什么呢？
+
+    如果它是一个后台线程：
+
+    - 要么无事可做，被系统回收
+    - 要么继续执行别的后台任务
+
+    跟 Java 线程池里的线程在工作结束之后是完全一样的：回收或者再利用；如果这个线程它是 Android 的主线程，那它接下来就会继续回去工作：也就是一秒钟 60 次的界面刷新任务。
+
+    一个常见的场景是，获取一个图片，然后显示出来：
+
+    ```kotlin
+    🏝️
+    // 主线程中
+    GlobalScope.launch(Dispatchers.Main) {
+      val image = suspendingGetImage(imageId)  // 获取图片
+      avatarIv.setImageBitmap(image)           // 显示出来
+    }
+    
+    suspend fun suspendingGetImage(id: String) = withContext(Dispatchers.IO) {
+      ...
+    }
+    ```
+
+    这段执行在主线程的协程，它实质上会往你的主线程 `post` 一个 `Runnable`，这个 `Runnable` 就是你的协程代码：
+
+    ```kotlin
+    🏝️
+    handler.post {
+      val image = suspendingGetImage(imageId)
+      avatarIv.setImageBitmap(image)
+    }
+    ```
+
+    当这个协程被挂起的时候，就是主线程 `post` 的这个 `Runnable` 提前结束，然后继续执行它界面刷新的任务。
+
+    这个时候你可能会有一个疑问，那 `launch` 包裹的剩下代码怎么办？所以接下来，我们来看看协程这一边。
+
+- **协程：**
+
+    线程的代码在到达 `suspend` 函数的时候被掐断，接下来协程会从这个 `suspend` 函数开始在**指定的线程**继续往下执行。
+
+    谁指定的？是 `suspend` 函数指定的，比如我们这个例子中，是函数内部的 `withContext` 传入的 `Dispatchers.IO` 所指定的 IO 线程。
+
+    
+
+    `Dispatchers` 调度器，它可以将协程限制在一个特定的线程执行，或者将它分派到一个线程池，或者让它不受限制地运行。
+
+    常用的 `Dispatchers` ，有以下三种：
+
+    - `Dispatchers.Main`：Android 中的主线程
+
+    - `Dispatchers.IO`：针对磁盘和网络 IO 进行了优化，适合 IO 密集型的任务，比如：读写文件，操作数据库以及网络请求
+
+    - `Dispatchers.Default`：适合 CPU 密集型的任务，比如计算
+
+        
+
+    回到我们的协程，它从 `suspend` 函数开始脱离启动它的线程，继续执行在 `Dispatchers` 所指定的 IO 线程。紧接着在 `suspend` 函数执行完成之后，协程为我们做的最爽的事就来了：会**自动帮我们把线程再切回来**。
+
+    也就是：我们的协程原本是运行在**主线程**的，当代码遇到 suspend 函数的时候，发生线程切换，根据 `Dispatchers` 切换到了 IO 线程；
+
+    当这个函数执行完毕后，线程又切了回来，「切回来」也就是协程会再 `post` 一个 `Runnable`，让剩下的代码继续回到主线程去执行。
+
+
+
+所以现在可以对协程的「挂起」suspend 做一个解释：
+
+​		==协程在执行到有 suspend 标记的函数的时候，会被 suspend 也就是被挂起，而所谓的被挂起，就是切个线程；不过区别在于，**挂起函数在执行完成之后，协程会重新切回它原先的线程**==。
+
+再简单来讲，==在 Kotlin 中所谓的挂起，就是**一个稍后会被自动切回来的线程调度操作**==。
+
+> 这个「切回来」的动作，在 Kotlin 里叫做 [resume](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.coroutines.experimental/-continuation/resume.html)，恢复。
+
+通过刚才的分析我们知道：挂起之后是需要恢复。而恢复这个功能是协程的，如果你不在协程里面调用，恢复这个功能没法实现，所以也就回答了这个问题：为什么挂起函数必须在协程或者另一个挂起函数里被调用？这都是为了要让协程能够在 `suspend` 函数切换线程之后再切回来。
+
+
+
+##### 9.4.2 怎么就「挂起」了？
+
+我们了解到了什么是「挂起」后，再接着看看这个「挂起」是怎么做到的。
+
+先随便写一个自定义的 `suspend` 函数：
+
+```kotlin
+🏝️
+suspend fun suspendingPrint() {
+  println("Thread: ${Thread.currentThread().name}")
+}
+
+I/System.out: Thread: main
+```
+
+输出的结果还是在主线程。为什么没切换线程？因为它不知道往哪切，需要我们告诉它。
+
+对比之前例子中 `suspendingGetImage` 函数代码：
+
+```kotlin
+🏝️
+//                                               👇
+suspend fun suspendingGetImage(id: String) = withContext(Dispatchers.IO) {
+  ...
+}
+```
+
+可以发现不同之处其实在于 `withContext` 函数。其实通过 `withContext` 源码可以知道，它本身就是一个挂起函数，它接收一个 `Dispatcher` 参数，依赖这个 `Dispatcher` 参数的指示，你的协程被挂起，然后切到别的线程。
+
+所以这个 `suspend`，其实并不是起到把任何把协程挂起，或者说切换线程的作用。真正挂起协程这件事，是 Kotlin 的协程框架帮我们做的。
+
+所以我们==想要自己写一个挂起函数，仅仅只加上 `suspend` 关键字是不行的，还需要函数内部直接或间接地调用到 Kotlin 协程框架自带的 `suspend` 函数才行==。
+
+
+
+##### 9.4.3 `suspend` 的意义
+
+这个 `suspend` 关键字，既然它并不是真正实现挂起，那它的作用是什么？**它其实是一个提醒。**
+
+==函数的创建者对函数的使用者的提醒：我是一个耗时函数，我被我的创建者用挂起的方式放在后台运行，所以请在协程里调用我==。
+
+还记得刚才我们尝试自定义挂起函数的方法吗？
+
+```kotlin
+🏝️
+// 👇 redundant suspend modifier
+suspend fun suspendingPrint() {
+  println("Thread: ${Thread.currentThread().name}")
+}
+```
+
+如果你创建一个 `suspend` 函数但它内部不包含真正的挂起逻辑，编译器会给你一个提醒：`redundant suspend modifier`，告诉你这个 `suspend` 是多余的。
+
+因为你这个函数实质上并没有发生挂起，那你这个 `suspend` 关键字只有一个效果：就是限制这个函数只能在协程里被调用，如果在非协程的代码中调用，就会编译不通过。
+
+所以，==创建一个 `suspend` 函数，为了让它包含真正挂起的逻辑，要在它内部直接或间接调用 Kotlin 自带的 `suspend` 函数，你的这个 `suspend` 才是有意义的。==
+
+
+
+##### 9.4.4 怎么自定义 suspend 函数？
+
+这个「怎么自定义」其实分为两个问题：
+
+- 什么时候需要自定义 `suspend` 函数？
+- 具体该怎么写呢？
+
+
+
+1. 什么时候需要自定义 suspend 函数
+
+    如果你的某个函数比较耗时，也就是要等的操作，那就把它写成 `suspend` 函数。这就是原则。
+
+    耗时操作一般分为两类：I/O 操作和 CPU 计算工作。比如文件的读写、网络交互、图片的模糊处理，都是耗时的。另外这个「耗时」还有一种特殊情况，就是这件事本身做起来并不慢，但它需要等待，比如 5 秒钟之后再做这个操作。这种也是 `suspend` 函数的应用场景。
+
+2. 具体该怎么写
+
+    给函数加上 `suspend` 关键字，然后在 `withContext` 把函数的内容包住就可以了。提到用 `withContext`是因为它在挂起函数里功能最简单直接：把线程自动切走和切回。
+
+    当然还有其他函数来辅助我们实现自定义的 `suspend` 函数，比如还有一个挂起函数叫 `delay`，它的作用是等待一段时间后再继续往下执行代码。使用它就可以实现刚才提到的等待类型的耗时操作：
+
+    ```kotlin
+    🏝️
+    suspend fun suspendUntilDone() {
+      while (!done) {
+        delay(5)
+      }
+    }
+    ```
+
+    这些东西，在我们初步使用协程的时候不用立马接触，可以先把协程最基本的方法和概念理清楚。
+
+
+
+#### 9.5 非阻塞式挂起
+
+##### 9.5.1 什么是「非阻塞式挂起」
+
+非阻塞式是相对阻塞式而言的，线程阻塞很好理解，现实中的例子就是交通堵塞，它的核心有 3 点：
+
+- 前面有障碍物，你过不去（线程卡了）
+
+- 需要等障碍物清除后才能过去（耗时任务结束）
+
+- 除非你绕道而行（切到别的线程）
+
+    
+
+从语义上理解「非阻塞式挂起」，讲的是「非阻塞式」这个是挂起的一个特点，也就是说，协程的挂起，就是非阻塞式的，协程是不讲「阻塞式的挂起」的概念的。
+
+阻塞不阻塞，都是针对单线程讲的，一旦切了线程，肯定是非阻塞的，你都跑到别的线程了，之前的线程就自由了，可以继续做别的事情了。
+
+所以==「非阻塞式挂起」，其实就是在讲协程在挂起的同时切线程这件事情==。但是线程虽然会切，可写法上和普通的单线程差不多，也解决了原来我们单线程写法会卡线程这件事。
+
+
+
+##### 9.5.2 阻塞的本质
+
+首先，所有的代码本质上都是阻塞式的，而只有比较耗时的代码才会导致人类可感知的等待，比如在主线程上做一个耗时 50 ms 的操作会导致界面卡掉几帧，这种是我们人眼能观察出来的，而这就是我们通常意义所说的「阻塞」。
+
+举个例子，当你开发的 app 在性能好的手机上很流畅，在性能差的老手机上会卡顿，就是在说同一行代码执行的时间不一样。
+
+在网络请求的例子，IO 阻塞更多是反映在「等」这件事情上，它的性能瓶颈是和网络的数据交换，你切多少个线程都没用，该花的时间一点都少不了。
+
+而这跟协程半毛钱关系没有，切线程解决不了的事情，协程也解决不了。
+
+
+
+##### 9.5.3 协程与线程
+
+==在 Kotlin 里，协程就是基于线程来实现的一种更上层的工具 API==，类似于 Java 自带的 Executor 系列 API 或者 Android 的 Handler 系列 API。
+
+只不过呢，协程它不仅提供了方便的 API，在设计思想上是一个**基于线程的上层框架**，你可以理解为新造了一些概念用来帮助你更好地使用这些 API，仅此而已。
+
+说到这里，Kotlin 协程的三大疑问：协程是什么？挂起是什么？挂起的非阻塞式是怎么回事？就已经全部讲完了。非常简单：
+
+- 协程就是基于线程的一个工具 API；
+- 挂起就是可以自动切回来的切线程；
+- 挂起的非阻塞式指的是它能用看起来阻塞的代码写出非阻塞的操作，就这么简单。
+
+Kotlin 协程并没有脱离 Kotlin 或者 JVM 创造新的东西，它只是将多线程的开发变得更简单了，可以说是因为 Kotlin 的诞生而顺其自然出现的东西，从语法上看它很神奇，但从原理上讲，它并不是魔术。同时与Java里的线程池相比，也并无任何性能优势。

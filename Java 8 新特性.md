@@ -30,6 +30,12 @@ private interface DefaulableFactory {
 }
 ```
 
+
+
+------
+
+
+
 ### 2.Lambda 表达式
 
 可替代只需实现一个抽象方法的匿名内部类，结构：参数列表 **->** 语句块，示例如下：
@@ -39,6 +45,10 @@ Arrays.asList( "a", "b", "d" ).sort( ( e1, e2 ) -> e1.compareTo( e2 ) );
 ```
 
 - 可访问的外层作用域与匿名内部类类似，但无法调用接口中的默认方法
+
+
+
+------
 
 
 
@@ -60,6 +70,10 @@ System.out.println(converted);    // 123
 
 
 
+------
+
+
+
 ### 4.方法与构造函数引用
 
 Java 8 允许使用 **:: 关键字**来传递方法或者构造函数引用，如前一节中的代码还可以通过静态方法引用来表示：
@@ -74,7 +88,13 @@ System.out.println(converted);   // 123
 
 
 
+------
+
+
+
 ### 5.函数式接口
+
+
 
 #### 5.1 Predicate接口
 
@@ -93,6 +113,8 @@ Predicate<String> isEmpty = String::isEmpty;
 Predicate<String> isNotEmpty = isEmpty.negate();
 ```
 
+
+
 #### 5.2 Function 接口
 
 Function 接口有一个参数并且返回一个结果，并附带了一些可以和其他函数组合的默认方法（compose, andThen）：
@@ -104,6 +126,8 @@ Function<String, String> backToString = toInteger.andThen(String::valueOf);
 backToString.apply("123");     // "123"
 ```
 
+
+
 #### 5.3 Supplier 接口
 
 Supplier 接口返回一个任意范型的值，和Function接口不同的是该接口没有任何参数
@@ -113,6 +137,8 @@ Supplier<Person> personSupplier = Person::new;
 personSupplier.get();   // new Person
 ```
 
+
+
 #### 5.4 Consumer 接口
 
 Consumer 接口表示执行在单个参数上的操作，无返回值
@@ -121,6 +147,8 @@ Consumer 接口表示执行在单个参数上的操作，无返回值
 Consumer<Person> greeter = (p) -> System.out.println("Hello, " + p.firstName);
 greeter.accept(new Person("Luke", "Skywalker"));
 ```
+
+
 
 #### 5.5 Comparator 接口
 
@@ -135,6 +163,8 @@ Person p2 = new Person("Alice", "Wonderland");
 comparator.compare(p1, p2);             // > 0
 comparator.reversed().compare(p1, p2);  // < 0
 ```
+
+
 
 #### 5.6 Optional 接口
 
@@ -153,6 +183,8 @@ System.out.println( fullName.map( s -> "Hey " + s + "!" ).orElse( "Hey Stranger!
 - **orElseGet()**：如果Optional实例持有null，则可以接受一个lambda表达式生成的默认值；
 - **map()**：将现有的Opetional实例的值转换成新的值；
 - **orElse()**：如果Optional实例持有null，将值更新为传入值；
+
+
 
 #### 5.7 Stream 接口
 
@@ -285,9 +317,16 @@ stringCollection.stream();
     -  min：返回流中元素最小值
     - collect()：接收一个Collector实例，将流中元素收集成另外一个数据结构。
 
-    
+
+
+
+------
+
+
 
 ### 6.Map接口的新增方法
+
+
 
 #### 6.1 `putIfAbsent()` 
 
@@ -302,6 +341,8 @@ ret = map.putIfAbsent("a", "bbb"); //ret 为 "aaa", map 还是 {"a":"aaa"}
 map.put("b", null);
 ret = map.putIfAbsent("b", "bbb"); //ret 为 "bbb", map 为 {"a":"aaa","b":"bbb"}
 ```
+
+
 
 #### 6.2 `computeIfPresent()`
 
@@ -318,6 +359,8 @@ ret = map.computeIfPresent("a", (key, value) -> key + value); //ret "a+aaa", map
 ret = map.computeIfPresent("a", (key, value) -> null); //ret 为 null, map 为 {}，计算出的 null 把 key 删除了
 ```
 
+
+
 #### 6.3 `computeIfAbsent()`
 
 与`computeIfPresent()`相反，如果指定的 key 不存在或相关的 value 为 null 时，用计算的结果来更新value，若计算的值为 null 的话则什么也不做(不会去删除相应的 key)。同样，方法的返回值也是最终的 map.get(key)：
@@ -331,6 +374,8 @@ map.put("a", null);
 ret = map.computeIfAbsent("a", key -> key + "456"); //ret "a456", map 为 {"a":"a456"}
 ret = map.computeIfAbsent("a", key -> null); //ret 为 "a456", map 为 {"a":"a456"}
 ```
+
+
 
 #### 6.4 `replace(K key, V value)`
 
@@ -346,6 +391,8 @@ ret = map.replace("a", null); //ret 为 "abc", map 为 {"a":null}
 ret = map.replace("a", "ddd"); //ret 为 null, map 为 {"a":"ddd"}
 ```
 
+
+
 #### 6.5 replace(K key, V oldValue, V newValue)
 
 当且仅当 key 存在，并且对应值与 oldValue 不相等，才用 newValue 作为 key 的新相关联值，返回值为是否进行了替换：
@@ -360,6 +407,8 @@ ret = map.replace("a", "aaa", null); //ret 为 true, map 为 {"a":null}
 ret = map.replace("a", "aaa", "bbb");//ret 为 false, map 为 {"a":null}
 ```
 
+
+
 #### 6.6 `replaceAll() `
 
 像一个传统函数型语言的 map 函数，即对于 Map 中的每一个元素应用函数 function, 输入为 key 和 value
@@ -372,9 +421,13 @@ map.put("b", "bbb"); //map 为 {"a":"aaa","b":"bbb"}
 map.replaceAll((key, value) -> key + "-" + value); //map 为 {"a":"a-aaa","b":"b-bbb"}
 ```
 
+
+
 #### 6.7 `remove(key, value)`
 
 key 与 value 都匹配时才从map中删除。
+
+
 
 #### 6.8 `compute()`
 
@@ -387,6 +440,8 @@ ret = map.compute("a", (key, value) -> "a" + value); //ret="anull", map={"a":"an
 ret = map.compute("a", (key, value) -> "a" + value); //ret="aanull", map={"a":"aanull"}
 ret = map.compute("a", (key, value) -> null); //ret=null, map={}
 ```
+
+
 
 #### 6.9 `merge()`
 
@@ -405,6 +460,8 @@ ret = map.merge("a", "bb", (oldValue, value) -> null); //ret="bb", map={"a":"bb"
 ret = map.merge("a", null, (oldValue, value) -> oldValue + "-" + value); //NullPointerException, value 不能为 null
 ```
 
+
+
 #### 6.10 新增排序方法
 
 - `comparingByKey()/comparingByKey(Comparator<? super K> cmp)`：通过key排序
@@ -422,7 +479,13 @@ ret = map.merge("a", null, (oldValue, value) -> oldValue + "-" + value); //NullP
 
 
 
+------
+
+
+
 ### 7. 新的Date API
+
+
 
 #### 7.1 Clock 时钟
 
@@ -435,6 +498,8 @@ long millis = clock.millis();
 Instant instant = clock.instant();
 Date legacyDate = Date.from(instant);   // legacy java.util.Date
 ```
+
+
 
 #### 7.2 Timezones 时区
 
@@ -452,6 +517,8 @@ System.out.println(zone2.getRules());
 // ZoneRules[currentStandardOffset=+01:00]
 // ZoneRules[currentStandardOffset=-03:00]
 ```
+
+
 
 #### 7.3 LocalTime 本地时间
 
@@ -485,6 +552,8 @@ LocalTime leetTime = LocalTime.parse("13:37", germanFormatter);
 System.out.println(leetTime);   // 13:37
 ```
 
+
+
 #### 7.4 LocalDate 本地日期
 
 LocalDate 表示了一个确切的日期，比如 2014-03-11。该对象值是不可变的，用起来和LocalTime基本一致。下面的例子展示了如何给Date对象加减天/月/年。另外要注意的是这些**对象是不可变的，操作返回的总是一个新实例**：
@@ -511,6 +580,8 @@ DateTimeFormatter germanFormatter =
 LocalDate xmas = LocalDate.parse("24.12.2014", germanFormatter);
 System.out.println(xmas);   // 2014-12-24
 ```
+
+
 
 #### 7.5 LocalDateTime 本地日期时间
 
@@ -545,12 +616,14 @@ System.out.println(legacyDate);     // Wed Dec 31 23:59:59 CET 2014
 ```java
 DateTimeFormatter formatter =
     DateTimeFormatter
-        .ofPattern("MMM dd, yyyy - HH:mm");
+        .ofPattern("MM dd, yyyy - HH:mm");
 
 LocalDateTime parsed = LocalDateTime.parse("Nov 03, 2014 - 07:13", formatter);
 String string = formatter.format(parsed);
 System.out.println(string);     // Nov 03, 2014 - 07:13
 ```
+
+
 
 #### 7.6 时间比较
 
@@ -620,6 +693,12 @@ System.out.println("millis:"+d.toMillis());		// millis:37800000
     }
     ```
     所以，**想要获取2个时间的相差总天数，只能用Duration**。
+
+
+
+------
+
+
 
 ### 8.Annotation 注解
 
@@ -704,6 +783,12 @@ public class Annotations {
 }
 ```
 
+
+
+------
+
+
+
 ### 9. Base64
 
 对Base64编码的支持已经被加入到Java 8官方库中，这样不需要使用第三方库就可以进行Base64编码：
@@ -732,6 +817,12 @@ public class Base64s {
 ```
 
 新的Base64API也支持URL和MINE的编码解码。(**Base64.getUrlEncoder()** / **Base64.getUrlDecoder()**, **Base64.getMimeEncoder()** / **Base64.getMimeDecoder()**)。 
+
+
+
+------
+
+
 
 ### 10.并行数组
 

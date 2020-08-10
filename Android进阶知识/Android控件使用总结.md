@@ -217,3 +217,56 @@
 
 ------
 
+### 2. 自定义对话框
+
+- 首先需要自定义对话框的样式
+
+    ```xml
+    <!--对话框的样式-->
+    <style name="NormalDialogStyle">
+        <!--对话框背景 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--边框 -->
+        <item name="android:windowFrame">@null</item>
+        <!--没有标题 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 是否浮现在Activity之上 -->
+        <item name="android:windowIsFloating">true</item>
+        <!--背景透明 -->
+        <item name="android:windowIsTranslucent">false</item>
+        <!-- 是否有覆盖 -->
+        <item name="android:windowContentOverlay">@null</item>
+        <!--进出的显示动画 -->
+        <item name="android:windowAnimationStyle">@style/normalDialogAnim</item>
+        <!--背景变暗-->
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+    
+    <!--对话框动画-->
+    <style name="normalDialogAnim" parent="android:Animation">
+        <item name="@android:windowEnterAnimation">@anim/normal_dialog_enter</item>
+        <item name="@android:windowExitAnimation">@anim/normal_dialog_exit</item>
+    </style>
+    ```
+
+    然后再为对话框设置我们自定义的 style 以及需要填充的 layout ，就可以达到自定义对话框式样和布局了。
+
+    
+
+    如果需要更改对话框的位置、大小等其他属性，就需要更改 Dialog 的 Window 的 属性，如下：
+
+    ```java
+    Window dialogWindow = dialog.getWindow();
+    WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+    lp.width = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.75f);
+    lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+    // 通过lp设置的其他属性，比如位置、通过dimAmount更改背景透明度
+    ...
+    lp.gravity = Gravity.CENTER;
+    
+    //有时 dialog show()之后，更改才生效，百分百生效就放在 dialog.show() 之后
+    dialogWindow.setAttributes(lp);
+    ```
+
+    
+

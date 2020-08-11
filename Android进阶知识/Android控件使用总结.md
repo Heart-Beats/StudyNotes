@@ -4,7 +4,73 @@
 
 
 
-### 1. SearchView的定制化：
+### 1. Android 坐标系及获取坐标
+
+#### 1.1 Android 坐标系和视图坐标系
+
+1. Android坐标系
+
+    <img src="../../../Pictures/GraphBed/笔记图片/20160914151037027" alt="img" style="zoom: 80%;" />
+
+    Android坐标系以手机屏幕左上角的顶点为坐标原点，从该点向右为x轴正方向，从该点向下为y轴正方向。而触控事件中，使用 getRawX() 和 getRawY() 方法。
+
+
+
+2. 视图坐标系
+
+    <img src="../../../Pictures/GraphBed/笔记图片/20160914151055964" alt="img" style="zoom:80%;" />
+
+    视图坐标系是以父视图的左上角为坐标原点的。相应的原点向右为x轴正方向，原点向下为y 轴正方向。在触控中，通过
+
+    getX() 和 getY() 来获取的坐标值就是视图坐标系中的坐标值。
+
+
+
+#### 1.2 获取坐标值以及相对距离的方法
+
+![View位置](../../../Pictures/GraphBed/笔记图片/View位置.min.png)
+
+注：图中深蓝小圆点代表点击事件发生时的手指触摸点
+
+
+
+上图中标注的方法可以分为两类，一类是 View提供 的方法，一类是 MotionEvent 提供的方法。分别说明如下：
+
+1. View 提供的获取的坐标以及距离的方法（==视图坐标==）：
+
+    - getTop()  ：    获取到的是view自身的顶边到其父布局顶边的距离
+    - getLeft()   ：   获取到的是view自身的左边到其父布局左边的距离
+    - getRight()  ：   获取到的是view自身的右边到其父布局左边的距离
+    - getBottom()  ： 获取到的是view自身底边到其父布局顶边的距离
+
+    注意：上述方法表示的是 ==View 原始状态时相对于父容器的坐标，对 view 进行平移操作并不会被改变==。
+
+    
+
+    除了以上方法外，View 还提供了以下方法：
+
+    - `getX()` 、`getY()`  ：获取 View 左上角相对于父容器左上角的坐标，即==相对坐标==
+    - `getTranslationX()`  、`getTranslationY()`  ：获取 View 左上角相对于父容器左上角的发生的偏移量（如：**translationX = getX() - getLeft()** ）
+    - `getLocationOnScreen(int[] position)` ：获取 View 相对于整个屏幕的坐标，即==绝对坐标==
+    - `getLocationInWindow(int[] position)` ：获取 View 相对于 Window 的坐标（不包括状态栏及 ActionBar）
+
+    
+
+2. MotionEvent 提供的方法（重写 View 的 onTouchEvent 方法时使用）：
+
+    - getX()  ：  获取触摸点距离 View 左边的距离，即==视图坐标==
+
+    - getY()  ： 获取触摸点距离 View 顶边的距离，即视图坐标
+
+    - getRawX()  ： 获取触摸点距离整个屏幕左边的距离，即==绝对坐标==
+
+    - getRawY()  ： 获取触摸点距离整个屏幕顶边的距离，即绝对坐标
+
+        
+
+
+
+### 2. SearchView 的定制化
 
 - 自定义 SearchView 的 Style：
 
@@ -217,7 +283,7 @@
 
 ------
 
-### 2. 自定义对话框
+### 3. 自定义对话框
 
 - 首先需要自定义对话框的样式
 
@@ -255,18 +321,34 @@
 
     如果需要更改对话框的位置、大小等其他属性，就需要更改 Dialog 的 Window 的 属性，如下：
 
-    ```java
-    Window dialogWindow = dialog.getWindow();
-    WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-    lp.width = (int) (getWindowManager().getDefaultDisplay().getWidth() * 0.75f);
-    lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-    // 通过lp设置的其他属性，比如位置、通过dimAmount更改背景透明度
-    ...
-    lp.gravity = Gravity.CENTER;
+    ```kotlin
+    dialog.apply{
+        val window = this.window
+        window.setBackgroundDrawableResource(R.drawable.shape_bg_white_radius_8)
+        //去除dialog的背景遮罩
+        window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     
-    //有时 dialog show()之后，更改才生效，百分百生效就放在 dialog.show() 之后
-    dialogWindow.setAttributes(lp);
+        val layoutParams = window.attributes.apply {
+            // 更改遮罩层的透明度，会影响状态栏
+            // this.dimAmount = 0.1f
+            // 两种属性同时生效必须使用 位与运算
+            this.gravity = Gravity.TOP or Gravity.START
+            
+            //这里的 x,y 是相对 Window 的位置（不包括状态栏和 ActionBar ），可能需要用到 view.getLocationInWindow(int[] position) 此方法    
+            this.x = windowX
+            this.y = windowY
+                
+            val point = Point();
+    		window.getWindowManager().getDefaultDisplay().getSize(point)    
+            this.width = ( point.x * 0.75f).toInt()
+            this.height = WindowManager.LayoutParams.WRAP_CONTENT
+        }
+        window.attributes = layoutParams
+    }
     ```
-
     
+    
+
+
+​    
 

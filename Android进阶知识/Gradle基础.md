@@ -248,15 +248,15 @@ gradle 提供的预置 Task Types 非常多，具体参见：https://docs.gradle
 
 上图 settings.gradle 中导入了 3 个 project，但是实际上还会有一个根 project，使用 ./gradlew project 查看，如下所示：
 
-![Drawing 16.png](https://s0.lgstatic.com/i/image/M00/26/4A/Ciqc1F7xxoCANfOBAAEhWOUbtnQ479.png)
+<img src="https://s0.lgstatic.com/i/image/M00/26/4A/Ciqc1F7xxoCANfOBAAEhWOUbtnQ479.png" alt="Drawing 16.png" style="zoom:50%;" />
 
 我们可以在根 project 中统筹管理所有的子 project，具体在 LagouGradle 路径下的 build.gradle 中进行设置，如下所示：
 
-![Drawing 17.png](https://s0.lgstatic.com/i/image/M00/26/55/CgqCHl7xxoqASIQyAAJT5Xo0vsE094.png)
+<img src="https://s0.lgstatic.com/i/image/M00/26/55/CgqCHl7xxoqASIQyAAJT5Xo0vsE094.png" alt="Drawing 17.png" style="zoom:50%;" />
 
 这样写的好处是项目中所有 module 的配置都统一写在一个地方，统筹管理。比如经常会在主项目的 build.gradle 中添加包过滤，解决依赖冲突，如下所示：
 
-![Drawing 18.png](https://s0.lgstatic.com/i/image/M00/26/4A/Ciqc1F7xxpOAT_XTAAKMtjb8INs789.png)
+<img src="https://s0.lgstatic.com/i/image/M00/26/4A/Ciqc1F7xxpOAT_XTAAKMtjb8INs789.png" alt="Drawing 18.png" style="zoom:50%;" />
 
 
 
@@ -268,11 +268,11 @@ gradle 提供的预置 Task Types 非常多，具体参见：https://docs.gradle
 
 随着项目越来越大，工程中的 module 越来越多，依赖的三方库也越来越多。一般情况下我们会在一个集中的地方统一管理这些三方库的版本。比如像谷歌官方推荐的使用 ext 变量，在根 module 的 build.gradle 中，使用 ext 集中声明各种三方库的版本，如下所示：
 
-![Drawing 19.png](https://s0.lgstatic.com/i/image/M00/26/56/CgqCHl7xxqWAEgffAAGk5hqywVA752.png)
+<img src="https://s0.lgstatic.com/i/image/M00/26/56/CgqCHl7xxqWAEgffAAGk5hqywVA752.png" alt="Drawing 19.png" style="zoom:50%;" />
 
 然后在子 module 中，引用这些版本信息:
 
-![Drawing 20.png](https://s0.lgstatic.com/i/image/M00/26/56/CgqCHl7xxq6AL2vaAAHwPPKyVNo666.png)
+<img src="https://s0.lgstatic.com/i/image/M00/26/56/CgqCHl7xxq6AL2vaAAHwPPKyVNo666.png" alt="Drawing 20.png" style="zoom:50%;" />
 
 但是这种写法有点小瑕疵：不支持 AS 的自动补充功能，也无法使用代码自动跟踪，因此可以考虑使用 buildSrc。
 
@@ -282,17 +282,17 @@ buildSrc 是 Android 项目中一个比较特殊的 project，在 buildSrc 中�
 
 先在根路径下创建目录 buildSrc，结构如下：
 
-![Drawing 21.png](https://s0.lgstatic.com/i/image/M00/26/4A/Ciqc1F7xxriAUHEZAABrS7D3W5Y817.png)
+<img src="https://s0.lgstatic.com/i/image/M00/26/4A/Ciqc1F7xxriAUHEZAABrS7D3W5Y817.png" alt="Drawing 21.png" style="zoom:50%;" />
 
 - ==注意：这个工程的只能有一个，并且名字必须为 buildSrc。==
 
 创建好之后，在 buildSrc 中创建 build.gradle.kts 文件，并添加 Kotlin 插件：
 
-![Drawing 22.png](https://s0.lgstatic.com/i/image/M00/26/4A/Ciqc1F7xxsGAMYgAAABS_wU3BLs527.png)
+<img src="https://s0.lgstatic.com/i/image/M00/26/4A/Ciqc1F7xxsGAMYgAAABS_wU3BLs527.png" alt="Drawing 22.png" style="zoom:50%;" />
 
 编译工程有可能会报错，如下所示：
 
-![Drawing 23.png](https://s0.lgstatic.com/i/image/M00/26/4A/Ciqc1F7xxsiAXosXAAG9tqr61q0366.png)
+<img src="https://s0.lgstatic.com/i/image/M00/26/4A/Ciqc1F7xxsiAXosXAAG9tqr61q0366.png" alt="Drawing 23.png" style="zoom:50%;" />
 
 只要添加 jcenter() 仓库即可：
 
@@ -308,15 +308,15 @@ buildSrc 是 Android 项目中一个比较特殊的 project，在 buildSrc 中�
 
 我们可以在 Versions 中添加各种项目中可能会引用到的版本：
 
-![Drawing 25.png](https://s0.lgstatic.com/i/image/M00/26/4A/Ciqc1F7xxtiAOo-fAAHpeqvEX5Q157.png)
+<img src="https://s0.lgstatic.com/i/image/M00/26/4A/Ciqc1F7xxtiAOo-fAAHpeqvEX5Q157.png" alt="Drawing 25.png" style="zoom:50%;" />
 
 然后在 Deps 中引用 Versions 中的定义的各个依赖版本：
 
-![Drawing 26.png](https://s0.lgstatic.com/i/image/M00/26/56/CgqCHl7xxt-ADJo0AAIfd9-Y62o105.png)
+<img src="https://s0.lgstatic.com/i/image/M00/26/56/CgqCHl7xxt-ADJo0AAIfd9-Y62o105.png" alt="Drawing 26.png" style="zoom:50%;" />
 
 最后我们就可以在各个 module 中的 build.gradle 中直接使用 Deps 中的变量用来声明依赖，比如在 app module 的 build.gradle 中添加如下依赖：
 
-![Drawing 27.png](https://s0.lgstatic.com/i/image/M00/26/4A/Ciqc1F7xxuWAFi1dAACYA6J2oxs814.png)
+<img src="https://s0.lgstatic.com/i/image/M00/26/4A/Ciqc1F7xxuWAFi1dAACYA6J2oxs814.png" alt="Drawing 27.png" style="zoom:50%;" />
 
 上图中分别是使用 buildSrc 前后的对比，并且在使用 Deps 的过程中，studio 会给出自动提示，如下：
 

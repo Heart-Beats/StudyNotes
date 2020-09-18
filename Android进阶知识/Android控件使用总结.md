@@ -338,7 +338,7 @@
             this.x = windowX
             this.y = windowY
                 
-            val point = Point();
+            val point = Point()
     		window.getWindowManager().getDefaultDisplay().getSize(point)    
             this.width = ( point.x * 0.75f).toInt()
             this.height = WindowManager.LayoutParams.WRAP_CONTENT

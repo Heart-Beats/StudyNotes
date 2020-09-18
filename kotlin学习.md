@@ -231,7 +231,30 @@ class User {
 
 - setter 函数参数是 value
 
+  
+
+注意：==幕后字段 —— filed==
+
+- 在自定义 getter/setter 函数中，经常会用到 filed 这个幕后字段，它的含义：==代表属性本身==
+
+    ```kotlin
+    class User {
+        var name = "Mike"
+            set(value) {
+               // field = "Cute " + value
+            }
+    }
     
+    fun main() {
+        val user =  User()
+        user.name = "张三"
+        println(user.name)  //仍然为"Mike"，修改属性未生效
+    }
+    ```
+
+    如上所示，若未使用 field 进行赋值，则 name 的值会一直为 “Mike”。
+
+  
 
 前面讲过 val 是只读变量，只读的意思就是说 val 声明的变量不能进行重新赋值，也就是说不能调用 setter 函数，因此，val 声明的变量是不能重写 setter 函数的，但它可以重写 getter 函数：
 

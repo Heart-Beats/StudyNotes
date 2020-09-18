@@ -775,6 +775,7 @@ DrawableRequestBuilder 中有很多个方法，这些方法其实就是 Glide �
 DrawableRequestBuilder 的父类是 GenericRequestBuilder，我们来看一下 GenericRequestBuilder 类中的 `into()` 方法，如下所示：
 
 ```java
+// GenericRequestBuilder 类中
 public Target<TranscodeType> into(ImageView view) {
     Util.assertMainThread();
     if (view == null) {
@@ -799,3 +800,157 @@ public Target<TranscodeType> into(ImageView view) {
 }
 ```
 
+这里前面一大堆的判断逻辑我们都可以先不用管，等到后面讲 transform 的时候会再进行解释，现在我们只需要关注最后一行代码。
+
+最后一行代码先是调用了 `glide.buildImageViewTarget()` 方法，这个方法会构建出一个 Target 对象，Target 对象则是用来最终展示图片用的，如果我们跟进去的话会看到如下代码：
+
+```java
+<R> Target<R> buildImageViewTarget(ImageView imageView, Class<R> transcodedClass) {
+    return imageViewTargetFactory.buildTarget(imageView, transcodedClass);
+}
+```
+
+这里其实又是调用了ImageViewTargetFactory的buildTarget()方法，我们继续跟进去，代码如下所示：
+
+public class ImageViewTargetFactory {
+
+```java
+@SuppressWarnings("unchecked")
+public <Z> Target<Z> buildTarget(ImageView view, Class<Z> clazz) {
+    if (GlideDrawable.class.isAssignableFrom(clazz)) {
+        return (Target<Z>) new GlideDrawableImageViewTarget(view);
+    } else if (Bitmap.class.equals(clazz)) {
+        return (Target<Z>) new BitmapImageViewTarget(view);
+    } else if (Drawable.class.isAssignableFrom(clazz)) {
+        return (Target<Z>) new DrawableImageViewTarget(view);
+    } else {
+        throw new IllegalArgumentException("Unhandled class: " + clazz
+                + ", try .as*(Class).transcode(ResourceTranscoder)");
+    }
+}
+```
+可以看到，在 `buildTarget() `方法中会根据传入的 class 参数来构建不同的 Target 对象。
+
+那如果你要分析这个 class 参数是从哪儿传过来的，这可有得你分析了，简单起见我直接帮大家梳理清楚。这个 class 参数其实基本上只有两种情况：
+
+1. 如果你在使用 Glide 加载图片的时候调用了 `asBitmap()` 方法，那么这里就会构建出 BitmapImageViewTarget 对象。
+2. 否则的话构建的都是 GlideDrawableImageViewTarget对象。
+
+至于上述代码中的 DrawableImageViewTarget 对象，这个通常都是用不到的，我们可以暂时不用管它。
+
+
+
+也就是说，通过 `glide.buildImageViewTarget()` 方法，我们构建出了一个 GlideDrawableImageViewTarget 对象。那现在回到刚才 `into()` 方法的最后一行，可以看到，这里又将这个参数传入到了 GenericRequestBuilder 另一个接收 Target 对象的 `into()` 方法当中了。我们来看一下这个 `into()` 方法的源码：
+
+```java
+// GenericRequestBuilder 类中
+public <Y extends Target<TranscodeType>> Y into(Y target) {
+    Util.assertMainThread();
+    if (target == null) {
+        throw new IllegalArgumentException("You must pass in a non null Target");
+    }
+    if (!isModelSet) {
+        throw new IllegalArgumentException("You must first set a model (try #load())");
+    }
+    Request previous = target.getRequest();
+    if (previous != null) {
+        previous.clear();
+        requestTracker.removeRequest(previous);
+        previous.recycle();
+    }
+    Request request = buildRequest(target);
+    target.setRequest(request);
+    lifecycle.addListener(target);
+    requestTracker.runRequest(request);
+    return target;
+}
+```
+
+这里我们还是只抓核心代码，其实只有两行是最关键的，第16行调用 `buildRequest()` 方法构建出了一个 Request 对象，还有第19行来执行这个 Request。
+
+Request 是用来发出加载图片请求的，它是 Glide 中非常关键的一个组件。我们先来看 `buildRequest()` 方法是如何构建Request对象的：
+
+```java
+// GenericRequestBuilder 类中
+private Request buildRequest(Target<TranscodeType> target) {
+    if (priority == null) {
+        priority = Priority.NORMAL;
+    }
+    return buildRequestRecursive(target, null);
+}
+
+private Request buildRequestRecursive(Target<TranscodeType> target, ThumbnailRequestCoordinator parentCoordinator) {
+    if (thumbnailRequestBuilder != null) {
+        if (isThumbnailBuilt) {
+            throw new IllegalStateException("You cannot use a request as both the main request and a thumbnail, "
+                    + "consider using clone() on the request(s) passed to thumbnail()");
+        }
+        // Recursive case: contains a potentially recursive thumbnail request builder.
+        if (thumbnailRequestBuilder.animationFactory.equals(NoAnimation.getFactory())) {
+            thumbnailRequestBuilder.animationFactory = animationFactory;
+        }
+
+        if (thumbnailRequestBuilder.priority == null) {
+            thumbnailRequestBuilder.priority = getThumbnailPriority();
+        }
+
+        if (Util.isValidDimensions(overrideWidth, overrideHeight)
+                && !Util.isValidDimensions(thumbnailRequestBuilder.overrideWidth,
+                        thumbnailRequestBuilder.overrideHeight)) {
+          thumbnailRequestBuilder.override(overrideWidth, overrideHeight);
+        }
+
+        ThumbnailRequestCoordinator coordinator = new ThumbnailRequestCoordinator(parentCoordinator);
+        Request fullRequest = obtainRequest(target, sizeMultiplier, priority, coordinator);
+        // Guard against infinite recursion.
+        isThumbnailBuilt = true;
+        // Recursively generate thumbnail requests.
+        Request thumbRequest = thumbnailRequestBuilder.buildRequestRecursive(target, coordinator);
+        isThumbnailBuilt = false;
+        coordinator.setRequests(fullRequest, thumbRequest);
+        return coordinator;
+    } else if (thumbSizeMultiplier != null) {
+        // Base case: thumbnail multiplier generates a thumbnail request, but cannot recurse.
+        ThumbnailRequestCoordinator coordinator = new ThumbnailRequestCoordinator(parentCoordinator);
+        Request fullRequest = obtainRequest(target, sizeMultiplier, priority, coordinator);
+        Request thumbnailRequest = obtainRequest(target, thumbSizeMultiplier, getThumbnailPriority(), coordinator);
+        coordinator.setRequests(fullRequest, thumbnailRequest);
+        return coordinator;
+    } else {
+        // Base case: no thumbnail.
+        return obtainRequest(target, sizeMultiplier, priority, parentCoordinator);
+    }
+}
+
+private Request obtainRequest(Target<TranscodeType> target, float sizeMultiplier, Priority priority,
+        RequestCoordinator requestCoordinator) {
+    return GenericRequest.obtain(
+            loadProvider,
+            model,
+            signature,
+            context,
+            priority,
+            target,
+            sizeMultiplier,
+            placeholderDrawable,
+            placeholderId,
+            errorPlaceholder,
+            errorId,
+            fallbackDrawable,
+            fallbackResource,
+            requestListener,
+            requestCoordinator,
+            glide.getEngine(),
+            transformation,
+            transcodeClass,
+            isCacheable,
+            animationFactory,
+            overrideWidth,
+            overrideHeight,
+            diskCacheStrategy);
+}
+```
+
+可以看到，`buildRequest()` 方法的内部其实又调用了 `buildRequestRecursive()` 方法，而 `buildRequestRecursive()` 方法中的代码虽然有点长，但是其中90%的代码都是在处理缩略图的。如果我们只追主线流程的话，那么只需要看第48行代码就可以了。
+
+这里调用了 `obtainRequest()` 方法来获取一个 Request 对象，而 `obtainRequest()` 方法中又去调用了 GenericRequest 的 `obtain()` 方法。注意这个 `obtain()` 方法需要传入非常多的参数，而其中很多的参数我们都是比较熟悉的，像什么 placeholderId、errorPlaceholder、diskCacheStrategy 等等。因此，我们就有理由猜测，刚才在 `load()` 方法中调用的所有API，其实都是在这里组装到 Request 对象当中的。那么我们进入到这个 GenericRequest 的 `obtain()` 方法瞧一瞧：

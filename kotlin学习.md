@@ -1450,6 +1450,23 @@ Kotlin 和 Java 一样有三种集合类型：List、Set 和 Map，它们的含�
 
 
 
+注意：在继承实现方法时，方法可见性默认与父类保持一致，但有些情况是可以修改的：
+
+- 父类方法`protected` —->  子类重写可见性改为`public `
+
+- 父类方法``internal`` —->  子类重写可见性改为`public `
+
+    这两种情况是允许的，因此原则：==方法重写时可见性仅可放大不可缩小。==
+
+    需要注意以下两种情况：
+
+    - `private` 方法不可继承重写，但父类中的调用在子类生效
+    - ==`protected`可见性比`internal`大==，Java 中==`protected`可见性比`default`大==
+
+以上修改继承方法修改可见性对 Java 也生效。
+
+
+
 1.  `public`
 
     Java 中没写可见性修饰符时，表示包内可见，只有在同一个 `package` 内可以引用；
@@ -1497,7 +1514,7 @@ Kotlin 和 Java 一样有三种集合类型：List、Set 和 Map，它们的含�
 
     - Kotlin 中 `protected` 表示 `private` + 子类可见。
 
-        Kotlin 相比 Java `protected` 的可见范围收窄了，原因是 Kotlin 中不再有「包内可见」的概念了，相比 Java 的可见性着眼于 `package`，Kotlin 更关心的是 module。
+        ==Kotlin 相比 Java `protected` 的可见范围收窄了，原因是 Kotlin 中不再有「包内可见」的概念了，相比 Java 的可见性着眼于 `package`，Kotlin 更关心的是 module。==
 
 4.  `internal`
 

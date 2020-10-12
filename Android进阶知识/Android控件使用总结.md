@@ -50,13 +50,23 @@
     除了以上方法外，View 还提供了以下方法：
 
     - `getX()` 、`getY()`  ：获取 View 左上角相对于父容器左上角的坐标，即==相对坐标==
+
     - `getTranslationX()`  、`getTranslationY()`  ：获取 View 左上角相对于父容器左上角的发生的偏移量（如：**translationX = getX() - getLeft()** ）
+
     - `getLocationOnScreen(int[] position)` ：获取 View 相对于整个屏幕的坐标，即==绝对坐标==
+
     - `getLocationInWindow(int[] position)` ：获取 View 相对于 Window 的坐标（不包括状态栏及 ActionBar）
+
+        
+
+    注意： `getLocationOnScreen()`和`getLocationInWindow()` 的区别：
+
+    - View不在弹窗中时：两者获取的值相同（可见的状态栏的高度 + 可见的标题栏的高度 + View上端到标题栏下端的距离）；
+    - View在弹窗中时：`getLocationOnScreen()`还是相对屏幕左上角的坐标，`getLocationInWindow()`为相对状态栏左下角的坐标，此时计算 Y 时已不包括状态栏的高度了。
 
     
 
-2. MotionEvent 提供的方法（重写 View 的 onTouchEvent 方法时使用）：
+2. MotionEvent 提供的方法（重写 View 的 onTouchEvent 方法时使用 —- 图中蓝色部分）：
 
     - getX()  ：  获取触摸点距离 View 左边的距离，即==视图坐标==
 
@@ -334,7 +344,8 @@
             // 两种属性同时生效必须使用 位与运算
             this.gravity = Gravity.TOP or Gravity.START
             
-            //这里的 x,y 是相对 Window 的位置（不包括状态栏和 ActionBar ），可能需要用到 view.getLocationInWindow(int[] position) 此方法    
+            //这里的 x,y 是相对 Window 的位置（不包括状态栏和 ActionBar ），y 的计算需要用到
+            //  view.getLocationOnScreen(int[] position) - 状态栏高度 - 标题栏高度（若弹出框的样式未禁用actionBar）
             this.x = windowX
             this.y = windowY
                 

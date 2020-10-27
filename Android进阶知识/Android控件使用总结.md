@@ -4,6 +4,28 @@
 
 
 
+> dp 解析：
+>
+> - dpi = px/ inch（英寸）  ：   像素密度 = 斜对角像素 / 斜对角英寸
+> - density = dpi / 160   —> 密度，指每平方英寸中的像素数
+> - dp = px/ density = px / (dpi / 160)   <==>  px = dp * ( dpi /160 )
+>
+> 所以在 Android 中 ，160 dpi 的设备上 1 px = 1 dp， 同时我们可推断出： 
+>
+> ​		dp = px / (dpi / 160)  = dpi * inch / ( dpi /160) =  160 inch
+>
+> 因此我们可以看出 ， 1 英寸 = 160 dp， 即 最终 dp 决定的控件大小与任何因素无关， 160 dp 在不同 Android 设备上都会是 1 英寸。
+
+
+
+问题记录：
+
+1. 自适应宽度的控件右边同时有控件跟随它的宽度改变而移动，当这个自适应宽度达到可达最大值时，会将右边控件挤掉的，这种情况下不设置自适应控件的最大宽度如何解决？
+
+    方案：使用相对布局或约束性布局将右边控件的右边缘与自适应宽度控件的右边缘对齐，同时设置 PaddingEnd = 右边控件的宽度，即可解决此问题。 
+
+
+
 ### 1. Android 坐标系及获取坐标
 
 #### 1.1 Android 坐标系和视图坐标系
@@ -329,16 +351,17 @@
 
     
 
-    如果需要更改对话框的位置、大小等其他属性，就需要更改 Dialog 的 Window 的 属性，如下：
+- 如果需要更改对话框的位置、大小等其他属性，就需要更改 Dialog 的 Window 的 属性，如下：
 
     ```kotlin
     dialog.apply{
         val window = this.window
-        window.setBackgroundDrawableResource(R.drawable.shape_bg_white_radius_8)
+        //自定义 style 中可以控制 window 的背景和遮罩层
+        //window.setBackgroundDrawableResource(R.drawable.shape_bg_white_radius_8)
         //去除dialog的背景遮罩
-        window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+        //window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     
-        val layoutParams = window.attributes.apply {
+        val layoutParams = window?.attributes?apply {
             // 更改遮罩层的透明度，会影响状态栏
             // this.dimAmount = 0.1f
             // 两种属性同时生效必须使用 位与运算
@@ -354,12 +377,70 @@
             this.width = ( point.x * 0.75f).toInt()
             this.height = WindowManager.LayoutParams.WRAP_CONTENT
         }
-        window.attributes = layoutParams
+        window?.attributes = layoutParams
+        
+        //设置 windows 弹出和关闭动画样式
+        window?.setWindowAnimations(animationStyle)
     }
     ```
+
+
+
+
+### 4. 自定义 TabLayout 的指示器
+
+- 首先定义 tablayout 的样式
+
+    ```xml
+    <style name="TabLayoutStyle" parent="Widget.MaterialComponents.TabLayout">
+        <!--设置tab 的背景-->
+        <item name="tabBackground">@android:color/white</item>
+        <!--设置按下的水波纹颜色 -->
+        <item name="tabRippleColor">@android:color/transparent</item>
+        <!--设置水波纹是否有边界 -->
+        <item name="tabUnboundedRipple">true</item>
+        <!--设置图标与文字是否横向线性排列-->
+        <item name="tabInlineLabel">false</item>
+        <!--设置默认指示器宽度是否与 item 文字等宽，false为与文字等宽 -->
+        <item name="tabIndicatorFullWidth">false</item>
+        <!--设置默认字体样式（字体大小，颜色，风格...） -->
+        <item name="tabTextAppearance">@style/TabLayoutTextStyle</item>
+        <!--设置选中的 item 字体颜色-->
+        <item name="tabSelectedTextColor">@color/colorAccent</item>
+        <!--设置指示器的颜色 -->
+        <item name="tabIndicatorColor">@color/colorAccent</item>
+        <!--设置自定义的指示器 -->
+        <item name="tabIndicator">@drawable/tab_indicator</item>
+        <!--设置是否可横向滚动 -->
+        <item name="tabMode">scrollable</item>
+    </style>
     
+    <style name="TabLayoutTextStyle">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">#333333</item>
+    </style>
+    ```
+
+    以下为自定义的指示器文件：
+
+    ```xml
+    <?xml version="1.0" encoding="utf-8"?>
+    <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     
+        <!--决定指示器的位置， tabIndicatorFullWidth 不同值可能有不同效果-->
+        <item android:gravity="center">
+            <shape>
+                <size
+                    android:width="18dp"
+                    android:height="3dp" />
+                <!--这里设置的颜色不会生效，需要通过 tabIndicatorColor 设置-->
+                <solid android:color="@color/uikit_color_1" />
+                <corners android:radius="5dp" />
+            </shape>
+        </item>
+    </layer-list>
+    ```
 
+    通过定义上面的样式后，在使用 TabLayout 时引用此样式就可以了。
 
-​    
-
+    后续代码中就可通过 TabLayout + ViewPager + Fragment 实现页面滑动切换效果。

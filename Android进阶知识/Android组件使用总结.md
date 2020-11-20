@@ -455,8 +455,73 @@
 
     通过定义上面的样式后，在使用 TabLayout 时引用此样式就可以了。
 
-    后续代码中就可通过 TabLayout + ViewPager + Fragment 实现页面滑动切换效果。
     
+
+- 然后，创建选项卡
+
+    1. 在 xml 中通过布局文件创建
+
+        ```xml
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            style="@style/TabLayoutStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            app:tabContentStart="50dp"
+            app:tabMode="fixed">
+        
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="选项1"/>
+            <!--可以通过 "android:icon" 来给选项卡加上图标 -->
+        
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="选项2"/>
+        </com.google.android.material.tabs.TabLayout>
+        ```
+
+    2. 在代码中动态创建
+
+        ```kotlin
+        val tab = tabLayout.newTab()  //通过 newTab() 创建新的选项卡，这样才可以被添加
+        
+        tab.setText("选项卡1")     // 设置选项卡上的文字
+        tab.setIcon(R.drawable.icon_tab1)  // 设置选项卡上的图标
+        
+        tab.setCustomView(Button(requireContext()))  //给选项卡设置自定义的view（可以从布局文件中加载）
+        
+        tabLayout.addTab(tab)
+        ```
+
+    3. 给选项卡添加点击选择监听器
+
+        ```kotlin
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            //当一个选项卡进入选择状态调用
+            override fun onTabSelected(tabItem: TabLayout.Tab) {
+                //可以通过 tabItem.text、tabItem.icon、tabItem.customView 来设置选中选项卡的文字、图标、和自定义view的更改
+            }
+        
+            //当一个选项卡退出选择状态调用，能通过 tabItem 可做的处理与选中状态一致
+            override fun onTabUnselected(tabItem: TabLayout.Tab) {
+            }
+        
+            //当用户再次选择已经选择的选项卡时调用 ， tabItem 使用同上
+            override fun onTabReselected(tabItem: TabLayout.Tab) {
+            }
+        })
+        ```
+
+        注意：若在 `tabLayout.addTab(tab)` 之后设置选择监听器，那么默认选中时选择监听器是无任何事件回调的，切换选项卡时才有事件回调，若想 tabLayout 一显示就有事件回调，在 `tabLayout.addTab(tab)` 之前设置选择监听器即可，这样默认选中选项卡时就能收到监听回调。
+
+        
+
+    后续代码中就可通过 TabLayout + ViewPager + Fragment 实现页面滑动切换效果。
+
     
 
 ------
@@ -618,6 +683,18 @@
 
 ##### 5.2.1 主要创建步骤
 
+在创建通知或通知渠道之前，首先应该添加支持库来使用 ==`NotificationCompat`== 和 ==`NotificationManagerCompat`==相关API，在应用模块的 `build.gradle`文件中添加依赖：
+
+```groovy
+dependencies {
+        implementation "com.android.support:support-compat:28.0.0"
+    	// androidX 下的依赖 
+    	//implementation "androidx.core:core:1.0.0" 
+    }
+```
+
+
+
 1. 构建一个具有唯一渠道 ID、用户可见名称和重要性级别的 `NotificationChannel` 对象。
 2. （可选）使用 `setDescription()` 指定用户在系统设置中看到的说明。
 3. 注册通知渠道，方法是将该渠道传递给 `createNotificationChannel()`。
@@ -749,4 +826,312 @@ notificationManager.deleteNotificationChannel(id)
 创建新分组后，您可以调用 `setGroup()` 以将新的 `NotificationChannel` 对象与该分组相关联。
 
 将渠道提交至通知管理器后，便也无法更改通知渠道和分组之间的关联。
+
+
+
+#### 5.3 创建通知
+
+
+
+##### 5.3.1 创建基本通知
+
+最基本、精简形式（也称为折叠形式）的通知会显示一个图标、一个标题和少量内容文本
+
+<img src="../../../Pictures/GraphBed/笔记图片/notification-basic_2x.png" alt="img" style="zoom:50%;" />
+
+<center>图 1. 带有标题和文本的通知</center>
+
+如需详细了解通知的各个部分，请参阅[通知剖析](#5.1.2 通知各个部分解析)。
+
+如下代码，就是创建了一个最基本的通知：
+
+```kotlin
+val builder = NotificationCompat.Builder(this, CHANNEL_ID)
+        .setSmallIcon(R.drawable.notification_icon) //小图标,必须
+        .setContentTitle(textTitle)  //标题
+        .setContentText(textContent) //正文文本
+        .setPriority(NotificationCompat.PRIORITY_DEFAULT) 
+```
+
+注意：
+
+- `NotificationCompat.Builder` 构造函数需要提供渠道 ID。这是兼容 Android 8.0（API 级别 26）及更高版本所必需的，但会被低版本忽略。
+
+- `setPriority()`是设置通知优先级，确定通知在 Android 7.1 和更低版本上的干扰程度。（对于 Android 8.0 和更高版本，还必须设置渠道重要性)
+
+    
+
+默认情况下，通知的文本内容会被截断放在一行。如果想要更长的通知，可以使用 `setStyle()` 添加样式模板来启用可展开的通知。如下所示：
+
+```kotlin
+val builder = NotificationCompat.Builder(this, CHANNEL_ID)
+        .setSmallIcon(R.drawable.notification_icon)
+        .setContentTitle("My notification")
+        .setContentText("Much longer text that cannot fit one line...")
+        .setStyle(NotificationCompat.BigTextStyle()
+                .bigText("Much longer text that cannot fit one line..."))
+        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+```
+
+如需详细了解其他大型通知样式，包括如何添加图片和媒体播放控件，请参阅[创建包含可展开详情的通知](https://developer.android.google.cn/training/notify-user/expanded)。
+
+
+
+若需在 Android 8.0 以上设备上创建发布通知，则必须先创建通知渠道，重复创建通知渠道不会执行任何操作，所以可在应用启动时立即创建。更多详情请参阅[创建渠道通知](#5.2 创建通知渠道)。
+
+以上仅是创建一个通知，若需将通知显示发布，还需使用如下代码：
+
+```kotlin
+with(NotificationManagerCompat.from(this)) {
+    //每个通知的通知 ID 必须唯一
+    notify(notificationId, builder.build())
+}
+```
+
+请注意保存通知 ID，后续若想[更新](https://developer.android.google.cn/training/notify-user/build-notification#Updating)或[移除通知](https://developer.android.google.cn/training/notify-user/build-notification#Removing)，都需要使用这个 ID。
+
+
+
+##### 5.3.2 设置通知的点按操作
+
+每个通知都应该对点击操作做出响应，通常是在应用中打开对应于该通知的 Activity，还可以点击时发送广播或者启动 Service。为此，您必须指定通过 `PendingIntent` 对象定义的内容 Intent，并将其传递给 `setContentIntent()`。
+
+
+
+1. 打开Activity
+
+    以下代码段展示了如何创建基本 Intent，以在用户点按通知时打开 Activity：
+
+    ```kotlin
+    // Create an explicit intent for an Activity in your app
+    val intent = Intent(this, AlertDetails::class.java).apply {
+        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+    }
+    val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+    
+    val builder = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.drawable.notification_icon)
+            .setContentTitle("My notification")
+            .setContentText("Hello World!")
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            // Set the intent that will fire when the user taps the notification
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true) //点击通知后自动移除通知
+    ```
+
+    以上所示的 `setFlags()` 方法可帮助保留用户在通过通知打开应用后的预期导航体验。但您是否要使用这一方法取决于您要启动的 Activity 类型，类型可能包括：
+
+    - ==常规 Activity==
+
+        这类 Activity 是应用的正常用户体验流程的一部分。因此，当用户从通知转到这类 Activity 时，新任务应包括完整的[返回堆栈](https://developer.android.google.cn/guide/components/activities/tasks-and-back-stack)，以便用户可以按“返回”按钮并沿应用层次结构向上导航。
+
+    - ==特殊 Activity==
+
+        只有当 Activity 从通知启动时，用户才可以看到此类 Activity。从某种意义上来说，这类 Activity 通过提供通知本身难以显示的信息来扩展通知界面。因此，这类 Activity 不需要返回堆栈。
+
+        
+
+    通过以上可知，针对两种不同类型的  Activity 需要创建不同的`PendingIntent`：
+
+    - ==常规 Activity 的 PendingIntent==
+
+        - 定义应用的 Activity 层次结构
+
+            通过向应用清单文件中的每个 `<activity>` 元素添加 `android:parentActivityName` 属性来定义 Activity 的层次结构。如下：
+
+            ```xml
+            <activity
+                android:name=".MainActivity"
+                android:label="@string/app_name" >
+                <intent-filter>
+                    <action android:name="android.intent.action.MAIN" />
+                    <category android:name="android.intent.category.LAUNCHER" />
+                </intent-filter>
+            </activity>
+            <!-- 定义 ResultActivity 的父 Activity 为 MainActivity -->
+            <activity
+                android:name=".ResultActivity"
+                android:parentActivityName=".MainActivity" />
+                ...
+            </activity>
+                
+            ```
+
+        - 构建包含返回堆栈的 `PendingIntent`
+
+            启动需要包含返回堆栈的 Activity，需要创建 `TaskStackBuilder` 的实例并调用 `addNextIntentWithParentStack()`，向其传递要启动的 Activity 的 `Intent`。
+
+            只要每个 Activity 定义了父 Activity（如上文所述），就可以调用 `getPendingIntent()` 来接收包含整个返回堆栈的 `PendingIntent`：
+
+            ```kotlin
+            // 创建需要启动的 Activity 的 Intent
+            val resultIntent = Intent(this, ResultActivity::class.java)
+            val resultPendingIntent: PendingIntent? = TaskStackBuilder.create(this).run {
+                // 通过 TaskStackBuilder 添加一个包含返回堆栈的 Intent
+                addNextIntentWithParentStack(resultIntent)
+                // 从 TaskStackBuilder 获取包含返回堆栈的 PendingIntent
+                getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+            }
+            ```
+
+            如有必要，可以通过调用 `TaskStackBuilder.editIntentAt()` 取得堆栈中对应的 `Intent` 对象并添加参数，这样就可确保用户向上导航到返回堆栈中的 Activity 时，该 Activity 显示有意义的数据。
+
+            
+
+            然后，就可以像往常一样将 `PendingIntent` 传递到通知中：
+
+            ```kotlin
+            val builder = NotificationCompat.Builder(this, CHANNEL_ID).apply {
+                setContentIntent(resultPendingIntent)
+                ...
+            }
+            with(NotificationManagerCompat.from(this)) {
+                notify(NOTIFICATION_ID, builder.build())
+            }    
+            ```
+
+            
+
+    - ==特殊 Activity 的 PendingIntent==
+
+        由于从通知启动的“特殊 Activity”不需要返回堆栈，因此可以通过调用 `getActivity()` 创建 `PendingIntent`，但还应确保在清单中定义了相应的任务选项，如下：
+
+        ```xml
+        <activity
+            android:name=".ResultActivity"
+            android:launchMode="singleTask"
+            android:taskAffinity="" 
+            android:excludeFromRecents="true">
+        </activity>
+        ```
+
+        -  `android:taskAffinity=""`：
+
+            与将在代码中使用的 `FLAG_ACTIVITY_NEW_TASK` 标记结合使用，将此属性设置为空，可确保这类 Activity 不会进入应用的默认任务。具有应用默认亲和性的任何现有任务都不会受到影响。
+
+        - `android:excludeFromRecents="true"`：
+
+            用于从“最近”中排除新任务，以免用户意外返回它。
+
+            
+
+        这时就可通过调用 `getActivity()` 创建 `PendingIntent`：
+
+        ```kotlin
+        val notifyIntent = Intent(this, ResultActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK //设置为在新的空任务栈中启动
+        }
+        val notifyPendingIntent = PendingIntent.getActivity(
+                this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        ```
+
+        然后，就可以像往常一样将 `PendingIntent` 传递到通知中：
+
+        ```kotlin
+        val builder = NotificationCompat.Builder(this, CHANNEL_ID).apply {
+            setContentIntent(notifyPendingIntent)
+            ...
+        }
+        with(NotificationManagerCompat.from(this)) {
+            notify(NOTIFICATION_ID, builder.build())
+        }   
+        ```
+
+    
+
+2. 发送广播
+
+    以下代码创建了一个发送广播的`PendingIntent`：
+
+    ```kotlin
+    val intent = Intent(Constants.ACTION_CLICK_INSTALL)
+    val broadcastPendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0)
+    ```
+
+    通过 `setContentIntent()` 传递给通知，即可在点击通知时发送响应的广播 Action 。
+
+    
+
+3. 启动 Service
+
+    以下代码创建了一个启动服务的`PendingIntent`：
+
+    ```kotlin
+    val intent = Intent(context, AppUpdateService::class.java)
+    intent.action = Constants.ACTION_DOWNLOAD_RESUME
+    val servicePendingIntent = PendingIntent.getService(context, 0, intent, 0)
+    ```
+
+    通过 `setContentIntent()` 传递给通知，即可在点击通知时启动相应的服务 。
+
+
+
+##### 5.3.3 添加操作按钮
+
+一个通知最多可以提供三个操作按钮，让用户能够快速响应操作，例如暂停提醒，甚至回复短信。但这些操作不应该和[点按通知](#5.3.2 设置通知的点按操作)的效果相同。
+
+<img src="../../../Pictures/GraphBed/笔记图片/notification-basic-action_2x.png" alt="img" style="zoom:50%;" />
+
+<center>图 2. 带有一个操作按钮的通知</center>
+
+如需添加操作按钮，请将 `addAction()` 传递给 `PendingIntent` 方法。这像在设置通知的默认点按操作一样，不同的是不会启动 Activity，而是可以完成各种其他任务，例如启动在后台执行作业的 `BroadcastReceiver`，这样该操作就不会干扰已经打开的应用。
+
+例如，以下代码演示了如何向特定接收者发送广播：
+
+```kotlin
+val snoozeIntent = Intent(this, MyBroadcastReceiver::class.java).apply {
+    action = ACTION_SNOOZE
+    putExtra(EXTRA_NOTIFICATION_ID, 0)
+}
+val snoozePendingIntent: PendingIntent =
+    PendingIntent.getBroadcast(this, 0, snoozeIntent, 0)
+val builder = NotificationCompat.Builder(this, CHANNEL_ID)
+        .setSmallIcon(R.drawable.notification_icon)
+        .setContentTitle("My notification")
+        .setContentText("Hello World!")
+        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+        .setContentIntent(pendingIntent)
+        .addAction(R.drawable.ic_snooze, getString(R.string.snooze), snoozePendingIntent)
+```
+
+
+
+##### 5.3.4 添加直接回复操作
+
+Android 7.0（API 级别 24）中引入的直接回复操作允许用户直接在通知中输入文本，然后会直接提交给应用，而不必打开 Activity。例如，可以让用户从通知内直接回复短信或更新任务列表。
+
+<img src="../../../Pictures/GraphBed/笔记图片/reply-button_2x.png" alt="img" style="zoom:50%;" />
+
+<center>图 2. 点按“回复”按钮会打开文本输入框</center>
+
+直接回复操作在通知中显示为一个额外按钮，可打开文本输入。当用户完成输入后，系统会将文本回复附加到通知操作指定的 Intent，然后将 Intent 发送到应用中。
+
+
+
+- 添加回复按钮
+
+    1. 创建一个可添加到通知操作的`RemoteInput.Builder`实例。此类的构造函数接收一个字符串作为 `Intent ` 的 `action` ，之后，应用使用该键检索输入的文本。
+
+        ```kotlin
+        private val KEY_TEXT_REPLY = "key_text_reply"  // 该 key 作为 Intent 的 action
+        var replyLabel: String = resources.getString(R.string.reply_label)  // 该字符串作为操作按钮的显示文本
+        var remoteInput: RemoteInput = RemoteInput.Builder(KEY_TEXT_REPLY).run {
+            setLabel(replyLabel)
+            build()
+        }
+        ```
+        
+2. 为回复操作创建`PendingIntent`。
+    
+    ```kotlin
+        var replyPendingIntent: PendingIntent =
+            PendingIntent.getBroadcast(applicationContext,
+                conversation.getConversationId(),
+                getMessageReplyIntent(conversation.getConversationId()),
+                PendingIntent.FLAG_UPDATE_CURRENT)
+        ```
+        
+        
+
 

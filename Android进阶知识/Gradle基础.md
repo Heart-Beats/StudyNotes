@@ -4,7 +4,7 @@
 
 
 
-### 1. gradle Task
+### 1. Gradle Task
 
 > Task（任务）可以理解为 gradle 的执行单元，gradle 通过执行一个个 Task 来完成整个项目构建工作。
 >
@@ -186,7 +186,7 @@ BUILD SUCCESSFUL in 842ms
 
 
 
-#### 1.3 gradle 自定义方法
+#### 1.3 Gradle 自定义方法
 
 我们可以在 build.gradle 中使用 `def` 关键字自定义方法，比如以下代码中自定义了 getDateTime 方法，并在 task 中使用此方法：
 
@@ -240,11 +240,83 @@ gradle 提供的预置 Task Types 非常多，具体参见：https://docs.gradle
 
 
 
-### 2.  gradle project
+### 2. Gradle 项目依赖管理
+
+> 依赖管理的条件：
+>
+> - 依赖外部类库的代码实现现有的功能，避免重复造轮子
+> - 自动化依赖管理可以明确依赖的版本，能解决传递性依赖带来的版本冲突问题
+
+#### 2.1 工件坐标(jar 包标志)
+
+- group : 指明 jar 包所在的分组
+- name : 指明 jar 包的名称
+- version: 指明 jar 包的版本
+
+```groovy
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    // 简写
+    // testCompile 'junit:junit:4.12'
+}
+```
+
+在 dependencies 中指明依赖的 jar 包
+
+
+
+#### 2.2 仓库(jar 包的存放位置)
+
+- ==公共仓库(中央仓库)==
+     Gradle 没有自己的中央仓库，可配置使用 Maven 的中央仓库：mavenCentral/jcenter
+- ==私有仓库==
+     配置从本地 maven 仓库中获取依赖的 jar 包，不远程加载 jar 包，使用 mavenLocal
+- ==自定义 maven 仓库==
+     自定义仓库来源，一般指向公司的 Maven 私服。
+- ==文件仓库==
+     本地机器上的文件路径，一般不使用，没有意义。因为构建工具的目的就是去除本机的影响，可以在任何地方公用同一份仓库数据，跟本机关联上就没有太大的意义，当然特殊情况下除外。
+
+```groovy
+repositories {
+    // 配置私有仓库
+    mvaenLocal()
+    
+    // 配置中央仓库
+    // jcenter()
+    mavenCentral()
+    
+    // 自定义 maven 仓库
+    maven {
+        url ''
+        // 使用本地文件仓库仅仅后面的字符串为 本地文件仓库地址即可
+    }
+}
+```
+
+在 repositories 中配置仓库的指向，在这里面可配置多个仓库，会按配置的顺序去查找jar包，找到则获取，找不到继续到下一个配置的仓库去查找。一般是在最前面配置公司的私服，使用自定义仓库方式配置。
+
+
+
+#### 2.3 依赖传递性
+
+比如：A 依赖 B，如果 C 依赖 A，那么 C 依赖 B。
+		 就是因为依赖的传递性，所以才会出现版本的冲突问题。以下通过一张图来了解下Gradle 的自动化依赖管理流程。
+
+<img src="https://gitee.com/HeartBeats_huan/GraphBed/raw/master/%E7%AC%94%E8%AE%B0%E5%9B%BE%E7%89%87/%E8%87%AA%E5%8A%A8%E5%8C%96%E4%BE%9D%E8%B5%96%E7%AE%A1%E7%90%86%E6%B5%81%E7%A8%8B.png" alt="img" style="zoom: 80%;" />
+
+<center>自动化依赖管理流程</center>
+
+由图可得知，Gradle 工具从远程仓库下载 jar 包到本地仓库，Gradle 工具需要依赖配置文件，如果同一个 jar 经常使用会被存入到依赖缓存中。
+
+
+
+
+
+### 3.  Gradle project
 
 在 Android 中每个 module 就对应着一个 project，gradle 在编译时期会为每一个 project 创建一个 Project 对象用来构建项目。这一过程是在初始化阶段，通过解析 settings.gradle 中的配置来创建相应的 Project。
 
-![Drawing 15.png](https://s0.lgstatic.com/i/image/M00/26/55/CgqCHl7xxneADC6uAAAwMY8f2jo857.png)
+<img src="https://s0.lgstatic.com/i/image/M00/26/55/CgqCHl7xxneADC6uAAAwMY8f2jo857.png" alt="Drawing 15.png" style="zoom:50%;" />
 
 上图 settings.gradle 中导入了 3 个 project，但是实际上还会有一个根 project，使用 ./gradlew project 查看，如下所示：
 
@@ -264,7 +336,7 @@ gradle 提供的预置 Task Types 非常多，具体参见：https://docs.gradle
 
 
 
-### 3. buildSrc 统筹依赖管理
+### 4. buildSrc 统筹依赖管理
 
 随着项目越来越大，工程中的 module 越来越多，依赖的三方库也越来越多。一般情况下我们会在一个集中的地方统一管理这些三方库的版本。比如像谷歌官方推荐的使用 ext 变量，在根 module 的 build.gradle 中，使用 ext 集中声明各种三方库的版本，如下所示：
 
@@ -304,7 +376,7 @@ buildSrc 是 Android 项目中一个比较特殊的 project，在 buildSrc 中�
 
 接下来在 buildSrc 中创建 src/main/java 目录，并在此目录下创建 Dependencies.kt（名字可随意取）。在 Dependencies.kt 中创建两个 object，分别用来管理工程中的版本信息以及依赖库：
 
-![Drawing 24.png](https://s0.lgstatic.com/i/image/M00/26/4A/Ciqc1F7xxtCAVD7QAABV55LwZYk087.png)
+<img src="https://s0.lgstatic.com/i/image/M00/26/4A/Ciqc1F7xxtCAVD7QAABV55LwZYk087.png" alt="Drawing 24.png" style="zoom:50%;" />
 
 我们可以在 Versions 中添加各种项目中可能会引用到的版本：
 
@@ -321,3 +393,8 @@ buildSrc 是 Android 项目中一个比较特殊的 project，在 buildSrc 中�
 上图中分别是使用 buildSrc 前后的对比，并且在使用 Deps 的过程中，studio 会给出自动提示，如下：
 
 ![image.gif](https://s0.lgstatic.com/i/image/M00/26/56/CgqCHl7xx4GAZqZQAHlyz8uwUhg260.gif)
+
+
+
+### 5. 依赖冲突
+

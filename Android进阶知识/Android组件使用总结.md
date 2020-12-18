@@ -425,6 +425,9 @@
         <item name="tabIndicator">@drawable/tab_indicator</item>
         <!--设置是否可横向滚动 -->
         <item name="tabMode">scrollable</item>
+        
+        <!-- android:theme 这个属性很重要，在 material v1.1.0 之后，未将theme设置为MaterialComponents，使用MD控件可能会出现闪退-->
+    	<item name="android:theme">@style/Theme.MaterialComponents.Light.NoActionBar</item>
     </style>
     
     <style name="TabLayoutTextStyle">
@@ -520,7 +523,21 @@
 
         
 
-    后续代码中就可通过 TabLayout + ViewPager + Fragment 实现页面滑动切换效果。
+    后续代码中就可通过 TabLayout + ViewPager2 + Fragment 实现页面滑动切换效果。
+
+    
+
+    注意：TabLayout + ViewPager2 实现页面滑动切换联动需要使用 ==TabLayoutMediator==，如下所示：
+
+    ```kotlin
+    //通过 TabLayoutMediator 的 attach 将 TabLayout 和 ViewPager2 联动在一起
+    TabLayoutMediator(tab_layout, view_pager) { tab, position ->
+        //TabLayout 和 ViewPager2 联动在一起后布局中设置的 tabItem 将失效，因此需要重新设置 item
+        tab.text = fragments[position].arguments?.get("title") as? String ?: ""
+    }.attach()
+    ```
+
+    只有最终调用 ==`attach()`== 方法后，才会有联动效果以及 `TabLayoutMediator` 中设置的回调才会产生。
 
     
 
@@ -1103,7 +1120,7 @@ Android 7.0（API 级别 24）中引入的直接回复操作允许用户直接�
 
 <img src="../../../Pictures/GraphBed/笔记图片/reply-button_2x.png" alt="img" style="zoom:50%;" />
 
-<center>图 2. 点按“回复”按钮会打开文本输入框</center>
+<center>图 3. 点按“回复”按钮会打开文本输入框</center>
 
 直接回复操作在通知中显示为一个额外按钮，可打开文本输入。当用户完成输入后，系统会将文本回复附加到通知操作指定的 Intent，然后将 Intent 发送到应用中。
 
@@ -1111,7 +1128,7 @@ Android 7.0（API 级别 24）中引入的直接回复操作允许用户直接�
 
 - 添加回复按钮
 
-    1. 创建一个可添加到通知操作的`RemoteInput.Builder`实例。此类的构造函数接收一个字符串作为 `Intent ` 的 `action` ，之后，应用使用该键检索输入的文本。
+    1. 创建一个可添加到通知操作的`RemoteInput.Builder`实例。此类的构造函数接收一个字符串作为 `Intent ` 的 `action` ，之后，应用使用该键检索输入的文本
 
         ```kotlin
         private val KEY_TEXT_REPLY = "key_text_reply"  // 该 key 作为 Intent 的 action
@@ -1122,16 +1139,41 @@ Android 7.0（API 级别 24）中引入的直接回复操作允许用户直接�
         }
         ```
         
-2. 为回复操作创建`PendingIntent`。
+    2. 为回复操作创建`PendingIntent`
     
-    ```kotlin
+        ```kotlin
+        //创建一个 PendingIntent 作为回复操作的触发器
         var replyPendingIntent: PendingIntent =
             PendingIntent.getBroadcast(applicationContext,
                 conversation.getConversationId(),
                 getMessageReplyIntent(conversation.getConversationId()),
                 PendingIntent.FLAG_UPDATE_CURRENT)
         ```
+    
+    3. 使用 `addRemoteInput()` 将 `RemoteInput` 对象附加到操作上
+    
+        ```java
+        // 创建一个 action 并为其添加相关的回复操作（RemoteInput）
+        NotificationCompat.Action action =
+                new NotificationCompat.Action.Builder(R.drawable.ic_reply_icon, getString(R.string.label), 								replyPendingIntent)
+                        .addRemoteInput(remoteInput)
+                        .build();
+        ```
+    
+    4. 给通知添加操作并发出
+    
+        ```java
+        // 创建通知并添加 action
+        Notification newMessageNotification = new Notification.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_message)
+                .setContentTitle(getString(R.string.title))
+                .setContentText(getString(R.string.content))
+                .addAction(action)
+                .build();
         
-        
+        // 发出通知
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(notificationId, newMessageNotification);
+        ```
 
 

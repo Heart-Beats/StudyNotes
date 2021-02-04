@@ -100,6 +100,14 @@ lateinit var view: View
 
 它的作用就是让 IDE 不要对这个变量检查初始化和报错。换句话说，加了这个 `lateinit` 关键字，这个变量的初始化就全靠你自己了，编译器不帮你检查了。
 
+要检测一个 `lateinit var` 是否已经初始化过，需要在该属性的引用上使用 `.isInitialized`：
+
+```kotlin
+if (::view.isInitialized) {
+    println(view)
+}
+```
+
 
 
 #### 1.4 类型推断
@@ -2523,6 +2531,26 @@ print(str2 === str3) // 👈 引用地址相等，输出：true
 
 
 
+
+
+##### 5.5.7 返回和跳转
+
+Kotlin 有三种结构化跳转表达式：
+
+- return：默认从最直接包围它的函数或者[匿名函数](#7.3 匿名函数)返回。
+- break：终止当前包围它的循环。
+- continue：中止当前包围它的循环，继续下一次循环。
+
+以上三种情况都有它的默认行为，基本与 Java 一致。
+
+
+
+==标签：==在 Kotlin 中任何表达式都可以用标签（label）来标记。 标签的格式为标识符后跟 `@` 符号，如：`abc@`、`loop@`…
+
+==借助标签，我们就可以返回或跳转到指定表达式==，当要返一个回值时，解析器优先选用标签限制的 return，如：`return@a 1`，意为“返回 `1` 到 `@a`”
+
+
+
 ------
 
 
@@ -3184,7 +3212,7 @@ val b: (Int) -> String = {
 
 这个一定注得意，==Lambda 的返回值别写 return，如果你写了，它会把这个作为它外层的函数的返回值来直接结束外层函数==。当然如果就是想这么做那是没问题的，但如果只是想返回 Lambda，这么写就会出错了。
 
-另外因为 Lambda 是个代码块，它总能根据最后一行代码来推断出返回值类型，所以它的返回值类型确实可以不写。实际上，Kotlin 的 Lambda 也是写不了返回值类型的，语法上就不支持。
+另外因为 Lambda 是个代码块，它总能根据最后一行代码来推断出返回值类型，所以它的返回值类型确实可以不写。实际上，Kotlin 的 Lambda 也是写不了返回值类型的，语法上就不支持。==若想 Lambda 中可以直接 return , 则必须用 inline(内联) 来修饰它==。
 
 
 
@@ -4080,9 +4108,46 @@ public suspend fun await(): T
 
 #### 9.4 「挂起」：`suspend`
 
+
+
+==**挂起的对象是协程，而不是 `suspend` 修饰的方法。**== 如下代码所示，先来体会一下：
+
+```kotlin
+suspend fun getToken(): String {
+	delay(1000)
+	println("getToken 开始执行，时间:  ${LocalDateTime.now()}")
+	return "ask"
+}
+
+suspend fun getResponse(token: String): String {
+	delay(2000)
+	println( "getResponse 开始执行，时间:  ${LocalDateTime.now()}")
+	return "response"
+}
+
+fun setText(response: String) {
+	println("setText 执行，时间:  ${LocalDateTime.now()}")
+}
+
+runBlocking {
+    println("协程 开始执行，时间:  ${LocalDateTime.now()}")
+    val token = getToken()
+    val response = getResponse(token)
+    setText(response)
+}
+```
+
+执行结果如下：
+
+​	<img src="https://gitee.com/HeartBeats_huan/GraphBed/raw/master/%E7%AC%94%E8%AE%B0%E5%9B%BE%E7%89%87/image-20210128151347991.png" alt="image-20210128151347991" style="zoom:80%;" />
+
+可以看出，虽然有挂起函数，但是三个函数却仍然依次执行了，所以：在 getToken 函数将协程挂起时，getResponse 函数是永远不会运行，只有等 getToken 挂起结束（即执行完成）将协程恢复时才会运行。
+
+
+
 ##### 9.4.1 挂起本质
 
-**挂起的对象是协程。**还记得协程是什么吗？==启动一个协程可以使用 `launch` 或者 `async` 函数，协程其实就是这两个函数中闭包的代码块==。
+还记得协程是什么吗？==启动一个协程可以使用 `launch` 或者 `async` 函数，协程其实就是这两个函数中闭包的代码块==。
 
 `launch` ，`async` 或者其他函数创建的协程，在执行到某一个 `suspend` 函数的时候，这个协程会被「suspend」，也就是被挂起。那此时又是从哪里挂起？**从当前线程挂起。换句话说，就是这个协程从正在执行它的线程上脱离。**
 

@@ -620,6 +620,97 @@ fun main() {
 
 
 
+#### 3.4 `Unit`、 `Any`  以及 `Nothing`
+
+Kotlin 里所有东西都有类型：对象、函数…… 
+
+- ==Unit==
+
+    Kotlin 里没有 `void`，所有函数都有默认返回类型 `Unit`：
+
+    ```kotlin
+    fun doSomething() { // 函数声明等价于 fun doSomething(): Unit
+      Log.d("Hello", "World")
+    }
+    ```
+
+    虽然 `unit` 相当于 Java 中的 `void`，但它们有着本质不同：==Unit是一个真正的类，继承自 Any 类，其用 object 实现单例。==
+    <img src="https://gitee.com/HeartBeats_huan/GraphBed/raw/master/%E7%AC%94%E8%AE%B0%E5%9B%BE%E7%89%87/image-20210305185350159.png" alt="image-20210305185350159" style="zoom:80%;" />
+
+- ==Nothing==
+    接下来，看看下面的函数：
+
+    ```kotlin
+    fun fail() {
+        throw RuntimeException("Something went wrong")
+    }
+    ```
+
+    这个函数的返回类型好像和上面那个一样，都是 Unit，对吗？等等，一个只抛出了异常的函数真的有返回类型吗？它应该什么都不返回，事实上，这个函数的返回类型就是 Nothing：
+
+    ```kotlin
+    fun fail(): Nothing {
+        throw RuntimeException("Something went wrong")
+    }
+    ```
+
+    ==**Nothing** 是一个 **空类型（uninhabited type）**，也就是说，程序运行时不会出现任何一个 Nothing 类型对象。Nothing 还是其他所有类型的子类型。==
+    <img src="https://gitee.com/HeartBeats_huan/GraphBed/raw/master/%E7%AC%94%E8%AE%B0%E5%9B%BE%E7%89%87/image-20210305191826455.png" alt="image-20210305191826455" style="zoom:80%;" />
+
+    1. 但 Unit 和 Nothing 有什么区别呢？看下面两行代码：
+
+        ```kotlin
+        val data: String = intent.getStringExtra("key") ?: fail()
+        textView.text = data
+        ```
+
+        调用的 serveice.getData() 返回了 **String?** 类型，接下来的执行情况就与 fail() 函数返回的类型息息相关：
+
+        - 如果 fail() 函数返回 **Nothing**，就不需要对 data 检查空值：要么 data 不为 null，要么就抛出异常；
+        - 如果 fail() 函数返回 **Unit**，就会出现编译错误（类型转换错误）：要的是 String，传入的却是 Unit，自然会出错。
+
+        如果不显式指明 data 的类型呢，就像下面这样：
+
+        ```kotlin
+        val data = intent.getStringExtra("key") ?: fail()
+        textView.text = data
+        ```
+
+        - 如果 fail() 返回 Nothing，data 的类型就会推测为 **String**；
+        - 如果 fail() 返回 Unit，data 的类型自动推断为 **Any?**（为 null 和 Unit 的父类，但是并不会出现错误，因为 TextView 要求传入 CharSequence 类型）。
+
+    2. 前面说过，Nothing 在运行时没有任何实例。但同时也要明白，==**java.lang.Void::class** 与 **kotlin.Nothing::class** 是等价的==。因为 Nothing 是其他所有类型的子类，编译器对此会有优化处理。
+
+        除此之外，==Nothing 还有一个作用：如果上一行代码返回了 null，就可以保证下一行代码不会被执行到，不必额外再检查一次返回值了。==
+
+        ```kotlin
+        // 不使用 Nothing，必须进行空检查
+        val data: String? = intent.getStringExtra("key")
+        if(data == null) {
+            throw IllegalStateException()
+        } else {
+            textView.setText(data)
+        }
+        ```
+
+    3. **Nothing?**
+
+        现在，也许你会疑问为什么不需要在代码用 Nothing 类型，答案：==**Nothing 只是一个编译期的抽象概念**（所以没有实例）==。**只有需要将一个函数显式标记为无法完成时，才有用 Nothing 类型的必要**，这样的函数可能要抛出异常，也可能是陷入死循环或者进入控制流转换，也就是这个函数无法正常执行完成。
+
+        与其他类型一样， ==Nothing 也有可空类型 `Nothing?`，`Nothing?`有且只有一个值：null。==没错，Kotlin 里，就算 null 也有自己的类型。`Nothing?` 是所有可空类型的子类型，这也是为什么所有可空类型可以为 null 的原因：因为 null 是它们子类型的值。
+
+        正如 [Kotlin Language Specification](https://link.zhihu.com/?target=https%3A//jetbrains.github.io/kotlin-spec/%23_general_9) 所说
+
+        > null 是一个特殊的不可变基本值（没有结构），它的真实类型是 Nothing? （同时也是这个类型的唯一值）。null 同时也是所有可空类型的合法值，也意味着相对应的非空类型不能为 null 。
+
+- ==Any==
+
+    相当于 Java 中的 Object，是所有类型的父类。
+
+
+
+
+
 ------
 
 

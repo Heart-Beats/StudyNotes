@@ -100,9 +100,52 @@
 
         
 
+------
 
 
-### 2. SearchView 的定制化
+
+### 2. EditText 相关
+
+1. 自定义游标：通过 `textCursorDrawable`  属性设置，该属性对应的 Drawable 可如下：
+
+    ```xml
+    <?xml version="1.0" encoding="utf-8"?>
+    <inset xmlns:android="http://schemas.android.com/apk/res/android"
+        android:inset="2dp">
+        <shape
+            android:shape="rectangle"
+            android:tint="@color/uikit_color_1">
+            <size
+                android:width="2dp"
+                android:height="2dp" />
+            <solid android:color="@color/uikit_color_1" />
+        </shape>
+    </inset>
+    ```
+
+2. 更改长按复制的水滴颜色：通过 `colorControlActivated` 属性直接设置颜色
+
+3. 更改选中的文字颜色：通过 `textColorHighlight` 属性直接设置文字高亮颜色
+
+除了以上对 EditText 直接设置相关属性外，还可以将相关属性定义在应用主题中，一般来说：该控件的相关属性保持统一就可以定义在主题中，如下：
+
+```xml
+<style name="AppTheme" parent="UiKit.AppTheme">
+    <item name="actionBarSize">44dp</item>
+    <!-- 更改游标颜色   -->
+    <item name="android:textCursorDrawable">@drawable/uikit_edit_text_cursor_style</item>
+    <item name="android:colorControlActivated">@color/main_blue</item>
+    <item name="android:textColorHighlight">#4D5E60C7</item>
+</style>
+```
+
+
+
+------
+
+ 
+
+### 3. SearchView 的定制化
 
 - 自定义 SearchView 的 Style：
 
@@ -315,7 +358,9 @@
 
 ------
 
-### 3. 自定义对话框
+
+
+### 4. 自定义对话框
 
 - 首先需要自定义对话框的样式
 
@@ -399,7 +444,7 @@
 
 
 
-### 4. 自定义 TabLayout 的指示器
+### 5. 自定义 TabLayout 的指示器
 
 - 首先定义 tablayout 的样式
 
@@ -545,7 +590,7 @@
 
 
 
-### 5. 通知的使用
+### 6. 通知的使用
 
 
 
@@ -555,9 +600,9 @@
 
 
 
-#### 5.1 通知概览
+#### 6.1 通知概览
 
-##### 5.1.1 通知的外观
+##### 6.1.1 通知的外观
 
 通知可以在不同的位置以不同的格式显示，例如，状态栏中的图标、抽屉式通知栏中比较详细的条目、应用图标上的标志，以及在配对的穿戴式设备上自动显示。
 
@@ -643,7 +688,7 @@
 
 
 
-##### 5.1.2 通知各个部分解析
+##### 6.1.2 通知各个部分解析
 
 通知的设计由系统模板决定，您的应用只需要定义模板中各个部分的内容即可。通知的部分详情仅在展开后视图中显示。
 
@@ -664,7 +709,7 @@
 
 
 
-##### 5.1.3 通知的兼容性
+##### 6.1.3 通知的兼容性
 
 由于通知系统界面以及与通知相关的 API 在不断发展，所以为了支持旧设备的同时又能使用最新的通知 API，需要使用 ==`NotificationCompat`== 和 ==`NotificationManagerCompat`==， 这样一来，就无需编写条件代码来检查 API 级别，因为这些 API 会作处理。
 
@@ -674,7 +719,7 @@
 
 
 
-##### 5.1.4 通知的发布限制
+##### 6.1.4 通知的发布限制
 
 从 ==Android 8.1（API 级别 27）==开始，应用无法每秒发出一次以上的通知提示音。如果应用在一秒内发出了多条通知，这些通知都会按预期显示，但是每秒中只有第一条通知发出提示音。
 
@@ -684,7 +729,7 @@
 
 
 
-#### 5.2 创建通知渠道
+#### 6.2 创建通知渠道
 
 <img src="../../../Pictures/GraphBed/笔记图片/image-20201113111917715.png" alt="image-20201113111917715" style="zoom: 25%;" />
 
@@ -698,7 +743,7 @@
 
 
 
-##### 5.2.1 主要创建步骤
+##### 6.2.1 主要创建步骤
 
 在创建通知或通知渠道之前，首先应该添加支持库来使用 ==`NotificationCompat`== 和 ==`NotificationManagerCompat`==相关API，在应用模块的 `build.gradle`文件中添加依赖：
 
@@ -740,7 +785,7 @@ dependencies {
 
 
 
-##### 5.2.2 设置重要性级别
+##### 6.2.2 设置重要性级别
 
 渠道重要性会影响在渠道中发布的所有通知的干扰级别，因此必须在 `NotificationChannel` 构造函数中指定渠道重要性。可以使用从 `IMPORTANCE_NONE(0)` 到 `IMPORTANCE_HIGH(4)` 的五个重要性级别之一。
 
@@ -761,7 +806,7 @@ dependencies {
 
 
 
-##### 5.2.3 读取通知渠道设置
+##### 6.2.3 读取通知渠道设置
 
 用户可以修改通知渠道的设置，其中包括振动和提醒提示音等行为。如果想了解用户对通知渠道所应用的设置，请按以下步骤操作：
 
@@ -772,7 +817,7 @@ dependencies {
 
 
 
-##### 5.2.4 打开通知渠道设置
+##### 6.2.4 打开通知渠道设置
 
 创建通知渠道后，便无法以编程方式更改通知渠道的视觉和听觉行为，只有用户可以通过系统设置更改渠道行为。为了让用户轻松访问这些通知设置，应在应用的[设置界面](https://developer.android.google.cn/guide/topics/ui/settings)中添加一个用于打开这些系统设置的项。
 
@@ -793,7 +838,7 @@ startActivity(intent)
 
 
 
-##### 5.2.5 删除通知渠道
+##### 6.2.5 删除通知渠道
 
 可以通过调用 `deleteNotificationChannel()` 删除通知渠道。以下示例代码演示了如何完成此过程：
 
@@ -809,7 +854,7 @@ notificationManager.deleteNotificationChannel(id)
 
 
 
-##### 5.2.6 创建渠道分组
+##### 6.2.6 创建渠道分组
 
 如果希望进一步整理渠道在设置界面中的外观，则可以创建渠道分组。当应用支持多个用户帐号时，强烈建议这么做，因为这么做可以为每个帐号各创建一个通知渠道分组。这样一来，用户便可以轻松识别和控制具有相同名称的多个通知渠道了。
 
@@ -846,11 +891,11 @@ notificationManager.deleteNotificationChannel(id)
 
 
 
-#### 5.3 创建通知
+#### 6.3 创建通知
 
 
 
-##### 5.3.1 创建基本通知
+##### 6.3.1 创建基本通知
 
 最基本、精简形式（也称为折叠形式）的通知会显示一个图标、一个标题和少量内容文本
 
@@ -909,7 +954,7 @@ with(NotificationManagerCompat.from(this)) {
 
 
 
-##### 5.3.2 设置通知的点按操作
+##### 6.3.2 设置通知的点按操作
 
 每个通知都应该对点击操作做出响应，通常是在应用中打开对应于该通知的 Activity，还可以点击时发送广播或者启动 Service。为此，您必须指定通过 `PendingIntent` 对象定义的内容 Intent，并将其传递给 `setContentIntent()`。
 
@@ -1084,7 +1129,7 @@ with(NotificationManagerCompat.from(this)) {
 
 
 
-##### 5.3.3 添加操作按钮
+##### 6.3.3 添加操作按钮
 
 一个通知最多可以提供三个操作按钮，让用户能够快速响应操作，例如暂停提醒，甚至回复短信。但这些操作不应该和[点按通知](#5.3.2 设置通知的点按操作)的效果相同。
 
@@ -1114,7 +1159,7 @@ val builder = NotificationCompat.Builder(this, CHANNEL_ID)
 
 
 
-##### 5.3.4 添加直接回复操作
+##### 6.3.4 添加直接回复操作
 
 Android 7.0（API 级别 24）中引入的直接回复操作允许用户直接在通知中输入文本，然后会直接提交给应用，而不必打开 Activity。例如，可以让用户从通知内直接回复短信或更新任务列表。
 

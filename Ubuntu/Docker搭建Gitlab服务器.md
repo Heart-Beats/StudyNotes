@@ -365,7 +365,7 @@ gitlab-rake gitlab:backup:create  #备份数据
 
 ##### 3.3.2 crontab文件的格式
 
-<img src="https://gitee.com/HeartBeats_huan/note-picture/raw/master/images/20170416161735666" alt="img" style="zoom:80%;" />
+<img src="https://gitee.com/HeartBeats_huan/note-picture/raw/master/images/20170416161735666.png" alt="img" style="zoom:80%;" />
 
 其中，command 为要执行的命令，可以是系统命令，也可以是自己编辑的脚本文件。
 

@@ -32,7 +32,7 @@
 
 1. Android坐标系
 
-    <img src="../../../Pictures/GraphBed/笔记图片/20160914151037027.png" alt="img" style="zoom: 80%;" />
+    <img src="https://gitee.com/HeartBeats_huan/note-picture/raw/master/images/20160914151037027.png" alt="img" style="zoom: 80%;" />
 
     Android坐标系以手机屏幕左上角的顶点为坐标原点，从该点向右为x轴正方向，从该点向下为y轴正方向。而触控事件中，使用 getRawX() 和 getRawY() 方法。
 
@@ -40,7 +40,7 @@
 
 2. 视图坐标系
 
-    <img src="../../../Pictures/GraphBed/笔记图片/20160914151055964.png" alt="img" style="zoom:80%;" />
+    <img src="https://gitee.com/HeartBeats_huan/note-picture/raw/master/images/20160914151055964.png" alt="img" style="zoom:80%;" />
 
     视图坐标系是以父视图的左上角为坐标原点的。相应的原点向右为x轴正方向，原点向下为y 轴正方向。在触控中，通过
 
@@ -50,7 +50,7 @@
 
 #### 1.2 获取坐标值以及相对距离的方法
 
-![View位置](../../../Pictures/GraphBed/笔记图片/View位置.min.png)
+![View位置](https://gitee.com/HeartBeats_huan/note-picture/raw/master/images/View位置.min.png)
 
 注：图中深蓝小圆点代表点击事件发生时的手指触摸点
 
@@ -610,13 +610,13 @@
 
     发出通知后，通知先以图标的形式显示在状态栏中：
 
-    <img src="../../../Pictures/GraphBed/笔记图片/notification-area_2x.png" alt="img" style="zoom:50%;" />
+    <img src="https://gitee.com/HeartBeats_huan/note-picture/raw/master/images/notification-area_2x.png" alt="img" style="zoom:50%;" />
 
     <center>图 1. 通知图标显示在状态栏的左侧</center>																
 
     用户可以在状态栏向下滑动以打开抽屉式通知栏，并在其中查看更多详情及对通知执行操作：
 
-    <img src="../../../Pictures/GraphBed/笔记图片/notification-drawer_2x.png" alt="img" style="zoom:50%;" />
+    <img src="https://gitee.com/HeartBeats_huan/note-picture/raw/master/images/notification-drawer_2x.png" alt="img" style="zoom:50%;" />
 
     <center>图 2. 抽屉式通知栏中的通知</center>										
 
@@ -630,7 +630,7 @@
 
     从 Android 5.0 开始，通知可以短暂地显示在浮动窗口中，称之为提醒式通知。这种行为通常适用于用户应立即知晓的重要通知，而且仅在设备未锁定时才显示。
 
-    <img src="../../../Pictures/GraphBed/笔记图片/heads-up_2x.png" alt="img" style="zoom:50%;" />
+    <img src="https://gitee.com/HeartBeats_huan/note-picture/raw/master/images/heads-up_2x.png" alt="img" style="zoom:50%;" />
 
     <center>图 3. 显示在前台应用前面的提醒式通知</center>										
 
@@ -654,7 +654,7 @@
 
     用户可以通过系统设置来选择锁定屏幕通知的详情可见等级，包括选择停用所有锁定屏幕通知。从 Android 8.0 开始，用户可以选择停用或启用各个[通知渠道](#5.2 创建通知渠道)的锁定屏幕通知。
 
-    <img src="../../../Pictures/GraphBed/笔记图片/lock-screen_2x.png" alt="img" style="zoom:50%;" />
+    <img src="https://gitee.com/HeartBeats_huan/note-picture/raw/master/images/lock-screen_2x.png" alt="img" style="zoom:50%;" />
 
     <center>图 4. 锁定屏幕上已隐藏敏感内容的通知</center>						
 
@@ -668,7 +668,7 @@
 
     用户可以长按应用图标来查看该应用的通知，同时也可以关闭通知或者在长按菜单中对通知执行操作（类似于抽屉式通知栏）。
 
-    <img src="../../../Pictures/GraphBed/笔记图片/badges-open_2x.png" alt="img" style="zoom:50%;" />
+    <img src="https://gitee.com/HeartBeats_huan/note-picture/raw/master/images/badges-open_2x.png" alt="img" style="zoom:50%;" />
 
     <center>图 5. 通知标志和长按菜单</center>						
 
@@ -682,7 +682,7 @@
 
     另外还可以通过自定义通知在穿戴式设备上的外观以及提供不同的操作选项（包括建议的回复和语音输入回复）来提升用户体验。要了解详情，请参阅如何[向通知中添加特定于穿戴式设备的功能](https://developer.android.google.cn/training/wearables/notifications/creating#AddWearableFeatures)。
 
-    <img src="../../../Pictures/GraphBed/笔记图片/wear_2x.png" alt="img" style="zoom:50%;" />
+    <img src="https://gitee.com/HeartBeats_huan/note-picture/raw/master/images/wear_2x.png" alt="img" style="zoom:50%;" />
 
     <center>图 6. 通知自动显示在已配对的 Wear OS 设备上</center>						
 
@@ -692,7 +692,7 @@
 
 通知的设计由系统模板决定，您的应用只需要定义模板中各个部分的内容即可。通知的部分详情仅在展开后视图中显示。
 
-<img src="../../../Pictures/GraphBed/笔记图片/notification-callouts_2x.png" alt="img" style="zoom:50%;" />
+<img src="https://gitee.com/HeartBeats_huan/note-picture/raw/master/images/notification-callouts_2x.png" alt="img" style="zoom:50%;" />
 
 <center>图 7. 包含基本详情的通知</center>	
 
@@ -731,13 +731,13 @@
 
 #### 6.2 创建通知渠道
 
-<img src="../../../Pictures/GraphBed/笔记图片/image-20201113111917715.png" alt="image-20201113111917715" style="zoom: 25%;" />
+<img src="https://gitee.com/HeartBeats_huan/note-picture/raw/master/images/image-20201113111917715.png" alt="image-20201113111917715" style="zoom: 25%;" />
 
 <center>图 8. 哔哩哔哩的通知渠道情况</center>	
 
 上图即为哔哔哩的通知渠道情况，可以看出总共有六个通知渠道，点击直播，我们可以查看这个通知渠道详情：
 
-<img src="../../../Pictures/GraphBed/笔记图片/image-20201113112324022.png" alt="image-20201113112324022" style="zoom:25%;" />
+<img src="https://gitee.com/HeartBeats_huan/note-picture/raw/master/images/image-20201113112324022.png" alt="image-20201113112324022" style="zoom:25%;" />
 
 渠道详情里有重要程度（也就是静默通知以及横幅通知）、提示音、震动等设置，这些都可以在代码中设置的。
 
@@ -858,7 +858,7 @@ notificationManager.deleteNotificationChannel(id)
 
 如果希望进一步整理渠道在设置界面中的外观，则可以创建渠道分组。当应用支持多个用户帐号时，强烈建议这么做，因为这么做可以为每个帐号各创建一个通知渠道分组。这样一来，用户便可以轻松识别和控制具有相同名称的多个通知渠道了。
 
-<img src="../../../Pictures/GraphBed/笔记图片/channel-groups_2x.png" alt="img" style="zoom:50%;" />
+<img src="https://gitee.com/HeartBeats_huan/note-picture/raw/master/images/channel-groups_2x.png" alt="img" style="zoom:50%;" />
 
 <center>包含个人帐号和工作帐号分组的通知渠道设置</center>
 
@@ -899,7 +899,7 @@ notificationManager.deleteNotificationChannel(id)
 
 最基本、精简形式（也称为折叠形式）的通知会显示一个图标、一个标题和少量内容文本
 
-<img src="../../../Pictures/GraphBed/笔记图片/notification-basic_2x.png" alt="img" style="zoom:50%;" />
+<img src="https://gitee.com/HeartBeats_huan/note-picture/raw/master/images/notification-basic_2x.png" alt="img" style="zoom:50%;" />
 
 <center>图 1. 带有标题和文本的通知</center>
 
@@ -1133,7 +1133,7 @@ with(NotificationManagerCompat.from(this)) {
 
 一个通知最多可以提供三个操作按钮，让用户能够快速响应操作，例如暂停提醒，甚至回复短信。但这些操作不应该和[点按通知](#5.3.2 设置通知的点按操作)的效果相同。
 
-<img src="../../../Pictures/GraphBed/笔记图片/notification-basic-action_2x.png" alt="img" style="zoom:50%;" />
+<img src="https://gitee.com/HeartBeats_huan/note-picture/raw/master/images/notification-basic-action_2x.png" alt="img" style="zoom:50%;" />
 
 <center>图 2. 带有一个操作按钮的通知</center>
 
@@ -1163,7 +1163,7 @@ val builder = NotificationCompat.Builder(this, CHANNEL_ID)
 
 Android 7.0（API 级别 24）中引入的直接回复操作允许用户直接在通知中输入文本，然后会直接提交给应用，而不必打开 Activity。例如，可以让用户从通知内直接回复短信或更新任务列表。
 
-<img src="../../../Pictures/GraphBed/笔记图片/reply-button_2x.png" alt="img" style="zoom:50%;" />
+<img src="https://gitee.com/HeartBeats_huan/note-picture/raw/master/images/reply-button_2x.png" alt="img" style="zoom:50%;" />
 
 <center>图 3. 点按“回复”按钮会打开文本输入框</center>
 

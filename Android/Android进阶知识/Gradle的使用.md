@@ -302,7 +302,7 @@ repositories {
 比如：A 依赖 B，如果 C 依赖 A，那么 C 依赖 B。
 		 就是因为依赖的传递性，所以才会出现版本的冲突问题。以下通过一张图来了解下Gradle 的自动化依赖管理流程。
 
-<img src="https://gitee.com/HeartBeats_huan/note-picture/raw/master/images/自动化依赖管理流程.png" alt="img" style="zoom: 80%;" />
+<img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/自动化依赖管理流程.png" alt="img" style="zoom: 80%;" />
 
 <center>自动化依赖管理流程</center>
 
@@ -426,7 +426,7 @@ buildSrc 是 Android 项目中一个比较特殊的 project，在 buildSrc 中�
 
 Maven 自动处理传递性依赖版本冲突：==按最短路径和优先声明原则来处理==
 
-<img src="https://gitee.com/HeartBeats_huan/note-picture/raw/master/images/9082898-597dc426e99205ee.png" alt="img"  />
+<img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/9082898-597dc426e99205ee.png" alt="img"  />
 
 #### 5.2 Gradle
 

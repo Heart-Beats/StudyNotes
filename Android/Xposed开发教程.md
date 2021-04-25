@@ -38,7 +38,7 @@
 
 Xposed 模块是普通的应用程序，只是带有一些特殊的元数据和文件。因此，需要创建一个新的Android项目，选择 Emtpy Activity 模板即可：
 
-<img src="https://gitee.com/HeartBeats_huan/note-picture/raw/master/images/image-20210227212012577.png" alt="image-20210227212012577" style="zoom:50%;" />
+<img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/image-20210227212012577.png" alt="image-20210227212012577" style="zoom:50%;" />
 
 
 
@@ -102,7 +102,7 @@ Xposed 模块是普通的应用程序，只是带有一些特殊的元数据和�
 
     此时唯一缺少的就是 `XposedBridge` 的入口，它主要通过 `assets` 文件夹下的 `xposed_init` 文件完成，在此文件中，每一行包含一个类的全名，如下：
 
-    <img src="https://gitee.com/HeartBeats_huan/note-picture/raw/master/images/image-20210227215831866.png" alt="image-20210227215831866" style="zoom: 67%;" />
+    <img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/image-20210227215831866.png" alt="image-20210227215831866" style="zoom: 67%;" />
 
     
 

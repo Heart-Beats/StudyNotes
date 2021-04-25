@@ -74,7 +74,7 @@
 
             正常运行结果如下：
 
-            ![image-20210422171842850](https://gitee.com/HeartBeats_huan/note-picture/raw/master/images/image-20210422171842850.png)
+            ![image-20210422171842850](https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/image-20210422171842850.png)
             
             b. 使用第二列中的版本字符串安装特定版本，例如`5:18.09.1~3-0~ubuntu-xenial`
             
@@ -273,18 +273,33 @@ gitlab-rake gitlab:backup:create  #备份数据
 1.  首先创建一个备份脚本  ` sudo touch /home/backup-script/gitlab_auto_backup.sh`：
 
     ```shell
+    function delete_old_backup(){
+    	echo "开始删除$1"
+    	rm -r $1
+    	echo "删除旧备份文件完成"
+    }
+    
+    function copy_lastest_backup(){
+    	time=$(date "+%Y-%m-%d %H-%M") #获取当前时间并格式化 
+    	save_path="/home/备份硬盘/Gitlab_Backup/${time}"
+    
+    	printf "开始创建目录：$save_path\n"
+    	mkdir -p "/home/备份硬盘/Gitlab_Backup/${time}" #一次性创建多层次目录
+    
+    	backup_path=/home/gitlab/data/backups
+    	lastest_backup_path=$backup_path/$(ls -t $backup_path/| head -1) #获取指定目录下最新的文件
+    		
+    	cp -r $lastest_backup_path $save_path
+    	echo	"拷贝最新备份数据($lastest_backup_path)到$save_path完成"
+    	printf  "----------------------------------\n\n"
+    }
+    
     printf "开始备份 GitLab 数据 ==========\n"
     docker exec -i gitlab /bin/bash -c 'gitlab-rake gitlab:backup:create' #这里不能以 tty(-t) 执行, 必须使用 -i
     printf "备份 GitLab 数据完成\n"
     
-    time=$(date "+%Y-%m-%d %H-%M") #获取当前时间并格式化 
-    save_path="/home/备份硬盘/Gitlab_Backup/${time}"
-    
-    printf "开始创建目录：$save_path\n"
-    mkdir -p "/home/备份硬盘/Gitlab_Backup/${time}" #一次性创建多层次目录
-    
-    cp -r /home/gitlab/data/backups/* "$save_path"
-    printf	"拷贝备份数据到$save_path完成\n"
+    delete_old_backup /home/备份硬盘/Gitlab_Backup # 执行方法并传参
+    copy_lastest_backup
     ```
 
     
@@ -317,21 +332,24 @@ gitlab-rake gitlab:backup:create  #备份数据
     -   继续执行 `sudo crontab -u root  -e` 进入编辑 **root 用户的crontab文件**，该文件每一行代表一项定时任务，都会以 root 用户执行，在尾部添加如下内容：
 
         ```shell
-        0 2 * * * /home/backup-script/gitlab_auto_backup.sh >/home/backup-script/gitlab_backup_log.txt 2>&1 </dev/null &
+        0 2 * * * /home/backup-script/gitlab_auto_backup.sh >>/home/backup-script/gitlab_backup_log.txt 2>&1 </dev/null &
         ```
 
-        以上任务表示：每天两点执行 `gitlab_auto_backup.sh` 脚本同时将正确和错误日志都输出到  `gitlab_backup_log.txt` 文件中。
+        以上任务表示：每天两点执行 `gitlab_auto_backup.sh` 脚本同时将正确和错误日志都追加输出到  `gitlab_backup_log.txt` 文件中。
 
-        
-
+        -   \>：覆盖写入文件，清空已有内容并重写；
+        -   \>>：追加写入文件，在已有内容后插入；
+    
+    
+    
     -    重新启动 cron服务，然后就会定时执行设定好的脚本：
-
-        ```shell
+    
+    ```shell
         sudo service cron restart   #重新启动 cron 服务
-        ```
-
+    ```
+    
         可以使用以下命令查看相关日志：
-
+        
         ```shell
         sudo tail /var/log/cron.log #查看 cron 执行的日志
          
@@ -365,7 +383,22 @@ gitlab-rake gitlab:backup:create  #备份数据
 
 ##### 3.3.2 crontab文件的格式
 
-<img src="https://gitee.com/HeartBeats_huan/note-picture/raw/master/images/20170416161735666.png" alt="img" style="zoom:80%;" />
+
+
+<img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/20170416161735666.png" alt="img" style="zoom:80%;" />
+
+
+
+```shell
+#格式与取值范围:
+ .---------------- minute (0 - 59)
+ |  .------------- hour (0 - 23)
+ |  |  .---------- day of month (1 - 31)
+ |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...
+ |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+ |  |  |  |  |
+ *  *  *  *  * command
+```
 
 其中，command 为要执行的命令，可以是系统命令，也可以是自己编辑的脚本文件。
 

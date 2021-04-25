@@ -635,7 +635,7 @@ Kotlin 里所有东西都有类型：对象、函数……
     ```
 
     虽然 `unit` 相当于 Java 中的 `void`，但它们有着本质不同：==Unit是一个真正的类，继承自 Any 类，其用 object 实现单例。==
-    <img src="https://gitee.com/HeartBeats_huan/note-picture/raw/master/images/image-20210305185350159.png" alt="image-20210305185350159" style="zoom:80%;" />
+    <img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/image-20210305185350159.png" alt="image-20210305185350159" style="zoom:80%;" />
 
 - ==Nothing==
     接下来，看看下面的函数：
@@ -655,7 +655,7 @@ Kotlin 里所有东西都有类型：对象、函数……
     ```
 
     ==**Nothing** 是一个 **空类型（uninhabited type）**，也就是说，程序运行时不会出现任何一个 Nothing 类型对象。Nothing 还是其他所有类型的子类型。==
-    <img src="https://gitee.com/HeartBeats_huan/note-picture/raw/master/images/image-20210305191826455.png" alt="image-20210305191826455" style="zoom:80%;" />
+    <img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/image-20210305191826455.png" alt="image-20210305191826455" style="zoom:80%;" />
 
     1. 但 Unit 和 Nothing 有什么区别呢？看下面两行代码：
 
@@ -4230,7 +4230,7 @@ runBlocking {
 
 执行结果如下：
 
-​	<img src="https://gitee.com/HeartBeats_huan/note-picture/raw/master/images/image-20210128151347991.png" alt="image-20210128151347991" style="zoom:80%;" />
+​	<img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/image-20210128151347991.png" alt="image-20210128151347991" style="zoom:80%;" />
 
 可以看出，虽然有挂起函数，但是三个函数却仍然依次执行了，所以：在 getToken 函数将协程挂起时，getResponse 函数是永远不会运行，只有等 getToken 挂起结束（即执行完成）将协程恢复时才会运行。
 

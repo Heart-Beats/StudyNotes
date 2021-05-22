@@ -273,10 +273,7 @@ gitlab-rake gitlab:backup:create  #备份数据
 1.  首先创建一个备份脚本  ` sudo touch /home/backup-script/gitlab_auto_backup.sh`：
 
     ```shell
-    #指定以 bash 执行脚本，避免 cron 执行时重定向 shell
-    #!/bin/bash  
-    
-    echo "当前日期：$(date )"
+    printf "\n当前日期：$(date )"
     time=$(date "+%Y-%m-%d_%H-%M") #获取当前时间并格式化 
     save_path="/home/备份硬盘/Gitlab_Backup/$time"
     
@@ -307,9 +304,9 @@ gitlab-rake gitlab:backup:create  #备份数据
     delete_old_backup $save_path
     printf  '=============================\n\n'
     ```
-
     
-
+    
+    
 2.  再给其添加可执行权限并执行它：
 
     ```shell
@@ -335,33 +332,44 @@ gitlab-rake gitlab:backup:create  #备份数据
 
         
 
+    -    安装 postfix：
+
+        由于 crontab 通知机制是将错误会以邮件形式发给所属登录账号或者系统管理员，如果没有安装邮件管理服务，那么这部分信息会被系统丢弃。接下来安装 postfix 即可：  
+    
+        ```shell
+    sudo apt-get install postfix
+        sudo service postfix start
+    ```
+    
+        
+
     -   继续执行 `sudo crontab -u root  -e` 进入编辑 **root 用户的crontab文件**，该文件每一行代表一项定时任务，都会以 root 用户执行，在尾部添加如下内容：
 
         ```shell
-        0 2 * * * /home/backup-script/gitlab_auto_backup.sh >>/home/backup-script/gitlab_backup_log.txt 2>&1 </dev/null &
+    0 2 * * * bash /home/backup-script/gitlab_auto_backup.sh >>/home/backup-script/gitlab_backup_log.txt 2>&1 </dev/null &
         ```
-
-        以上任务表示：每天两点执行 `gitlab_auto_backup.sh` 脚本同时将正确和错误日志都追加输出到  `gitlab_backup_log.txt` 文件中。
+    
+        以上任务表示：每天两点以 `bash` 执行 `gitlab_auto_backup.sh` 脚本同时将正确和错误日志都追加输出到  `gitlab_backup_log.txt` 文件中。
 
         -   \>：覆盖写入文件，清空已有内容并重写；
-        -   \>>：追加写入文件，在已有内容后插入；
-
+    -   \>>：追加写入文件，在已有内容后插入；
     
-
+    
+    
     -    重新启动 cron服务，然后就会定时执行设定好的脚本：
-
-         ```shell
+    
+     ```shell
          sudo service cron restart   #重新启动 cron 服务
          ```
-
+    
          可以使用以下命令查看相关日志：
-
+    
          ```shell
          sudo tail /var/log/cron.log #查看 cron 执行的日志
           
          sudo cat /home/backup-script/gitlab_backup_log.txt  #查看脚本执行的输出日志
          ```
-
+    
          
 
 

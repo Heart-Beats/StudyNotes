@@ -170,7 +170,7 @@ android {
 
 ##### 2.2.1 `@HiltAndroidApp`
 
-所有使用 Hilt 的应用都必须包含一个带有 `@HiltAndroidApp` 注释的 `Application` 类。 它会触发 Hilt 的代码生成操作，生成的代码包括应用的一个基类，该基类充当应用级依赖项容器，如下：
+所有使用 Hilt 的应用都必须包含一个带有 `@HiltAndroidApp` 注解的 `Application` 类。 它会触发 Hilt 的代码生成操作，生成的代码包括应用的一个基类，该基类充当应用级依赖项容器，如下：
 
 ```kotlin
 @HiltAndroidApp
@@ -183,7 +183,7 @@ class ExampleApplication : Application() { ... }
 
 ##### 2.2.2 `@AndroidEntryPoint`
 
-在 `Application` 类中设置了 Hilt 且有了应用级组件后，Hilt 可以为带有 `@AndroidEntryPoint` 注释的其他 Android 类提供依赖项，`@AndroidEntryPoint` 会为项目中的每个 Android 类生成一个单独的 Hilt 组件。这些组件可以从它们各自的父类接收依赖项，如[组件层次结构](https://developer.android.google.cn/training/dependency-injection/hilt-android#component-hierarchy)中所述。
+在 `Application` 类中设置了 Hilt 且有了应用级组件后，Hilt 可以为带有 `@AndroidEntryPoint` 注解的其他 Android 类提供依赖项，`@AndroidEntryPoint` 会为项目中的每个 Android 类生成一个单独的 Hilt 组件。这些组件可以从它们各自的父类接收依赖项，如[组件层次结构](https://developer.android.google.cn/training/dependency-injection/hilt-android#component-hierarchy)中所述。
 
 
 
@@ -221,4 +221,112 @@ class ExampleFragment : Fragment() { ... }
     
 
 ##### 2.2.3 `@Inject`
+
+为了执行字段注入，Hilt 需要知道如何从相应组件提供必要依赖项的实例并绑定。
+
+向 Hilt 提供绑定信息的一种方法是构造函数注入。在某个类的构造函数中使用 `@Inject` 注释，以告知 Hilt 如何提供该类的实例：
+
+```kotlin
+class AnalyticsAdapter @Inject constructor(
+  private val service: AnalyticsService
+) { ... }
+```
+
+在一个类的代码中，带有 `@Inject` 注解的构造函数的参数即是该类的依赖项。在本例中，`AnalyticsService` 是 `AnalyticsAdapter` 的一个依赖项。因此，Hilt 还必须知道如何提供 `AnalyticsService` 的实例。
+
+
+
+**注意**：在构建编译时，Hilt 会为 Android 类生成 [Dagger](https://developer.android.google.cn/training/dependency-injection/dagger-basics) 组件。然后，Dagger 会检查您的代码，并执行以下步骤：
+
+- 构建并验证依赖关系图，确保没有未满足的依赖关系且没有依赖循环。
+- 生成它在运行时用来创建实际对象及其依赖项的类。
+
+
+
+##### 2.2.4 `@Module`
+
+有时，有些类型不能通过构造函数注入，发生这种问题的原因有多样，例如：
+
+1. 接口无构造参数，因此无法通过 Hilt 注入接口；
+2. 外部库的构造函数不为我们所有，也无法通过 Hilt 注入；
+
+
+
+这时候就需要使用 `@Module` 注解，声明其为 Hilt 模块，它会告知 Hilt 如何提供某些类型的实例。同时还必须使用 `@InstallIn` 为 Hilt 模块添加注解，以告知 Hilt 每个模块将用在或安装在哪个 Android 类中。==在 Hilt 模块中提供的依赖项可以在它安装到的所有 Android 类关联的组件中使用==。
+
+
+
+**注意**：由于 Hilt 的代码生成操作需要访问使用 Hilt 的所有 Gradle 模块，因此编译 `Application` 类的 Gradle 模块还需要在其传递依赖项中包含您的所有 Hilt 模块和通过构造函数注入的类（不是很明白！！！）。
+
+
+
+##### 2.2.5 `@Binds`
+
+`@Binds` 注解会告知 Hilt 在需要提供接口的实例时要使用哪种实现。
+
+
+
+以 `AnalyticsService` 为例。如果 `AnalyticsService` 是一个接口，则无法通过构造函数注入它，这时应向 Hilt 提供绑定信息，方法是在 Hilt 模块内创建一个==带有 `@Binds` 注解的抽象函数==。
+
+这个抽象函数会向 Hilt 提供以下信息：
+
+1. 返回类型会告知 Hilt 该函数提供哪个接口的实例。
+2. 参数会告知 Hilt 需要提供哪个实现。
+
+```kotlin
+interface AnalyticsService {
+  fun analyticsMethods()
+}
+
+// Constructor-injected, because Hilt needs to know how to
+// provide instances of AnalyticsServiceImpl, too.
+class AnalyticsServiceImpl @Inject constructor(
+  ...
+) : AnalyticsService { ... }
+
+@Module
+@InstallIn(ActivityComponent::class)
+abstract class AnalyticsModule {
+
+  @Binds
+  abstract fun bindAnalyticsService(
+    analyticsServiceImpl: AnalyticsServiceImpl
+  ): AnalyticsService
+}
+```
+
+Hilt 模块 `AnalyticsModule` 带有 `@InstallIn(ActivityComponent::class)` 注解，它意味着该模块中的所有依赖项都可以在应用的所有 Activity 中使用。
+
+
+
+2.2.6 `@Provides` 
+
+接口不是无法通过构造函数注入类型的唯一一种情况，如果某个类来自外部库或者必须使用[构建器模式](https://en.wikipedia.org/wiki/Builder_pattern)创建实例，也无法通过构造函数注入。
+
+
+
+以前面的例子来说，如果 `AnalyticsService` 类不直接归我们所有，我们可以告知 Hilt 如何提供此类型的实例，方法是在 Hilt 模块内创建一个==带有 `@Provides`  注解的普通函数==。
+
+这时，该函数会向 Hilt 提供以下信息：
+
+1. 返回类型会告知 Hilt 该函数提供哪个类型的实例。
+2. 参数会告知 Hilt 该函数需要的相应类型的依赖项。
+3. 函数主体会告知 Hilt 如何提供相应类型的实例，每当需要提供该类型的实例时，Hilt 都会执行函数主体。
+
+```kotlin
+@Module
+@InstallIn(ActivityComponent::class)
+object AnalyticsModule {
+
+  @Provides
+  fun provideAnalyticsService(
+    // Potential dependencies of this type
+  ): AnalyticsService {
+      return Retrofit.Builder()
+               .baseUrl("https://example.com")
+               .build()
+               .create(AnalyticsService::class.java)
+  }
+}
+```
 

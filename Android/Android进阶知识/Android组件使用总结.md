@@ -399,27 +399,27 @@
 - 如果需要更改对话框的位置、大小等其他属性，就需要更改 Dialog 的 Window 的 属性，如下：
 
     ```kotlin
-    dialog.apply{
+    requireDialog().apply {
         val window = this.window
         //自定义 style 中也可以控制 window 的背景和遮罩层
         //window.setBackgroundDrawableResource(R.drawable.shape_bg_white_radius_8)
         //去除dialog的背景遮罩
         //window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     
-        val layoutParams = window?.attributes?apply {
+        val layoutParams = window?.attributes?.apply {
             // 更改遮罩层的透明度，会影响状态栏
             // this.dimAmount = 0.1f
             // 两种属性同时生效必须使用 位与运算
             this.gravity = Gravity.TOP or Gravity.START
-            
+    
             //这里的 x,y 是相对 Window 的位置（不包括状态栏和 ActionBar ），y 的计算需要用到
             //  view.getLocationOnScreen(int[] position) - 状态栏高度 - 标题栏高度（若弹出框的样式未禁用actionBar）
             this.x = windowX
             this.y = windowY
-                
+    
             val point = Point()
-    		window.getWindowManager().getDefaultDisplay().getSize(point)    
-            this.width = ( point.x * 0.75f).toInt()
+         	window.windowManager.defaultDisplay.getSize(point)
+            this.width = (point.x * 0.75f).toInt()
             this.height = WindowManager.LayoutParams.WRAP_CONTENT
         }
         window?.attributes = layoutParams
@@ -1220,5 +1220,4 @@ Android 7.0（API 级别 24）中引入的直接回复操作允许用户直接�
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(notificationId, newMessageNotification);
         ```
-
 

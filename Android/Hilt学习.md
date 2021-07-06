@@ -299,7 +299,7 @@ Hilt 模块 `AnalyticsModule` 带有 `@InstallIn(ActivityComponent::class)` 注�
 
 
 
-2.2.6 `@Provides` 
+##### 2.2.6 `@Provides`
 
 接口不是无法通过构造函数注入类型的唯一一种情况，如果某个类来自外部库或者必须使用[构建器模式](https://en.wikipedia.org/wiki/Builder_pattern)创建实例，也无法通过构造函数注入。
 
@@ -329,4 +329,14 @@ object AnalyticsModule {
   }
 }
 ```
+
+
+
+##### 2.2.7 自定义注解 - 限定符
+
+有时，我们可能需要让 Hilt 以依赖项的形式提供同一类型的不同实现，这就必须要向 Hilt 提供多个绑定。但显然直接通过 `@Binds` 或者 `@Provides` 是无法做到的，限定符在此时就==可以标识某个类型的特定绑定==。
+
+
+
+
 

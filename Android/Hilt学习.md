@@ -1,5 +1,7 @@
 # Android 中依赖注入框架 Hilt
 
+[toc]
+
 
 
 
@@ -256,7 +258,7 @@ class AnalyticsAdapter @Inject constructor(
 
 
 
-**注意**：由于 Hilt 的代码生成操作需要访问使用 Hilt 的所有 Gradle 模块，因此编译 `Application` 类的 Gradle 模块还需要在其传递依赖项中包含您的所有 Hilt 模块和通过构造函数注入的类（不是很明白！！！）。
+**注意**：由于 Hilt 的代码生成操作需要访问使用 Hilt 的所有 Gradle 模块，因此编译 `Application` 类的 Gradle 模块还需要在其传递依赖项中包含您的所有 Hilt 模块和通过构造函数注入的类（不是很明白 ！！！）。
 
 
 
@@ -338,5 +340,171 @@ object AnalyticsModule {
 
 
 
+以前面的例子来讲，如果需要拦截对 `AnalyticsService` 的调用，可以使用带有 [拦截器](https://square.github.io/okhttp/interceptors/) 的 `OkHttpClient` 对象。对于其他服务，可能需要以不同的方式拦截调用。在这种情况下，就需要告知 Hilt 如何提供两种不同的 `OkHttpClient` 实现。
 
+1. 首先，定义用于绑定的限定符：
+
+    ```kotlin
+    @Qualifier  // hilt 中的注解，用于标识限定符
+    @Retention(AnnotationRetention.BINARY)
+    annotation class AuthInterceptorOkHttpClient
+    
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class OtherInterceptorOkHttpClient
+    ```
+
+2. 然后，将 hilt 模块中绑定实例的方法加上限定符注解：
+
+    ```kotlin
+    @Module
+    @InstallIn(ApplicationComponent::class)
+    object NetworkModule {
+    
+      @AuthInterceptorOkHttpClient // 限定符
+      @Provides
+      fun provideAuthInterceptorOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
+          return OkHttpClient.Builder()
+                   .addInterceptor(authInterceptor)
+                   .build()
+      }
+    
+      @OtherInterceptorOkHttpClient // 限定符
+      @Provides
+      fun provideOtherInterceptorOkHttpClient(otherInterceptor: OtherInterceptor): OkHttpClient {
+          return OkHttpClient.Builder()
+                   .addInterceptor(otherInterceptor)
+                   .build()
+      }
+    }
+    ```
+
+    虽然这两种方法具有相同的返回类型，但限定符将它们标记为两个不同的绑定。
+
+3. 最后我们就可以通过使用相应的限定符为字段或参数添加注解来注入所需的特定类型：
+
+    ```kotlin
+    // As a dependency of another class.
+    @Module
+    @InstallIn(ActivityComponent::class)
+    object AnalyticsModule {
+    
+      @Provides
+      fun provideAnalyticsService(
+        @AuthInterceptorOkHttpClient okHttpClient: OkHttpClient   //取得 @AuthInterceptorOkHttpClient 修饰的依赖
+      ): AnalyticsService {
+          return Retrofit.Builder()
+                   .baseUrl("https://example.com")
+                   .client(okHttpClient)
+                   .build()
+                   .create(AnalyticsService::class.java)
+      }
+    }
+    
+    // As a dependency of a constructor-injected class.
+    class ExampleServiceImpl @Inject constructor(
+      @AuthInterceptorOkHttpClient private val okHttpClient: OkHttpClient
+    ) : ...
+    
+    // At field injection.
+    @AndroidEntryPoint
+    class ExampleActivity: AppCompatActivity() {
+    
+      @AuthInterceptorOkHttpClient
+      @Inject lateinit var okHttpClient: OkHttpClient
+    }
+    ```
+
+    最好的做法是，如果您向某个类型添加限定符，那么最好给它的默认实现也加一个限定符，否则容易出错，导致 hilt 注入错误的依赖。
+
+
+
+##### 2.2.8  预定义限定符（`@ApplicationContext` 和 `@ActivityContext` ）
+
+ Hilt 提供了一些预定义的限定符。例如，由于我们可能需要来自应用或 Activity 的 `Context` 类，因此 Hilt 提供了 `@ApplicationContext` 和 `@ActivityContext` 限定符。
+
+同时每个 Hilt 组件都附带一组默认绑定，我们可以将其作为依赖项注入到自定义的绑定中。请注意，这些绑定都对应于常规 Activity 和 Fragment 类型，而不对应于它们的任何特定子类。这是因为，Hilt 会使用单个 ActivityComponent 组件来注入所有 Activity，每个 Activity 都有此组件的不同实例。
+
+| Android 组件                | 默认绑定                                        |
+| :-------------------------- | :---------------------------------------------- |
+| `ApplicationComponent`      | `Application`                                   |
+| `ActivityRetainedComponent` | `Application`                                   |
+| `ActivityComponent`         | `Application` 和 `Activity`                     |
+| `FragmentComponent`         | `Application`、`Activity` 和 `Fragment`         |
+| `ViewComponent`             | `Application`、`Activity` 和 `View`             |
+| `ViewWithFragmentComponent` | `Application`、`Activity`、`Fragment` 和 `View` |
+| `ServiceComponent`          | `Application` 和 `Service`                      |
+
+我们还可以使用 `@ApplicationContext` 获得应用上下文绑定、`@ActivityContext` 获得 Activity 上下文绑定：
+
+```kotlin
+class AnalyticsServiceImpl @Inject constructor(
+  @ApplicationContext context: Context
+) : AnalyticsService { ... }
+
+// Application 绑定可以没有限定符
+class AnalyticsServiceImpl @Inject constructor(
+  application: Application
+) : AnalyticsService { ... }
+
+
+class AnalyticsAdapter @Inject constructor(
+  @ActivityContext context: Context
+) { ... }
+
+// Activity 绑定可以没有限定符
+class AnalyticsAdapter @Inject constructor(
+  activity: FragmentActivity
+) { ... }
+```
+
+
+
+### 3. Hilt 的组件
+
+
+
+#### 3.1 为 Android 类生成的组件
+
+对于我们可以直接执行依赖注入的每个 Android 类，Hilt 都为它生成了一个相关的组件，再通过 `@InstallIn` 注解可以将 Hilt 的模块与指定的组件关联，这时组件就可以获取到 Hilt 模块提供的绑定，与该组件关联的 Android 类就能直接执行依赖注入获取绑定的实例：
+
+
+
+Hilt 自动生成提供了以下组件：
+
+|          Hilt 组件          |              注入器面向的对象              |
+| :-------------------------: | :----------------------------------------: |
+|   `ApplicationComponent`    |               `Application`                |
+| `ActivityRetainedComponent` |                `ViewModel`                 |
+|     `ActivityComponent`     |                 `Activity`                 |
+|     `FragmentComponent`     |                 `Fragment`                 |
+|       `ViewComponent`       |                   `View`                   |
+| `ViewWithFragmentComponent` | 带有 `@WithFragmentBindings` 注释的 `View` |
+|     `ServiceComponent`      |                 `Service`                  |
+
+**注意**：Hilt 不会为广播接收器生成组件，因为 Hilt 直接从 `ApplicationComponent` 注入广播接收器。
+
+
+
+#### 3.2 组件生命周期
+
+==Hilt 会按照相应 Android 类的生命周期自动创建和销毁生成的组件类的实例==。
+
+|         生成的组件          |         创建时机         |         销毁时机          |
+| :-------------------------: | :----------------------: | :-----------------------: |
+|   `ApplicationComponent`    | `Application#onCreate()` | `Application#onDestroy()` |
+| `ActivityRetainedComponent` |  `Activity#onCreate()`   |  `Activity#onDestroy()`   |
+|     `ActivityComponent`     |  `Activity#onCreate()`   |  `Activity#onDestroy()`   |
+|     `FragmentComponent`     |  `Fragment#onAttach()`   |  `Fragment#onDestroy()`   |
+|       `ViewComponent`       |      `View#super()`      |        视图销毁时         |
+| `ViewWithFragmentComponent` |      `View#super()`      |        视图销毁时         |
+|     `ServiceComponent`      |   `Service#onCreate()`   |   `Service#onDestroy()`   |
+
+**注意**：`ActivityRetainedComponent` 在配置更改后仍然存在，因此它在第一次调用 `Activity#onCreate()` 时创建，在最后一次调用 `Activity#onDestroy()` 时销毁。
+
+
+
+#### 3.3 组件作用域
+
+默认情况下，Hilt 中的所有绑定都未限定作用域。这意味着，每当应用请求绑定时，Hilt 都会创建所需类型的一个新实例。
 

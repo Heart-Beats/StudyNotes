@@ -166,7 +166,7 @@ android {
 
 
 
-#### 2.2 Hilt 的相关注解
+#### 2.2 Hilt 的常用相关注解
 
 
 
@@ -224,6 +224,32 @@ class ExampleFragment : Fragment() { ... }
 
 ##### 2.2.3 `@Inject`
 
+该注解在 Hilt 中主要有两方面作用：
+
+1. 执行依赖注入
+2. 对有构造函数的依赖提供 Hilt 绑定
+
+
+
+###### 2.2.3.1 执行依赖注入
+
+`@AndroidEntryPoint` 注解为 Android 类生成的 Hilt 组件提供了应用所需的依赖，如果需要直接从组件获取依赖项，使用 `@Inject` 注解执行依赖注入即可：
+
+```kotlin
+@AndroidEntryPoint
+class ExampleActivity : AppCompatActivity() {
+
+  @Inject lateinit var analytics: AnalyticsAdapter
+  ...
+}
+```
+
+**注意**：==由 Hilt 注入的字段不能为私有字段。尝试使用 Hilt 注入私有字段会导致编译错误==。
+
+
+
+###### 2.2.3.2 提供 Hilt 绑定
+
 为了执行字段注入，Hilt 需要知道如何从相应组件提供必要依赖项的实例并绑定。
 
 向 Hilt 提供绑定信息的一种方法是构造函数注入。在某个类的构造函数中使用 `@Inject` 注释，以告知 Hilt 如何提供该类的实例：
@@ -258,7 +284,7 @@ class AnalyticsAdapter @Inject constructor(
 
 
 
-**注意**：由于 Hilt 的代码生成操作需要访问使用 Hilt 的所有 Gradle 模块，因此编译 `Application` 类的 Gradle 模块还需要在其传递依赖项中包含您的所有 Hilt 模块和通过构造函数注入的类（不是很明白 ！！！）。
+**注意**：由于 Hilt 的代码生成操作需要访问使用 Hilt 的所有 Gradle 模块，因此编译 `Application` 类的 Gradle 模块还需要在其传递依赖项中包含您的所有 Hilt 模块和通过构造函数注入的类（不是很明白？ app 模块中对依赖模块中的类进行依赖注入，自行提供 hilt 模块进行绑定？）。
 
 
 
@@ -423,6 +449,8 @@ object AnalyticsModule {
 
  Hilt 提供了一些预定义的限定符。例如，由于我们可能需要来自应用或 Activity 的 `Context` 类，因此 Hilt 提供了 `@ApplicationContext` 和 `@ActivityContext` 限定符。
 
+
+
 同时每个 Hilt 组件都附带一组默认绑定，我们可以将其作为依赖项注入到自定义的绑定中。请注意，这些绑定都对应于常规 Activity 和 Fragment 类型，而不对应于它们的任何特定子类。这是因为，Hilt 会使用单个 ActivityComponent 组件来注入所有 Activity，每个 Activity 都有此组件的不同实例。
 
 | Android 组件                | 默认绑定                                        |
@@ -547,5 +575,141 @@ class AnalyticsAdapter @Inject constructor(
 
 将模块安装到组件后，其绑定就可以用作该组件中其他绑定的依赖项，也可以用作组件层次结构中该组件下的任何子组件中其他绑定的依赖项：
 
-<img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/Hilt%20%E7%94%9F%E6%88%90%E7%9A%84%E7%BB%84%E4%BB%B6%E7%9A%84%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84.png" alt="Hilt 生成的组件的层次结构"  />
+<img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/Hilt%20%E7%94%9F%E6%88%90%E7%9A%84%E7%BB%84%E4%BB%B6%E7%9A%84%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84.png" alt="Hilt 生成的组件的层次结构" style="zoom:120%;" />
+
+**注意**：默认情况下，如果在 View 中执行字段注入，`ViewComponent` 可以使用 `ActivityComponent` 中定义的绑定。如果还需要使用 `FragmentComponent` 中定义的绑定并且该 view 是 Fragment 的一部分，应将 `@WithFragmentBindings` 注释和 `@AndroidEntryPoint` 一起使用。
+
+
+
+------
+
+
+
+### 4. 在 Hilt 不支持的类中注入依赖项
+
+Hilt 支持最常见的 Android 类。不过，有时我们可能需要在 Hilt 不支持的类中执行依赖注入。
+
+这时候就需要使用 `@EntryPoint` 注解创建入口点，入口点允许 Hilt 使用它并不管理的代码提供依赖关系图中的依赖项。
+
+
+
+例如，Hilt 并不直接支持内容提供器，如果需要在它内部使用 Hilt 来进行依赖注入，则需要为所需的每个绑定类型定义一个带有 `@EntryPoint` 注解的接口并添加限定符。然后，添加 `@InstallIn` 来指定要在其中安装入口点的组件，如下所示：
+
+```kotlin
+  @EntryPoint
+  @InstallIn(ApplicationComponent::class)
+  interface ExampleContentProviderEntryPoint {
+    fun analyticsService(): AnalyticsService
+  }
+```
+
+若想访问入口点，使用来自 `EntryPointAccessors` 的适当静态方法，==参数应该是组件实例或充当组件持有者的 `@AndroidEntryPoint` 对象，确保以参数形式传递的组件和使用的 `EntryPointAccessors` 静态方法都与 `@EntryPoint` 接口上的 `@InstallIn` 注解中的 Android 类匹配==：
+
+```kotlin
+class ExampleContentProvider: ContentProvider() {
+    ...
+
+  override fun query(...): Cursor {
+    val appContext = context?.applicationContext ?: throw IllegalStateException()
+    val hiltEntryPoint =
+      EntryPointAccessors.fromApplication(appContext, ExampleContentProviderEntryPoint::class.java)
+
+    val analyticsService = hiltEntryPoint.analyticsService()
+    ...
+  }
+}
+```
+
+在该例中，我们必须使用 `ApplicationContext` 检索入口点，因为入口点安装在 `ApplicationComponent` 中。如果检索的绑定位于 `ActivityComponent` 中，应改用 `ActivityContext`，同时也应该调用 `EntryPointAccessors.fromActivity(...)` 方法。
+
+
+
+------
+
+
+
+### 5. Hilt 对 Jetpack 组件的支持
+
+Hilt 包含一些扩展，用于提供支持其他 Jetpack 库中的类。Hilt 目前支持以下 Jetpack 组件：
+
+- `ViewModel`
+- `WorkManager`
+
+在添加 hilt 对相关 jetpack 组件的支持之前，确保应用已经[添加 Hilt 依赖](#2.1 添加依赖项)。
+
+
+
+#### 5.1 使用 Hilt 注入 ViewModel 对象
+
+首先添加下面的依赖，启用 Hilt 对 ViewModel 的支持：
+
+```groovy
+dependencies {
+  ...
+  implementation 'androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha01'
+  kapt 'androidx.hilt:hilt-compiler:1.0.0-alpha01' // 该注解处理器在 Hilt 注解处理器的基础上运行
+}
+```
+
+在 `ViewModel` 对象的构造函数中使用 `@ViewModelInject` 注解来提供绑定一个 [`ViewModel`](https://developer.android.google.cn/topic/libraries/architecture/viewmodel)，同时还必须使用 `@Assisted` 为 `SavedStateHandle` 依赖项添加注解：
+
+```kotlin
+class ExampleViewModel @ViewModelInject constructor(
+  private val repository: ExampleRepository,
+  @Assisted private val savedStateHandle: SavedStateHandle
+) : ViewModel() {
+  ...
+}
+```
+
+然后，带有 `@AndroidEntryPoint` 注解的 Activity 或 Fragment 可以使用 `ViewModelProvider` 或 `by viewModels()` [KTX 扩展](https://developer.android.google.cn/kotlin/ktx)照常获取 `ViewModel` 实例：
+
+```kotlin
+@AndroidEntryPoint
+class ExampleActivity : AppCompatActivity() {
+  private val exampleViewModel: ExampleViewModel by viewModels()
+  ...
+}
+```
+
+这时我们获取到的 ViewModel 对象其中相关的依赖也会自动注入。
+
+
+
+#### 5.2 使用 Hilt 注入 WorkManager
+
+类似，首先添加 Hilt 对 WorkManager 支持的依赖：
+
+```groovy
+dependencies {
+  ...
+  implementation 'androidx.hilt:hilt-work:1.0.0-alpha01'
+  kapt 'androidx.hilt:hilt-compiler:1.0.0-alpha01'
+}
+```
+
+在 `Worker` 对象的构造函数中使用 `@WorkerInject` 注解来注入绑定一个 [`Worker`](https://developer.android.google.cn/reference/kotlin/androidx/work/Worker)。同时只能在 `Worker` 对象中使用 `@Singleton` 作用域或者不限定作用域，还必须使用 `@Assisted` 为 `Context` 和 `WorkerParameters` 依赖项添加注解：
+
+```kotlin
+class ExampleWorker @WorkerInject constructor(
+  @Assisted appContext: Context,
+  @Assisted workerParams: WorkerParameters,
+  workerDependency: WorkerDependency
+) : Worker(appContext, workerParams) { ... }
+```
+
+然后，让 `Application` 类实现 `Configuration.Provider` 接口，注入 `HiltWorkFactory` 的实例，并将其传入 `WorkManager` 配置，如下所示：
+
+```kotlin
+@HiltAndroidApp
+class ExampleApplication : Application(), Configuration.Provider {
+
+  @Inject lateinit var workerFactory: HiltWorkerFactory
+
+  override fun getWorkManagerConfiguration() =
+      Configuration.Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
+}
+```
 

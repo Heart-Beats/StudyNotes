@@ -128,7 +128,7 @@ buildscript {
     ...
     dependencies {
         ...
-        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.28-alpha'
+        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.37'
     }
 }
 ```
@@ -147,8 +147,8 @@ android {
 }
 
 dependencies {
-    implementation "com.google.dagger:hilt-android:2.28-alpha"
-    kapt "com.google.dagger:hilt-android-compiler:2.28-alpha"
+    implementation "com.google.dagger:hilt-android:2.37"
+    kapt "com.google.dagger:hilt-compiler:2.37"
 }
 ```
 
@@ -185,7 +185,7 @@ class ExampleApplication : Application() { ... }
 
 ##### 2.2.2 `@AndroidEntryPoint`
 
-在 `Application` 类中设置了 Hilt 且有了应用级组件后，Hilt 可以为带有 `@AndroidEntryPoint` 注解的其他 Android 类提供依赖项，`@AndroidEntryPoint` 会为项目中的每个 Android 类生成一个单独的 Hilt 组件。这些组件可以从它们各自的父类接收依赖项，如[组件层次结构](https://developer.android.google.cn/training/dependency-injection/hilt-android#component-hierarchy)中所述。
+在 `Application` 类中设置了 Hilt 且有了应用级组件后，Hilt 可以为带有 `@AndroidEntryPoint` 注解的其他 Android 类提供依赖项，`@AndroidEntryPoint` 会为项目中的每个 Android 类生成一个单独的 Hilt 组件。这些组件可以从它们各自的父类接收依赖项，如[组件层次结构](#3.4 组件层次结构)中所述。
 
 
 
@@ -460,17 +460,21 @@ class AnalyticsAdapter @Inject constructor(
 
 
 
+------
+
+
+
 ### 3. Hilt 的组件
 
 
 
 #### 3.1 为 Android 类生成的组件
 
-对于我们可以直接执行依赖注入的每个 Android 类，Hilt 都为它生成了一个相关的组件，再通过 `@InstallIn` 注解可以将 Hilt 的模块与指定的组件关联，这时组件就可以获取到 Hilt 模块提供的绑定，与该组件关联的 Android 类就能直接执行依赖注入获取绑定的实例：
+对于我们可以直接执行依赖注入的每个 Android 类，Hilt 都为它生成了一个相关的组件，通过 `@InstallIn` 注解还可以将 Hilt 的模块与指定的组件关联，这时组件就可以获取到 Hilt 模块提供的绑定，与该组件关联的 Android 类就能直接执行依赖注入获取绑定的实例：
 
 
 
-Hilt 自动生成提供了以下组件：
+Hilt 提供了以下组件：
 
 |          Hilt 组件          |              注入器面向的对象              |
 | :-------------------------: | :----------------------------------------: |
@@ -506,5 +510,42 @@ Hilt 自动生成提供了以下组件：
 
 #### 3.3 组件作用域
 
-默认情况下，Hilt 中的所有绑定都未限定作用域。这意味着，每当应用请求绑定时，Hilt 都会创建所需类型的一个新实例。
+默认情况下，Hilt 中的所有绑定都未限定作用域。这意味着，每当应用请求绑定注入依赖时，Hilt 都会创建所需类型的一个新实例。
+
+不过，==Hilt 也允许将绑定的作用域限定为特定组件，在该组件对应的 Android 类实例中获取到的此绑定都为单例==。
+
+下表列出了生成的每个组件对应的作用域注解：
+
+|                 Android 类                 |         生成的组件          |          作用域          |
+| :----------------------------------------: | :-------------------------: | :----------------------: |
+|               `Application`                |   `ApplicationComponent`    |       `@Singleton`       |
+|                `View Model`                | `ActivityRetainedComponent` | `@ActivityRetainedScope` |
+|                 `Activity`                 |     `ActivityComponent`     |    `@ActivityScoped`     |
+|                 `Fragment`                 |     `FragmentComponent`     |    `@FragmentScoped`     |
+|                   `View`                   |       `ViewComponent`       |      `@ViewScoped`       |
+| 带有 `@WithFragmentBindings` 注释的 `View` | `ViewWithFragmentComponent` |      `@ViewScoped`       |
+|                 `Service`                  |     `ServiceComponent`      |     `@ServiceScoped`     |
+
+注意：==Hilt 模块中绑定的作用域要与模块安装到的组件一致==。如：绑定作用域为 `@Singleton`，那么模块则需要 `@InstallIn(ApplicationComponent::class)`
+
+
+
+例如，对上面的 AnalyticsAdapter 类型限定作用域如下：
+
+```kotlin
+@ActivityScoped
+class AnalyticsAdapter @Inject constructor(
+  private val service: AnalyticsService
+) { ... }
+```
+
+这时我们在同一 Activity 实例的生命周期内获取到的 AnalyticsAdapter 都会为同一对象，如果没有 `@ActivityScoped` 注解则每次获取到的都为不同对象。
+
+
+
+#### 3.4 组件层次结构
+
+将模块安装到组件后，其绑定就可以用作该组件中其他绑定的依赖项，也可以用作组件层次结构中该组件下的任何子组件中其他绑定的依赖项：
+
+<img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/Hilt%20%E7%94%9F%E6%88%90%E7%9A%84%E7%BB%84%E4%BB%B6%E7%9A%84%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84.png" alt="Hilt 生成的组件的层次结构"  />
 

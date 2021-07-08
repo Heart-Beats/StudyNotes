@@ -591,6 +591,8 @@ Hilt 支持最常见的 Android 类。不过，有时我们可能需要在 Hilt 
 
 这时候就需要使用 `@EntryPoint` 注解创建入口点，入口点允许 Hilt 使用它并不管理的代码提供依赖关系图中的依赖项。
 
+注意：==入口点类似于模块，都是针对提供绑定的方式，安装到组件后，组件就拥有入口点中的所有依赖，需要在 Hilt不支持 生成组件的类中手动调用相应的方法获取相关组件的指定依赖，这其实严格来说不能算作自动依赖注入。==
+
 
 
 例如，Hilt 并不直接支持内容提供器，如果需要在它内部使用 Hilt 来进行依赖注入，则需要为所需的每个绑定类型定义一个带有 `@EntryPoint` 注解的接口并添加限定符。然后，添加 `@InstallIn` 来指定要在其中安装入口点的组件，如下所示：
@@ -628,7 +630,33 @@ class ExampleContentProvider: ContentProvider() {
 
 
 
-### 5. Hilt 对 Jetpack 组件的支持
+### 5. Hilt 的使用总结
+
+Hilt 的使用主要有以下步骤：
+
+1.  添加 Hilt 依赖
+
+2.  定义生成 Hilt 组件
+
+3.  提供 Hilt 绑定
+
+4.  进行依赖注入
+
+    
+
+具体如下图所示：
+
+<img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/Hilt%20%E5%AE%9E%E7%8E%B0%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5.png" alt="Hilt 实现依赖注入"  />
+
+<center>高清图请点击<a href="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/Hilt%20%E5%AE%9E%E7%8E%B0%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5.png">Hilt 实现依赖注入</a></center>
+
+
+
+------
+
+
+
+### 6. Hilt 对 Jetpack 组件的支持
 
 Hilt 包含一些扩展，用于提供支持其他 Jetpack 库中的类。Hilt 目前支持以下 Jetpack 组件：
 
@@ -639,7 +667,7 @@ Hilt 包含一些扩展，用于提供支持其他 Jetpack 库中的类。Hilt �
 
 
 
-#### 5.1 使用 Hilt 注入 ViewModel 对象
+#### 6.1 使用 Hilt 注入 ViewModel
 
 首先添加下面的依赖，启用 Hilt 对 ViewModel 的支持：
 
@@ -676,7 +704,7 @@ class ExampleActivity : AppCompatActivity() {
 
 
 
-#### 5.2 使用 Hilt 注入 WorkManager
+#### 6.2 使用 Hilt 注入 WorkManager
 
 类似，首先添加 Hilt 对 WorkManager 支持的依赖：
 
@@ -704,7 +732,7 @@ class ExampleWorker @WorkerInject constructor(
 @HiltAndroidApp
 class ExampleApplication : Application(), Configuration.Provider {
 
-  @Inject lateinit var workerFactory: HiltWorkerFactory
+  @Inject lateinit var workerFactory: HiltWorkerFactory  
 
   override fun getWorkManagerConfiguration() =
       Configuration.Builder()

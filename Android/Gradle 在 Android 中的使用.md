@@ -14,11 +14,57 @@ Gradle 是目前流行的一种构建工具，它可以帮我们管理项目中�
 
 
 
+既然是构建工具，那么肯定是针对具体的项目的，接下来我们就看看使用它可以构建怎样的项目结构？
+
+
+
+##### 1.1.1 构建单软件多模块项目
+
+首先，单软件多模块项目指的是什么呢？它通常对应的是项目由一个根模块与多个子模块组成，其中：根模块又依赖于子模块提供的某些功能特性从而实现工程化。
+
+从 Gradle 来看，项目结构如下所示：
+
+```groovy
+//具有两个子项目的多项目构建
+.
+├── app
+│   ...
+│   └── build.gradle
+├── lib
+│   ...
+│   └── build.gradle
+└── settings.gradle
+```
+
+以上各个部分分别表示什么意思呢？在 Gradle 中，我们最应该关注的就是 .gradle 文件，接下来就开始分析：
+
+- `settings.gradle`
+
+    在 Gradle  中，它首先会解析项目根目录下的 settings.gradle 文件中的配置来构建整个工程，如上其中的内容就可为：
+
+    ```groovy
+    rootProject.name = 'basic-multiproject'  // 指定根项目的名称
+    include 'app'                            // 指定需要构建的子模块, 默认找 ./app 作为子模块路径
+    include 'lib'	                         // 指定需要构建的子模块							
+    ```
+
+- `app/build.gradle`
+
+    app 模块的构建文件，其中该文件指明了模块的类型，依赖，打包配置……
+
+- `lib/build.gradle`
+
+    lib 模块的构建文件，其中该文件指明了模块的类型，依赖，打包配置……
+
+注意：==这里根模块没有 Gradle 构建文件，只有定义要包含的子模块的设置文件，一般根模块的构建文件是用来做子模块的通用配置==
 
 
 
 
-### 1. Gradle Build 生命周期
+
+
+
+#### 1. 2 Gradle Build 生命周期
 
 Gradle 进行构建时，会经历3个生命周期：
 
@@ -32,19 +78,19 @@ Gradle 进行构建时，会经历3个生命周期：
 
     <img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/23948686-7b9eb1ab625b9786.image" alt="img" style="zoom: 80%;" />
 
-#### 1.1 初始化阶段
+##### 1.2.1 初始化阶段
 
 初始化阶段确定有多少工程需要构建，创建整个项目层次，并为每个 module 创建一个 Project 对象。（**每一个 build.gradle 文件对应一个 project 对象**，项目 build.gradle 文件以及众多 module 下的 build.gradle 文件均对应一个 project 对象）。项目初始化阶段会执行 setting.gradle 文件，setting.gradle 中所配置的 module 路径会决定 Gradle 创建哪些 project。
 
 
 
-#### 1.2 配置阶段
+##### 1.2.2 配置阶段
 
 配置阶段会执行 Project 对象和 Task 对象的代码，可以称这个阶段为配置阶段，配置阶段主要执行读取配置参数，创建 Task 对象，根据 Task 之间的依赖关系，构建出有向无环图，进而规定 Task 的执行顺序。**对于 task 对象而言，需要明确区分配置和执行这两个阶段**。整个配置阶段的运行顺序参照顶层 build.gradle 所代表的 Project 对象 -> setting.gradle 所声明的 Project 对象的顺序执行。
 
 
 
-#### 1.3 执行阶段
+##### 1.2.3 执行阶段
 
 执行阶段会按照配置中规定的顺序执行所有的 Task ，调用 Task 的 doFirst、doLast 方法传入的闭包会存入 Task 的 actions 列表（Task 中的 doFirst、doLast 方法均可调用多次）。
 
@@ -56,7 +102,7 @@ Gradle 生命周期提供了丰富的回调接口帮助使用者方便的 Hook �
 
 
 
-### 2. Gradle Task
+#### 1.3 Gradle Task
 
 > Task（任务）可以理解为 gradle 的执行单元，gradle 通过执行一个个 Task 来完成整个项目构建工作。
 >
@@ -64,7 +110,7 @@ Gradle 生命周期提供了丰富的回调接口帮助使用者方便的 Hook �
 
 
 
-#### 2.1 自定义 Task
+##### 1.3.1 自定义 Task
 
 我们可以在 build.gradle 中使用关键字 task 来自定义一个 Task。比如创建 build.gradle 文件，并添加 task，如下所示：
 
@@ -186,7 +232,7 @@ BUILD SUCCESSFUL in 821ms
 
 
 
-#### 2.2 Task 之间可以存在依赖关系
+##### 1.3.2 Task 之间可以存在依赖关系
 
 gradle 中的 Task 可以通过 dependsOn 来指定它依赖另一个 Task，如下所示：
 
@@ -238,7 +284,7 @@ BUILD SUCCESSFUL in 842ms
 
 
 
-#### 2.3 Gradle 自定义方法
+##### 1.3.3 Gradle 自定义方法
 
 我们可以在 build.gradle 中使用 `def` 关键字自定义方法，比如以下代码中自定义了 getDateTime 方法，并在 task 中使用此方法：
 
@@ -258,7 +304,7 @@ task('my_task'){
 
 
 
-#### 2.4 系统预置 task
+##### 1.3.4 系统预置 task
 
 自定义 task 时，还可以使用系统提供的各种显式 task 来完成相应的任务。具体就是使用关键字 type 来指定使用的是哪一个 task：
 
@@ -292,14 +338,14 @@ gradle 提供的预置 Task Types 非常多，具体参见：https://docs.gradle
 
 
 
-### 3. Gradle 项目依赖管理
+#### 1.4 Gradle 项目依赖管理
 
 > 依赖管理的条件：
 >
 > - 依赖外部类库的代码实现现有的功能，避免重复造轮子
 > - 自动化依赖管理可以明确依赖的版本，能解决传递性依赖带来的版本冲突问题
 
-#### 3.1 工件坐标(jar 包标志)
+##### 1.4.1 工件坐标(jar 包标志)
 
 - group : 指明 jar 包所在的分组
 - name : 指明 jar 包的名称
@@ -317,7 +363,7 @@ dependencies {
 
 
 
-#### 3.2 仓库(jar 包的存放位置)
+##### 1.4.2 仓库(jar 包的存放位置)
 
 - ==公共仓库(中央仓库)==
      Gradle 没有自己的中央仓库，可配置使用 Maven 的中央仓库：mavenCentral/jcenter
@@ -349,7 +395,7 @@ repositories {
 
 
 
-#### 3.3 依赖传递性
+##### 1.4.3 依赖传递性
 
 比如：A 依赖 B，如果 C 依赖 A，那么 C 依赖 B。
 		 就是因为依赖的传递性，所以才会出现版本的冲突问题。以下通过一张图来了解下Gradle 的自动化依赖管理流程。
@@ -362,7 +408,7 @@ repositories {
 
 
 
-#### 3.4 依赖阶段配置
+##### 1.4.4 依赖阶段配置
 
 在 `dependencies` 代码块内，可以从多种不同的依赖项配置中选择其一来声明库依赖项。每种依赖项配置都向 Gradle 提供了有关如何使用该依赖项的不同说明。下表介绍了可以对 Android 项目中的依赖项使用的各种配置。此表还将这些配置与自 Android Gradle 插件 3.0.0 起弃用的配置进行了比较。
 
@@ -382,7 +428,7 @@ repositories {
 
 
 
-### 4.  Gradle project
+#### 1.4.5 Gradle project
 
 在 Android 中每个 module 就对应着一个 project，gradle 在编译时期会为每一个 project 创建一个 Project 对象用来构建项目。这一过程是在初始化阶段，通过解析 settings.gradle 中的配置来创建相应的 Project。
 
@@ -406,7 +452,7 @@ repositories {
 
 
 
-### 5. buildSrc 统筹依赖管理
+#### 1.4.6 buildSrc 统筹依赖管理
 
 随着项目越来越大，工程中的 module 越来越多，依赖的三方库也越来越多。一般情况下我们会在一个集中的地方统一管理这些三方库的版本。比如像谷歌官方推荐的使用 ext 变量，在根 module 的 build.gradle 中，使用 ext 集中声明各种三方库的版本，如下所示：
 
@@ -470,17 +516,17 @@ buildSrc 是 Android 项目中一个比较特殊的 project，在 buildSrc 中�
 
 
 
-### 6. 解决依赖冲突
+#### 1.7 解决依赖冲突
 
 
 
-#### 6.1 Maven
+##### 1.7.1 Maven
 
 Maven 自动处理传递性依赖版本冲突：==按最短路径和优先声明原则来处理==
 
 <img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/9082898-597dc426e99205ee.png" alt="img"  />
 
-#### 6.2 Gradle
+##### 1.7.2 Gradle
 
 Gradle 自动处理传递性依赖版本冲突：==默认使用版本最高的==
 
@@ -488,7 +534,7 @@ Gradle 自动处理传递性依赖版本冲突：==默认使用版本最高的==
 
 
 
-##### 6.2.1 查找冲突的依赖库
+###### 1.7.2.1 查找冲突的依赖库
 
 若无法直接确定冲突的库和版本，可修改默认配置策略 ——> 查看冲突的 jar 包
 
@@ -518,7 +564,7 @@ Gradle 自动处理传递性依赖版本冲突：==默认使用版本最高的==
 
 在确定了产生问题的库以及版本后，就可以考虑以下方式解决问题：
 
-##### 6.2.2 排除传递性依赖
+###### 1.7.2.2 排除传递性依赖
 
 - 排除单个jar 包的传递性依赖
 
@@ -548,7 +594,7 @@ Gradle 自动处理传递性依赖版本冲突：==默认使用版本最高的==
 
 
 
-##### 6.2.3 强制指定一个版本
+###### 1.7.2.3 强制指定一个版本
 
 给有冲突的 jar 包强制指定一个版本，在 build.gradle 中配置如下：
 
@@ -564,7 +610,7 @@ configurations.all{
 
 
 
-##### 6.2.4 使用依赖替换策略
+###### 1.7.2.4 使用依赖替换策略
 
 依赖替换规则的适用场景分为以下几种：
 

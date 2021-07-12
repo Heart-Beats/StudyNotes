@@ -60,6 +60,68 @@ Gradle 是目前流行的一种构建工具，它可以帮我们管理项目中�
 
 
 
+##### 1.1.2 微调项目结构
+
+单软件多模块项目始终由具有单个根的树表示，树中的每个元素代表一个模块，同时每个模块都有一个路径，代表它在项目树中的位置。一般情况下，该路径与模块在文件系统中的物理位置一致。但是此路径是可以配置的，项目树在 `settings.gradle` 文件中创建，它所在的位置也是根模块的位置。
+
+一般可以进行如下配置来调整项目树：
+
+1.  构建项目树
+
+    在 `settings.gradle` 文件中，可以使用 `include` 方法来构建项目树：
+
+    ```groovy
+    include 'project1', 'project2:child', 'project3:child1'
+    ```
+
+    `include` 方法会将项目路径作为参数，如：==路径 “services:api” 默认映射到文件夹 “services/api”（相对于项目根目录）==，只需要指定树的叶子即可。同时这也意味着包含路径 “services:hotels:api” 将导致创建 3 个项目：“services”、“services:hotels”和“services:hotels:api”。
+
+2.  修改项目树的元素
+
+    在 `settings.gradle `文件中创建的项目树由所谓的*项目描述符组成*，可以随时读取和修改它们：
+
+    ```groovy
+    rootProject.name = 'main'                                 // 修改 Module 名称 
+    include('project-a')
+    
+    println project(':project-a').name                        // 读取 Module 名称 
+    project(':project-a').projectDir = file('my-project-a')   // 修改 Module 的路径 
+    project(':project-a').buildFileName = 'project-a.gradle'  // 修改 Module 的构建脚本文件 
+    ```
+
+
+
+##### 1.1.3 构建多软件多模块项目（大型项目）
+
+一般在大型系统中，会将软件分为几个独立的组件，再通过某些依赖关系将它们联系在一起运行。
+
+如：
+
+```groovy
+├── android-app
+│   └── settings.gradle
+│
+├── server-application
+│   └── settings.gradle
+│
+├── build-logic
+│   └── settings.gradle
+│
+└── platforms
+    └── settings.gradle
+```
+
+上述结构与单软件多模块的架构最大的不同是多了好几个 `settings.gradle` 文件，这些含有 `settings.gradle` 的文件夹都能成为一个单独的 Gradle 构建组件，每个组件自身就可以是一个单软件多模块的项目。
+
+
+
+接下来看看可以对它们做啥：
+
+1.  定义组件内部结构
+    -   使用  `include()` 给组件添加 Module 
+    -   应用 Gradle 的核心插件声明 Module 类型
+2.  
+
 
 
 

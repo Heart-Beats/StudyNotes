@@ -88,7 +88,7 @@ Gradle 是目前流行的一种构建工具，它可以帮我们管理项目中�
 
 2.  修改项目树的元素
 
-    在 `settings.gradle `文件中创建的项目树由所谓的*项目描述符组成*，可以随时读取和修改它们：
+    在 `settings.gradle ` 文件中创建的项目树由所谓的*项目描述符组成*，可以随时读取和修改它们：
 
     ```groovy
     rootProject.name = 'main'                                 // 修改 Module 名称 
@@ -129,7 +129,7 @@ Gradle 是目前流行的一种构建工具，它可以帮我们管理项目中�
 
 1.  定义组件内部结构
     -   使用  `include()` 给组件添加 Module 
-    -   应用 Gradle 的核心插件声明 Module 类型，这样才知道如何处理 Module 的相关源码
+    -   应用 Gradle 的核心插件声明 Module 类型（如：Android 应用、Java 库 …），这样才知道如何处理 Module 的相关源码
     
 2. 连接不同的组件
 
@@ -138,6 +138,8 @@ Gradle 是目前流行的一种构建工具，它可以帮我们管理项目中�
         在 `settings.gradle` 中使用 `includeBuild(…)` 语句，让一个组件知道另一个组件的物理位置：
 
         ```groovy
+        //server-application 的  settings.gradle
+        
         // == Define locations for build logic ==
         pluginManagement {
             repositories {
@@ -161,7 +163,44 @@ Gradle 是目前流行的一种构建工具，它可以帮我们管理项目中�
 
     - 声明组件之间的依赖关系
 
-3.  使用伞构建
+        使组件之间彼此知道之后，这时一个组件还是无法依赖另一个组件中的相关 Module 的，还需要进行一些其他配置。
+
+        如  server-application 想要依赖  platforms 的相关模块，假设  platforms  有个 android 模块，这时  platforms   的 构建设置就会如下：
+
+        ```groovy
+        ...
+        include(':android ')
+        ...
+        ```
+
+        同时必须在 android  模块的 build.gradle 中给其设置 group ，这样 server-application 才能通过坐标引用它，如
+
+        ```groovy
+        // android 的 build.gradle
+        ...
+            
+        group "com.hl.example"
+        
+        android{
+            ...
+        }
+        
+        ...
+        ```
+
+        这时若想在  server-application  的  app  模块中依赖它，只需要 如下所示：
+
+        ```groovy
+        // server-application/app/build.gradle
+        
+        dependences{
+        	impletation 'com.hl.example:android'      //标准坐标依赖形式： [group]:[module]:[version]
+        }
+        ```
+
+        
+
+3. 使用伞构建
 
     如果所有构建都位于一个文件夹结构中，则可以在包含所有构建的根文件夹中创建一个伞形构建。然后，可以通过寻址其中一个构建来从根项目调用任务。
 
@@ -196,7 +235,7 @@ Gradle 进行构建时，会经历3个生命周期：
 
 ##### 1.2.1 初始化阶段
 
-初始化阶段确定有多少工程需要构建，创建整个项目层次，并为每个 module 创建一个 Project 对象。（**每一个 build.gradle 文件对应一个 project 对象**，项目 build.gradle 文件以及众多 module 下的 build.gradle 文件均对应一个 project 对象）。项目初始化阶段会执行 setting.gradle 文件，setting.gradle 中所配置的 module 路径会决定 Gradle 创建哪些 project。
+初始化阶段确定有多少工程需要构建，创建整个项目层次，并为每个 module 创建一个 Project 对象。项目初始化阶段会执行 setting.gradle 文件，setting.gradle 中所配置的 module 路径会决定 Gradle 创建哪些 project。
 
 
 
@@ -220,9 +259,13 @@ Gradle 生命周期提供了丰富的回调接口帮助使用者方便的 Hook �
 
 #### 1.3 Gradle Task
 
+> Gradle 的构建实际上是基于任务（工作单元）的一个有向无环图 (DAG)，创建任务图后，Gradle 会确定哪些任务需要以何种顺序运行，然后继续执行它们。
+>
+> <img src="https://docs.gradle.org/current/userguide/img/task-dag-examples.png" alt="示例任务图" style="zoom: 25%;" />
+>
 > Task（任务）可以理解为 gradle 的执行单元，gradle 通过执行一个个 Task 来完成整个项目构建工作。
 >
-> 它由多个action组成，action就是一个代码块，里面是需要执行的代码，比如编译，打包，生成javadoc，发布等
+> 它由多个action组成，action 就是一个代码块，里面是需要执行的代码，比如编译，打包，生成 javadoc，发布等
 
 
 

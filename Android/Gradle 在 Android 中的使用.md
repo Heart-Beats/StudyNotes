@@ -4,17 +4,17 @@
 
 
 
-### 1. Gradle 基础
+> Gradle 是目前流行的一种构建工具，它可以帮我们管理项目中的差异、依赖、编译、打包、部署......，同时还可以定义满足自己需要的构建逻辑,写入到 build.gradle 中供日后复用。
 
 
 
-#### 1.1 Gradle 是什么？
-
-Gradle 是目前流行的一种构建工具，它可以帮我们管理项目中的差异、依赖、编译、打包、部署......，同时还可以定义满足自己需要的构建逻辑,写入到 build.gradle 中供日后复用。
+### 1. Gradle 构建
 
 
 
-既然是构建工具，那么肯定是针对具体的项目的，接下来我们就看看使用它可以构建怎样的项目结构？
+#### 1.1 创建 Gradle 构建
+
+Gradle 既然是构建工具，那么肯定是针对具体的项目的，接下来我们就看看使用它可以构建怎样的项目结构？
 
 
 
@@ -219,6 +219,299 @@ Gradle 是目前流行的一种构建工具，它可以帮我们管理项目中�
 
 
 
+#### 1.2  Gradle 配置构建环境
+
+> Gradle 可在以下的位置中按照优先级的顺序找到第一个选项应用：
+>
+> - 命令行，使用`-P`/ `--project-prop` [environment options 设置](https://docs.gradle.org/current/userguide/command_line_interface.html#sec:environment_options)。
+> - `gradle.properties` 在` GRADLE_USER_HOME`目录中
+> - `gradle.properties` 在项目根目录中
+> - `gradle.properties` 在 Gradle 安装目录中
+
+
+
+##### 1.2.1  Gradle 属性
+
+以下属性可用于配置 Gradle 构建环境：
+
+- **org.gradle.caching=(true,false)**： 启用构建缓存
+- **org.gradle.caching.debug=(true,false)**： debug 模式启用构建缓存
+- **org.gradle.configureondemand=(true,false)**：启用孵化配置，仅配置必要的项目
+- **org.gradle.console=(auto,plain,rich,verbose)**：自定义控制台输出颜色或详细程度，默认值取决于 Gradle 的调用方式
+- **org.gradle.daemon=(true,false)**：启用守护进程，默认开启
+- **org.gradle.daemon.idletimeout=(# of idle millis)**： 守护进程在指定的空闲毫秒数后自行终止，默认三小时
+- **org.gradle.debug=(true,false)**：Gradle 将在启用远程调试的情况下运行构建，侦听端口 5005。会等待调试器连接
+- **org.gradle.java.home=(path to JDK home)**：为 Gradle 构建过程指定 Java 主目录。该值可以设置为 `jdk` 或 `jre` 路径，使用 jdk 更安全，未设置使用 `JAVA_HOME`
+- **org.gradle.jvmargs=(JVM arguments)**：指定用于 Gradle 守护进程的 JVM 参数
+- **org.gradle.logging.level=(quiet,warn,lifecycle,info,debug)**：设置 Gradle 的日志级别，不区分大小写，默认 lifecycle
+- **org.gradle.parallel=(true,false)**：任务并行执行
+- **org.gradle.priority=(low,normal)**：指定 Gradle 守护进程及其启动的所有进程的调度优先级。默认为`normal`
+- **org.gradle.vfs.verbose=(true,false)**：在[查看文件系统](https://docs.gradle.org/current/userguide/gradle_daemon.html#sec:daemon_watch_fs)时配置详细日志记录。 默认为关闭
+- **org.gradle.vfs.watch=(true,false)**：切换[监视文件系统](https://docs.gradle.org/current/userguide/gradle_daemon.html#sec:daemon_watch_fs)
+- **org.gradle.warning.mode=(all,fail,summary,none)**：当设置为`all`,`summary`或 时`none`，Gradle 将使用不同的警告类型显示
+- **org.gradle.workers.max=(max # of worker processes)**：使用最多给定数量的工作人员，默认为 cpu 处理器数
+
+
+
+##### 1.2.2 系统属性
+
+在 `gradle.properties` 文件中以 `systemProp.` 开头的为系统属性，如：
+
+```groovy
+systemProp.gradle.wrapperUser=myuser
+systemProp.gradle.wrapperPassword=我的密码
+```
+
+以下系统属性可用，请注意，命令行选项优先于系统属性：
+
+- **gradle.wrapperUser=(myuser)**：指定用户名以使用 HTTP 基本身份验证从服务器下载 Gradle 发行版
+- **gradle.wrapperPassword=(mypassword)**：使用 Gradle 包装器指定用于下载 Gradle 发行版的密码
+- **gradle.user.home=(path to directory)**：指定 Gradle 用户主目录
+- **https.protocols**：以逗号分隔的格式指定支持的 TLS 版本。例如：`TLSv1.2,TLSv1.3`。
+
+注意：==在多模块项目的构建中，仅根模块中的系统属性（以 `systemProp.`前缀开头的属性）会生效==。
+
+
+
+##### 1.2.3 环境变量
+
+以下环境变量可用于 `gradle` 命令。请注意，命令行选项和系统属性优先于环境变量。
+
+- **GRADLE_OPTS**：指定启动 Gradle 客户端 VM 时要使用的 JVM 参数
+- **GRADLE_USER_HOME**：指定 Gradle 用户主目录，未设置则默认为 `$USER_HOME/.gradle`
+- **JAVA_HOME**：指定用于客户端 VM 的 JDK 安装目录，此 VM 也用于守护程序，除非在 Gradle 属性文件中指定了不同的 `org.gradle.java.home`
+
+
+
+##### 1.2.4 项目属性
+
+可以通过属性文件或者环境变量来设置项目的自定义属性：
+
+1. 通过  `gradle.properties` 
+
+    ```groovy
+    org.gradle.project.foo=bar
+    ```
+
+2. 通过环境变量
+
+    ```groovy
+    ORG_GRADLE_PROJECT_foo=bar
+    ```
+
+之后就可以像使用变量一样使用其名称来访问项目属性，需要注意的是：
+
+在使用之前最好使用 `Project.hasProperty(java.lang.String)` 方法判断属性是否存在，避免构建出错。
+
+
+
+##### 1.2.5 配置 JVM 内存
+
+可以通过以下方式调整 Gradle 的 JVM 选项：
+
+1. 通过 `gradle.properties` 
+
+    ```groovy
+    org.gradle.jvmargs=-Xmx2g -XX:MaxMetaspaceSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8
+    ```
+
+2. 通过环境变量
+
+    ```groovy
+    JAVA_OPTS="-Xmx64m -XX:MaxPermSize=64m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
+    ```
+
+
+
+##### 1.2.6 通过 HTTP 代理访问网络
+
+可以在 `gradle.properties` 中指定属性来配置  HTTP 或 HTTPS 代理：
+
+- 配置 HTTP 代理
+
+    ```groovy
+    systemProp.http.proxyHost=www.somehost.org
+    systemProp.http.proxyPort=8080
+    systemProp.http.proxyUser=userid
+    systemProp.http.proxyPassword=密码
+    systemProp.http.nonProxyHosts=*.nonproxyrepos.com|localhost
+    ```
+
+- 配置 HTTPS 代理
+
+    ```groovy
+    systemProp.https.proxyHost=www.somehost.org
+    systemProp.https.proxyPort=8080
+    systemProp.https.proxyUser=userid
+    systemProp.https.proxyPassword=密码
+    systemProp.http.nonProxyHosts=*.nonproxyrepos.com|localhost
+    ```
+
+
+
+
+
+#### 1.3  Gradle 守护进程
+
+Daemon（守护进程）是一个长期存在的进程，不仅能够避免每次构建的 JVM 启动成本，而且能够在内存中缓存有关项目结构、文件、任务等的信息，并且在可用系统内存不足时会在空闲时自行停止。从 Gradle 3.0 开始，Gradle 守护进程默认启用。
+
+
+
+##### 1.3.1 获取守护进程状态
+
+要获取正在运行的 Gradle 守护程序及其状态的列表，请使用该`--status`命令，输出示例如下：
+
+```bash
+    PID VERSION                 STATUS
+  28411 3.0                     IDLE
+  34247 3.0                     BUSY
+```
+
+
+
+##### 1.3.2 禁用守护进程
+
+1. 通过 `GRADLE_USER_HOME/gradle.properties` 文件
+
+    ```groovy
+    org.gradle.daemon=false
+    ```
+
+2. 通过环境变量
+
+    ```groovy
+    GRADLE_OPTS="-Dorg.gradle.daemon=false"
+    ```
+
+两种方式具有相同的效果，但第一种方式对大部分人来说更方便。
+
+
+
+##### 1.3.3 停止现有的守护进程
+
+一般情况下无需自主停止守护进程，如果需要明确停止运行守护进程，只需执行下面的命令：
+
+```shell
+ gradle --stop
+```
+
+这将终止所有使用用于执行命令的相同版本的 Gradle 启动的守护进程。
+
+
+
+#### 1.4  初始化脚本
+
+初始化脚本（又名*init scripts*）类似于 Gradle 中的其他脚本。但是，这些脚本在整个项目构建开始之前运行。
+
+
+
+##### 1.4.1 使用初始化脚本
+
+有以下几种使用初始化脚本的方法：
+
+1. 通过命令行
+
+    ```shell
+    gradle [-I | --init-script] 脚本路径
+    ```
+
+2. 在 `USER_HOME/.gradle/` 目录中创建 `init.gradle` 文件
+
+3. 在 `USER_HOME/.gradle/init.d` 中创建以 `.gradle`（或`.init.gradle.kts`对于 Kotlin）结尾的文件 
+
+    
+
+Gradle  会依次按照上面顺序全部执行一遍来查找初始化脚本，同时 `USER_HOME/.gradle/init.d`  目录下的脚本会按照字母顺序执行。这就意味着==可以有多个初始化脚本在构建前被执行==。
+
+
+
+##### 1.4.2  编写初始化脚本
+
+类似于 Gradle 构建脚本，init 脚本是 Groovy 或 Kotlin 脚本。每个 init 脚本都有一个与之关联的 [Gradle](https://docs.gradle.org/current/dsl/org.gradle.api.invocation.Gradle.html) 实例。init 脚本中的任何属性引用和方法调用都将委托给该`Gradle`实例。每个 init 脚本还实现了 [Script](https://docs.gradle.org/current/dsl/org.gradle.api.Script.html) 接口，那么我们可以用它来做什么呢？
+
+
+
+1. 配置项目
+
+    这与在多模块构建中配置模块的方式类似，如配置使用的外部存储库：
+
+    ```groovy
+    //init.gradle
+    
+    allprojects {
+        repositories {
+            mavenLocal()
+        }
+    }
+    ```
+
+2. 声明外部依赖项
+
+    初始化脚本中也可以添加外部依赖项，使用 `initscript()` 方法执行此操作，传递给该方法的闭包配置了一个 [ScriptHandler](https://docs.gradle.org/current/javadoc/org/gradle/api/initialization/dsl/ScriptHandler.html) 实例，可以通过向`classpath`配置添加依赖项来声明 init 脚本类路径。
+
+    ```groovy
+    //init.gradle
+    
+    initscript {
+        repositories {
+            mavenCentral()
+        }
+        dependencies {
+            classpath 'org.apache.commons:commons-math:2.0'
+        }
+    }
+    ```
+
+3. 初始化脚本插件
+
+    类似于 Gradle 构建脚本或 Gradle 设置文件，插件也可以应用于初始化脚本。
+
+    ```groovy
+    //init.gradle
+    
+    apply plugin: EnterpriseRepositoryPlugin
+    
+    class EnterpriseRepositoryPlugin implements Plugin<Gradle> {
+    
+        private static String ENTERPRISE_REPOSITORY_URL = "https://repo.gradle.org/gradle/repo"
+    
+        void apply(Gradle gradle) {
+            // ONLY USE ENTERPRISE REPO FOR DEPENDENCIES
+            gradle.allprojects { project ->
+                project.repositories {
+    
+                    // Remove all repositories not pointing to the enterprise repository url
+                    all { ArtifactRepository repo ->
+                        if (!(repo instanceof MavenArtifactRepository) ||
+                              repo.url.toString() != ENTERPRISE_REPOSITORY_URL) {
+                            project.logger.lifecycle "Repository ${repo.url} removed. Only $ENTERPRISE_REPOSITORY_URL is allowed"
+                            remove repo
+                        }
+                    }
+    
+                    // add the enterprise repository
+                    maven {
+                        name "STANDARD_ENTERPRISE_REPO"
+                        url ENTERPRISE_REPOSITORY_URL
+                    }
+                }
+            }
+        }
+    }
+    ```
+
+    在 init 脚本中应用插件时，Gradle 会实例化插件并调用插件实例的 [Plugin.apply(T)](https://docs.gradle.org/current/javadoc/org/gradle/api/Plugin.html#apply-T-) 方法。该 `gradle` 对象作为参数传递，可用于配置构建的所有方面。
+
+4. 初始化全局的属性或方法
+
+    如涉及一些敏感信息的需要在构建中使用，可以将其放在初始化脚本中来保证不会被 Git 托管上传。
+
+
+
+------
+
+
+
 #### 1. 2 Gradle Build 生命周期
 
 Gradle 进行构建时，会经历3个生命周期：
@@ -257,7 +550,7 @@ Gradle 生命周期提供了丰富的回调接口帮助使用者方便的 Hook �
 
 
 
-#### 1.3 Gradle Task
+#### 1.3 Gradle Task 
 
 > Gradle 的构建实际上是基于任务（工作单元）的一个有向无环图 (DAG)，创建任务图后，Gradle 会确定哪些任务需要以何种顺序运行，然后继续执行它们。
 >

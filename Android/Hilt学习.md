@@ -488,6 +488,12 @@ class AnalyticsAdapter @Inject constructor(
 
 
 
+##### 2.2.9  @EntryPoint
+
+创建入口点，详情见[在 Hilt 不支持的类中注入依赖项](#4. 在 Hilt 不支持的类中注入依赖项)
+
+
+
 ------
 
 
@@ -591,7 +597,14 @@ Hilt 支持最常见的 Android 类。不过，有时我们可能需要在 Hilt 
 
 这时候就需要使用 `@EntryPoint` 注解创建入口点，入口点允许 Hilt 使用它并不管理的代码提供依赖关系图中的依赖项。
 
-注意：==入口点类似于模块，都是针对提供绑定的方式，安装到组件后，组件就拥有入口点中的所有依赖，需要在 Hilt不支持 生成组件的类中手动调用相应的方法获取相关组件的指定依赖，这其实严格来说不能算作自动依赖注入。==
+注意：==入口点类似于模块，都是针对提供绑定的方式，安装到组件后，组件就拥有入口点中的所有依赖，需要在 Hilt不支持生成组件的类中手动调用相应的方法获取相关组件的指定依赖，这其实严格来说不能算作自动依赖注入。==
+
+主要有以下几种不同的方法获取相应的依赖：
+
+-   `EntryPointAccessors.fromApplication(Context context, Class<T> entryPoint)`
+-   `EntryPointAccessors.fromActivity(Activity activity, Class<T> entryPoint) `
+-   `EntryPointAccessors.fromFragment(Fragment fragment, Class<T> entryPoint)`
+-   `EntryPointAccessors.fromView(View view, Class<T> entryPoint)`
 
 
 
@@ -623,6 +636,28 @@ class ExampleContentProvider: ContentProvider() {
 ```
 
 在该例中，我们必须使用 `ApplicationContext` 检索入口点，因为入口点安装在 `ApplicationComponent` 中。如果检索的绑定位于 `ActivityComponent` 中，应改用 `ActivityContext`，同时也应该调用 `EntryPointAccessors.fromActivity(...)` 方法。
+
+
+
+关于 EntryPoint 的使用注意点，以如下代码为例：
+
+```kotlin
+@InstallIn(SingletonComponent::class)
+@EntryPoint
+interface TestEntryPoint {
+
+   val entryPointName: String
+
+   @ProvideQualifier
+   fun getEntryPoint(): TestEntryPoint
+}
+```
+
+1.  入口点中的所有方法都要提供绑定，如：上方的 `entryPointName` 虽然是属性，但也要提供绑定；
+2.  提供绑定的方式与正常一致，有构造函数的使用 `@Inject`，无构造函数的通过 `@Module` ；
+3.  方法上也可以使用限定符获取指定的依赖类型。
+
+总结：入口点中的方法能直接指定具体类型的就使用具体类型（即构造函数可直接绑定），否则需要使用限定符注解同时又要调用指定方法，多此一举。
 
 
 

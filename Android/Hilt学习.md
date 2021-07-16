@@ -488,7 +488,326 @@ class AnalyticsAdapter @Inject constructor(
 
 
 
-##### 2.2.9  @EntryPoint
+##### 2.2.9 `@IntKey` 和 `@IntoMap`
+
+前面通过自定义限定符可以获取指定的类型，但是此方式在某种情况下有点局限性，比如以下这种情况：
+
+已经定义好一个类型的绑定并且注入依赖了，此时想更换该类型的绑定为另一个特定子类，在多 Flavor 工程中此种情况比较常见。那么有哪些方式可以解决呢？
+
+1.  定义该子类的绑定，修改注入为子类
+2.  添加原父类类型的绑定，同时使用限定符在原绑定和新绑定上，注入时使用指定限定符对应的绑定
+3.  使用 `@IntKey` 和 `@IntoMap` 进行多重绑定，再提供方法获取指定绑定
+
+
+
+分析一下以上三种方式：
+
+1.  该方式最差，因为此方式虽然比较方便，但是其会破坏原有的结构，失去多态的特性。
+2.  此种方式每次注入时都需要指定特定绑定，如果某一绑定被删除可能注入处也得修改。
+3.  该方式对原有代码破坏性最小，它是在提供绑定时就已确定好会使用何种绑定，无需修改注入处代码。
+
+下面介绍一下第三种==多重绑定==方式具体如何使用：
+
+```kotlin
+// 1. 定义接口
+interface IMultiBindings {
+   fun printBindName(): String
+}
+
+// 2. 定义接口的特定实现
+class AIMultiBindingsImpl @Inject constructor() : IMultiBindings {
+
+   override fun printBindName(): String = this.javaClass.simpleName
+}
+
+class BIMultiBindingsImpl @Inject constructor() : IMultiBindings {
+
+   override fun printBindName(): String = this.javaClass.simpleName
+}
+
+// 3. 定义 module 提供特定绑定并添加到多重绑定中 
+@InstallIn(SingletonComponent::class)
+@Module
+abstract class IMultiBindingsBindsModule {
+
+   @IntoMap
+   @IntKey(0)
+   @Binds
+   abstract fun bindAIMultiBindings(impl: AIMultiBindingsImpl): IMultiBindings
+
+   @IntoMap
+   @IntKey(1)
+   @Binds
+   abstract fun bindBIMultiBindings(impl: BIMultiBindingsImpl): IMultiBindings
+}
+
+// 4. 从多重绑定中取出特定绑定
+@InstallIn(SingletonComponent::class)
+@Module
+object IMultiBindingsProvidesModule {
+
+   @Provides
+   fun provideIMultiBindingsResolutionSupport(available: Map<Int, @JvmSuppressWildcards IMultiBindings>): IMultiBindings {
+      val maxIndex = available.keys.maxOfOrNull { it } ?: 0
+      return available.getValue(maxIndex)
+   }
+}
+```
+
+从上可以看出使用多重绑定主要分为四步，==与 Hilt 一般的使用方式主要的区别是需要将绑定添加到多重绑定中，再从多重绑定中取出特定绑定==。
+
+那我们就看看如何将绑定添加到多重绑定中并使用它，以上例来看：
+
+-   `@IntoMap`：声明一个 Map 类型的多重绑定
+-   ` @IntKey`：声明 Map 类型的多重绑定的 key 为 Int，注解值即为 map 的键值
+-   `Map<Int, @JvmSuppressWildcards IMultiBindings>`：提供绑定的参数，即为自动生成的 Map 类型的多重绑定的对象。在上例对应的方法中主要是去除 Map 中 key 最大的 value
+
+注意点：
+
+1.  `@IntoMap` 类型的多重绑定必须要为其提供键值，即映射的 key。
+2.  ==`@JvmSuppressWildcards` 该注解不可丢失，否则会产生异常。==
+
+
+
+##### 2.2.10 多重绑定
+
+既然上面提到多重绑定，那么多重绑定到底是什么呢？其实它是在 Dragger 中就存在的，主要就是允许将多个绑定放到一个集合中，即使这些绑定并不在一个模块中也是可以的。
+
+提到集合，很熟悉的有：Set、List、Map。但由于绑定对象在集合中应该是唯一的，所以在多重绑定中没有 List 集合。
+
+
+
+针对两种绑定集合，主要提供了以下几种注解：
+
+1.  Set 绑定集合
+    -   `@IntoSet`
+    -   `@ElementsIntoSet`
+2.  Map 绑定集合
+    -   `@IntoMap`
+3.  直接声明多重绑定集合
+    -   `@Multibinds`
+
+
+
+==注意：多重绑定可以与限定符一起使用，用来获取特定的多重绑定集合（区分集合类型相同的情况）。==
+
+
+
+###### 2.2.10.1 `@IntoSet`
+
+该注解使用很简单，主要作用就是将绑定添加到 Set 中，如下所示：
+
+```kotlin
+@InstallIn(SingletonComponent::class)
+@Module
+object SetProvidesModule {
+
+   @IntoSet
+   @Provides
+   fun provideSetInt(): Int {
+      return 1
+   }
+       
+   @IntoSet
+   @Provides
+   fun provideSetString(): String {
+      return "1"
+   }
+   
+}
+```
+
+如上 `provideSetInt()`  的返回值会存放到一个 Set<Int> 集合中，`provideSetString()` 的返回值会存放到另一个 Set<String> 集合中。
+
+==`@IntoSet` 会自动根据返回值的不同创建不同类型的绑定集合，事实上其它的多重绑定注解也会如此。==
+
+那么绑定集合创建后，该如何使用它呢？其实在依赖注入中使用它和别的依赖没啥不同，都如下所示：
+
+```kotlin
+// 1. 属性注入
+class TestSet{
+    @Inject
+	lateinit var set: Set<Int>
+}
+
+// 2. 参数注入
+class TestSet{
+	
+    fun test(set: Set<@JvmSuppressWildcards String>){  //某些情况下无 @JvmSuppressWildcards 注解会编译报错
+      ...
+	}
+}
+```
+
+可以看出，若想注入想要的绑定集合，只需注入相应的类型即可获取组件中相应的绑定集合。
+
+
+
+###### 2.2.10.2 `@ElementsIntoSet`
+
+该多重绑定与 `@IntoSet` 无本质区别，都是将绑定添加到 Set 中，只不过它注解的方法返回值本身就需要为 Set，如下：
+
+```kotlin
+@InstallIn(SingletonComponent::class)
+@Module
+object SetProvidesModule {
+
+   @ElementsIntoSet
+   @Provides
+   fun provideSetInt(): Set<Int> { //返回值需要为 Set
+   		return hashSetOf(1,2,3)
+   }
+
+} 
+```
+
+
+
+###### 2.2.10.3 `@IntoMap`
+
+该多重绑定的数据结构为 Map，为使用最广泛的，因为它可以直接通过指定的 key 来获取相应的绑定。
+
+
+
+1.  创建 Key
+
+    -   简单 key  —————–> Key 的值为单个
+
+        1.  `@IntKey`
+
+        2.  `@LongKey`
+
+        3.  `@StringKey`
+
+        4.  `@ClassKey`
+
+        5.   `@MapKey` : 自定义 key
+
+            ```kotlin
+            enum class MyEnum {
+            	ABC, DEF
+            }
+            
+            @MustBeDocumented
+            @Target(AnnotationTarget.FUNCTION)
+            @Retention(AnnotationRetention.RUNTIME)
+            @MapKey
+            annotation class MyEnumKey(val value: MyEnum)
+            
+            class Test{}
+            
+            @MustBeDocumented
+            @Target(AnnotationTarget.FUNCTION)
+            @Retention(AnnotationRetention.RUNTIME)
+            @MapKey
+            annotation class TestKey(val value: Test)
+            ```
+
+            如上就自定义了两个 Map 多重绑定的 key 注解：`@MyEnumKey`， `@TestKey`
+
+            ==注意：自定义 key 注解的值不可为数组。==
+
+    -   复杂 key ——————> Key 的值为多个组合
+
+        如果 map 多重绑定的 Key 不仅可以由单个注解值表示，则可以将整个注解用作map关键字，方法是将 @`MapKey` 的 unwrapValue 设置为 false。如下：
+
+        ```kotlin
+        @MustBeDocumented
+        @Target(AnnotationTarget.FUNCTION)
+        @Retention(AnnotationRetention.RUNTIME)
+        @MapKey(unwrapValue = false)
+        annotation class MyKey(
+        	val name: String,
+        	val implementingClass: KClass<*>,
+        	val thresholds: IntArray
+        )
+        ```
+
+        被 `@MyKey` 注解的绑定就会被添加到 Key 为 `MyKey` 的 Map多重绑定集合中。
+
+        ==注意：复杂 key 运行时必须提供一个被 [@AutoAnnotation](https://github.com/google/auto/blob/master/value/src/main/java/com/google/auto/value/AutoAnnotation.java)注解的方法，参数为 复杂 key 的 value , 返回值为 复杂 key 对象==，如：
+
+        ```kotlin
+        object example{
+        	
+            @AutoAnnotation
+            fun createMyKey(name: String?, implementingClass: Class<*>?, thresholds: IntArray?): MyKey? {
+        		.........
+            }
+        }
+        ```
+
+        
+
+2.  使用 key 并创建 Map 多重绑定
+
+    首先，这些 Key 必须同时与 `@IntoMap` 同时使用才生效，使用方式很简单，都如下所示：
+
+    ```kotlin
+    // 1. 定义接口
+    interface IMultiBindings {
+       fun printBindName(): String
+    }
+    
+    // 2. 定义接口的特定实现
+    class AIMultiBindingsImpl @Inject constructor() : IMultiBindings {
+    
+       override fun printBindName(): String = this.javaClass.simpleName
+    }
+    
+    @InstallIn(SingletonComponent::class)
+    @Module
+    abstract class MapProvidesModule {
+    
+    
+    //@LongKey(0) | @StringKey("") | @ClassKey(IMultiBindings.class) | @MyKey("a",IMultiBindings::class ,intArrayOf(1,2,3))
+       @IntKey(0)
+       @IntoMap
+       @Binds
+       fun provideSetInt(impl: AIMultiBindingsImpl): IMultiBindings
+    
+    } 
+    ```
+    
+3.  注入 Map 多重绑定集合
+
+    注入相关依赖与 Set 多重绑定时无实质区别，需要注意的是它同样会根据键值的不同创建不同的 Map 多重绑定集合，在注入依赖时需要注意键值的类型，如：
+
+    ```kotlin
+    class TestSet{
+        
+        @Inject
+    	lateinit var map: Map<Int, IMultiBindings>
+        
+        //	lateinit var map: Map<Int, IMultiBindings>
+        //	lateinit var map: Map<Long, IMultiBindings>
+        //	lateinit var map: Map<String, IMultiBindings>
+        //	lateinit var map: Map<Class<*>?, IMultiBindings>
+        //	lateinit var map: Map<MyKey?, IMultiBindings>
+    }
+    ```
+
+    
+
+###### 2.2.10.4 `@Multibinds`
+
+可以声明多绑定 `set `或 `map` 是绑定的，方法是将一个 `@Multibinds` 注解的抽象方法添加到返回要声明的`set`或`map`的模块
+
+```kotlin
+@InstallIn(SingletonComponent::class)
+@Module
+abstract class MyModule {
+    
+	@Multibinds
+	abstract fun aMap(): Map<Int, IMultiBindings>
+}
+```
+
+以上==其实就是将隐性创建的多重绑定显性地提供出来，该多重绑定在创建时就已经在相关组件中存在，可以直接依赖注入，无需声明也能直接使用，所以此种方式比较非常鸡肋。==
+
+
+
+##### 2.2.11  `@EntryPoint`
 
 创建入口点，详情见[在 Hilt 不支持的类中注入依赖项](#4. 在 Hilt 不支持的类中注入依赖项)
 
@@ -681,9 +1000,9 @@ Hilt 的使用主要有以下步骤：
 
 具体如下图所示：
 
-<img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/Hilt%20%E5%AE%9E%E7%8E%B0%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5.png" alt="Hilt 实现依赖注入"  />
+<img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/Hilt%20%E5%AE%9E%E7%8E%B0%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A52.png" alt="Hilt 实现依赖注入2" style="zoom: 200%;" />
 
-<center>高清图请点击<a href="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/Hilt%20%E5%AE%9E%E7%8E%B0%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5.png">Hilt 实现依赖注入</a></center>
+<center>高清图请点击<a href="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/Hilt%20%E5%AE%9E%E7%8E%B0%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A52.png">Hilt 实现依赖注入</a></center>
 
 
 

@@ -1,4 +1,6 @@
-## Shadow 框架的插件化原理
+## Shadow 框架的插件化原理及集成使用
+
+[toc]
 
 
 
@@ -418,6 +420,7 @@ class PluginServiceManager(private val mPluginLoader: ShadowPluginLoader, privat
 
 // SampleComponentManager
 public class SampleComponentManager extends ComponentManager {
+    
     public List<BroadcastInfo> getBroadcastInfoList(String partKey) {
         List<ComponentManager.BroadcastInfo> broadcastInfos = new ArrayList<>();
         if (partKey.equals(Constant.PART_KEY_PLUGIN_MAIN_APP)) {
@@ -445,13 +448,486 @@ public class SampleComponentManager extends ComponentManager {
 
 
 
-### 3. 使用注意点
+### 3. Shadow 的集成使用
 
-1.  插件 APP 中通过 `apply plugin: 'com.tencent.shadow.plugin'` 使用 Shadow Gradle 插件一定要在 `android{}` 之后，同时插件的 applicationId 需要与宿主保持一致。
 
-2.  插件中 loader 和 runtime 除了 Shadow 依赖，可以无需其他任何依赖，尤其注意不可有 `androidx.core:core` 相关的依赖，否则打包插件运行时会有异常
 
-3.  启动插件中相关的四大组件时，Intent 传递的序列化对象会由于跨进程不能被插件 app 的 PathClassLoader 所加载而导致反序列化异常，解决方法：
+#### 3.1 环境准备
+
+1.  克隆仓库：`git clone git@github.com:Tencent/Shadow.git`
+
+2.  编译代码，建议先在命令行编译一次：
+
+    -   在编译前，**必须**设置 `ANDROID_HOME` 环境变量。
+
+    -   在编译时，**必须**使用 `gradlew` 脚本，以保证采用了项目配置的Gradle版本，即命令行运行：
+
+        ```shell
+        ./gradlew build
+        ```
+
+    过程中没有出错即代表编译成功，后续即可使用 Gradle 的 task 进行发布：
+
+    <img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/shadow-publish.gif" alt="shadow-publish" style="zoom: 80%;" />
+
+    该任务执行完成之后就可以在项目中使用 Shadow 相关的 SDK。
+
+3.  修改发布相关的配置以及查看版本号
+
+    -   修改发布配置
+
+        `buildScripts/gradle/maven.gradle `文件中配置了Shadow的Maven发布脚本，可以修改其中的两个 GroupID 变量：`coreGroupId`、`dynamicGroupId` 以及 `setScm` 方法中的两个URL到自己的版本库地址。
+
+        还可以将 `mavenLocal()` 改为自己发布的目标 Maven 仓库，之后执行 `./gradlew publish` 即可将 Shadow SDK 发布到 Maven 仓库。
+
+        
+
+    -   查看版本号
+
+        构建的版本号可以在 `build/pom` 目录中查看生成的 pom 文件中查看，如：
+
+        <img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/image-20210719111017658.png" alt="image-20210719111017658" style="zoom: 80%;" />
+
+        上图即可看出发布的构建 name 为 `activity-container`， group 为 `com.tencent.shadow.core.test`， version 为 `local-e66e0bb4-SNAPSHOT`，即后续若想依赖它，则相关的坐标就是：`com.tencent.shadow.core.test:activity-container:local-e66e0bb4-SNAPSHOT`
+
+
+
+#### 3.2 项目接入
+
+前面介绍的是初始化 Shadow 的相关配置，如果远程仓库上有相关版本而且无需修改可以直接依赖时，可以忽略它。
+
+接下来看看应该如何在项目中使用它？
+
+
+
+##### 3.2.1  宿主
+
+首先，需要清楚 Shadow 的框架结构，不了解的可查看 [ Shadow 框架结构分析](#2. 框架结构分析) 其中的图例。
+
+为了方便使用，我给 Shadow 单独封装了模块，示例可见 [Shadow 模块](https://github.com/Heart-Beats/AndroidApplicationTest/tree/master/shadow)，下面介绍其中相关的结构 ：
+
+<img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/image-20210719113239860.png" alt="image-20210719113239860"  />
+
+如图所示，主要分为三部分：
+
+-   plugin-aidl：
+
+    主要为了实现宿主与插件进行双向通信的 AIDL 接口，因为宿主与插件属于不同进程。
+
+    
+
+-   plugin-manager：
+
+    该部分对应 [Shadow 框架结构](#2. 框架结构分析) 中的 PluginManager 部分，主要通过它来实现插件的管理。在这里需要注意 `com.tencent.shadow.dynamic.impl`  下的两个类：`ManagerFactoryImpl` 和 `WhiteList`，它们的包名和类名必须固定，前者会找到 PluginManager  的动态实现，后者为 PluginManager  下配置的白名单，白名单中都为包名，PluginManager 可以加载宿主中位于白名单内的类。
+
+    
+
+    在这里你可能会想到为啥这两个类的包名和类名需要固定以及为啥需要白名单？
+
+    1.  这两个类在 Shadow 框架中是通过反射进行处理的，具体可见 [`ManagerImplLoader.MANAGER_FACTORY_CLASS_NAME` ](https://github.com/Tencent/Shadow/blob/89a753c50ab542ac1d2aa5f88cc828221f2e00ba/projects/sdk/dynamic/dynamic-host/src/main/java/com/tencent/shadow/dynamic/host/ManagerImplLoader.java#L28) 以及 [`ImplLoader.WHITE_LIST_CLASS_NAME` ](https://github.com/Tencent/Shadow/blob/89a753c50ab542ac1d2aa5f88cc828221f2e00ba/projects/sdk/dynamic/dynamic-host/src/main/java/com/tencent/shadow/dynamic/host/ImplLoader.java#L28) 对其相关的处理。
+    2.  从图中可以看出 `plugin-manager` 其实是个应用模块，它会打包成 APK 然后在宿主中通过 Shadow 装载它，因此它与宿主也不在同一进程中，因此这就意味着：宿主与它都有单独的 ClassLoader 。正常情况下是无法直接宿主中的类，不过通过 Shadow 在 PluginManager 中给其添加白名单，就可访问宿主中的相关类。
+
+    如果无需对插件实现特殊管理，此模块中的内容不建议修改。
+
+    
+
+    在此模块中，PluginManager  的动态实现类为 `MyPluginManager`，它继承自 `PluginManagerThatUseDynamicLoader`，由上层父类中定义的有一个抽象方法需要实现：
+
+    ```java
+    // PluginManagerThatUseDynamicLoader extends BasePluginManager
+    public abstract class BasePluginManager {
+        
+        ...
+        
+        /**
+         * PluginManager的名字
+         * 用于和其他 PluginManager 区分持续化存储的名字
+         */
+        abstract protected String getName();
+        
+        ...
+    }
+    ```
+
+    PluginManager  在解压插件压缩包读取相关信息时会创建数据库并存入相关信息，此过程中会根据该方法的返回值创建相关的数据库名字。因此不同的 PluginManager  需要不同的名字，避免数据混乱。
+
+
+
+-   shadow-init:
+
+    该模块才是真正意义上对 Shadow 接入的封装，看看有哪些比较重要的部分吧！
+
+    -   logger 包：该包中的类用于实现 Shadow 运行过程中的相关日志打印
+    -   managerupdater 包：其中主要实现 PluginManagerUpdater 接口，实现 PluginManager 的动态更新
+    -   `MainPluginProcessService` 类：继承自 `PluginProcessService`，为 [Shadow 框架结构](#2. 框架结构分析) 中的 PluginProcessService 部分，内容可为空。
+    -   `Shadow` 类：主要实现 PluginManager 的初始化以及该对象的获取
+
+    其中需要注意的是：MainPluginProcessService 为四大组件的 Service，需要在 AndroidManifest.xml 中注册，其实该文件中还有其他比较重要的部分，看看该模块中的此组件是怎样的？
+
+    ```xml
+    <?xml version="1.0" encoding="utf-8"?>
+    <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+        package="com.hl.shadow">
+    
+        <application
+            android:allowBackup="true"
+            android:allowClearUserData="true"
+            android:largeHeap="true"
+            android:supportsRtl="true">
+    
+    
+            <!--dynamic activity 注册
+              注意 configChanges 需要全注册
+              theme需要注册成透明
+              -->
+    
+            <activity
+                android:name="com.hl.my_runtime.PluginDefaultProxyActivity"
+                android:launchMode="standard"
+                android:screenOrientation="portrait"
+                android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|
+                                       screenLayout|fontScale|uiMode|orientation|screenSize|smallestScreenSize|layoutDirection"
+                android:hardwareAccelerated="true"
+                android:theme="@style/PluginContainerActivity"
+                android:multiprocess="true"
+                android:process=":plugin" />
+    
+            <activity
+                android:name="com.hl.my_runtime.PluginSingleInstance1ProxyActivity"
+                android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|
+                                       screenLayout|fontScale|uiMode|orientation|screenSize|smallestScreenSize|layoutDirection"
+                android:hardwareAccelerated="true"
+                android:launchMode="singleInstance"
+                android:multiprocess="true"
+                android:process=":plugin"
+                android:screenOrientation="portrait"
+                android:theme="@style/PluginContainerActivity" />
+    
+            <activity
+                android:name="com.hl.my_runtime.PluginSingleTask1ProxyActivity"
+                android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|
+                                       screenLayout|fontScale|uiMode|orientation|screenSize|smallestScreenSize|layoutDirection"
+                android:hardwareAccelerated="true"
+                android:launchMode="singleTask"
+                android:multiprocess="true"
+                android:process=":plugin"
+                android:screenOrientation="portrait"
+                android:theme="@style/PluginContainerActivity" />
+            <!--dynamic activity注册 end -->
+    
+            <provider
+                android:name="com.tencent.shadow.core.runtime.container.PluginContainerContentProvider"
+                android:authorities="com.tencent.shadow.contentprovider.authority.dynamic2"
+                android:process=":plugin" />
+    
+            <service
+                android:name=".MainPluginProcessService"
+                android:process=":plugin" />
+        </application>
+    
+    </manifest>
+    ```
+
+    1.  其中的 activity 都为相关的壳子 Activity，具体作用可看 [宿主中如何启动插件 Activity](#2.2.2 宿主中如何启动插件 Activity) 中的原理图
+    2.  provider 为 Shadow 框架中已实现的，需要注意 authorities 不可重复
+    3.  service 对应 MainPluginProcessService，不再多介绍
+
+
+
+##### 3.2.2  插件
+
+首先，也先来认识一下插件工程的结构，如下图：
+
+<img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/image-20210719154757401.png" alt="image-20210719154757401"  />
+
+主要有三个不可缺少的部分：
+
+1.  loader
+
+    对应图中的 `my-loader` 模块，其中主要实现插件组件的动态加载。
+
+    需要注意的类为：`com.tencent.shadow.dynamic.loader.impl` 包下的 `CoreLoaderFactoryImpl`，此类的包名与类名也必须固定，具体见
+
+    [`DynamicPluginLoader.CORE_LOADER_FACTORY_IMPL_NAME`](https://github.com/Tencent/Shadow/blob/89a753c50ab542ac1d2aa5f88cc828221f2e00ba/projects/sdk/dynamic/dynamic-loader-impl/src/main/kotlin/com/tencent/shadow/dynamic/loader/impl/DynamicPluginLoader.kt#L36) 即可了解。
+
+    
+
+    这里还有一个类需要了解一下：MyComponentManager ，它继承自 ComponentManager，主要功能是管理组件和宿主中注册的壳子之间的配对关系，需要实现以下三个方法：
+
+    ```kotlin
+    abstract class ComponentManager : PluginComponentLauncher {
+        
+        // 配置插件 Activity 到代理壳子 Activity 的对应关系
+        abstract fun onBindContainerActivity(pluginActivity: ComponentName): ComponentName
+    
+        // 配置对应宿主中预注册的代理壳子 ContentProvider 的信息
+        abstract fun onBindContainerContentProvider(pluginContentProvider: ComponentName): ContainerProviderInfo
+    
+        // 配置宿主中预注册的壳子 Broadcast 信息，随后会在插件中找到相应的 Receiver 动态注册
+        abstract fun getBroadcastInfoList(partKey: String): List<BroadcastInfo>?
+    }
+    ```
+
+    配置完成之后，Shadow 即可使用正确的方式启动相关的组件。
+
+    
+
+2.  runtime
+
+    对应图中的 `my-runtime` 模块，其中为相关的代理壳子 Activity 类，并无其他部分。
+
+    这里 `PluginContainerActivity` 的实现类有多个，主要是为了对应不同 launchMode 的 Activity，可视个人情况决定是否需要修改定制。
+
+    
+
+3.  plugin
+
+    对应图中的 `plugin` 模块，其中存放相关的插件应用。这里的插件应用与正常的应用并无二样，是可以单独启动运行的。
+
+    那么究竟它是如何能被插件化使用呢？这里就涉及到 Shadow Gradle 的插件，它会在代码编译时通过 Transform 将相关的组件转化为 Shadow 能识别的组件。
+
+    因此，插件中我们需要应用此 Gradle  插件：
+
+    -   添加插件路径地址
+
+        ```groovy
+        buildscript {
+        	repositories{
+        		// shadow repository，即 3.1 环境准备中 Shadow 发布到的仓库地址
+        	}
+            
+           dependencies {
+                classpath "com.tencent.shadow.core:gradle-plugin:$shadow_version"
+            }
+        }
+        ```
+
+    -   应用此插件， 这里以 [Shadow 官方 demo 插件中的构建脚本](https://github.com/Tencent/Shadow/blob/master/projects/sample/source/sample-plugin/sample-plugin-app/build.gradle) 为例：
+
+        ```groovy
+        //app 的 build.gradle
+        android {
+            
+         	defaultConfig {
+                applicationId project.SAMPLE_HOST_APP_APPLICATION_ID // 插件的 applicationId 需要与宿主保持一致
+            }
+            
+          //  ...
+        }
+        
+        //...
+        
+        apply plugin: 'com.tencent.shadow.plugin' 
+        
+        shadow {
+            transform {
+        //        useHostContext = ['abc']
+            }
+        
+            packagePlugin {
+                pluginTypes {
+                    debug {
+                        loaderApkConfig = new Tuple2('sample-loader-debug.apk', ':sample-loader:assembleDebug')
+                        runtimeApkConfig = new Tuple2('sample-runtime-debug.apk', ':sample-runtime:assembleDebug')
+                        pluginApks {
+                            pluginApk1 {
+                                businessName = 'sample-plugin-app'
+                                partKey = 'sample-plugin-app'
+                                buildTask = ':sample-plugin-app:assembleDebug'
+                                apkName = 'sample-plugin-app-debug.apk'
+                                apkPath = 'projects/sample/source/sample-plugin/sample-plugin-app/build/outputs/apk/debug/sample-plugin-app-debug.apk'
+                                hostWhiteList = ["com.tencent.shadow.sample.host.lib"]
+                            }
+                            pluginApk2 {
+                                businessName = 'sample-plugin-app2'
+                                partKey = 'sample-plugin-app2'
+                                buildTask = ':sample-plugin-app:assembleDebug'
+                                apkName = 'sample-plugin-app-debug2.apk'
+                                apkPath = 'projects/sample/source/sample-plugin/sample-plugin-app/build/outputs/apk/debug/sample-plugin-app-debug2.apk'
+                                hostWhiteList = ["com.tencent.shadow.sample.host.lib"]
+                            }
+                        }
+                    }
+        
+                    release {
+                        loaderApkConfig = new Tuple2('sample-loader-release.apk', ':sample-loader:assembleRelease')
+                        runtimeApkConfig = new Tuple2('sample-runtime-release.apk', ':sample-runtime:assembleRelease')
+                        pluginApks {
+                            pluginApk1 {
+                                businessName = 'sample-plugin-app'
+                                partKey = 'sample-plugin-app'
+                                buildTask = ':sample-plugin-app:assembleRelease'
+                                apkName = 'sample-plugin-app-release.apk'
+                                apkPath = 'projects/sample/source/sample-plugin/sample-plugin-app/build/outputs/apk/release/sample-plugin-app-release.apk'
+                                hostWhiteList = ["com.tencent.shadow.sample.host.lib"]
+                            }
+                            pluginApk2 {
+                                businessName = 'sample-plugin-app2'
+                                partKey = 'sample-plugin-app2'
+                                buildTask = ':sample-plugin-app:assembleRelease'
+                                apkName = 'sample-plugin-app-release2.apk'
+                                apkPath = 'projects/sample/source/sample-plugin/sample-plugin-app/build/outputs/apk/release/sample-plugin-app-release2.apk'
+                                hostWhiteList = ["com.tencent.shadow.sample.host.lib"]
+                            }
+                        }
+                    }
+                }
+        
+                loaderApkProjectPath = 'projects/sample/source/sample-plugin/sample-loader'
+                runtimeApkProjectPath = 'projects/sample/source/sample-plugin/sample-runtime'
+        
+                archiveSuffix = System.getenv("PluginSuffix") ?: ""
+                archivePrefix = 'plugin'
+                destinationDir = "${getRootProject().getBuildDir()}"
+        
+                version = 4
+                compactVersion = [1, 2, 3]
+                uuidNickName = "1.1.5"
+            }
+        }
+        ```
+
+        主要需要注意 `pluginApks{}` 中的内容：
+
+        -   pluginApk1、pluginApk2 ：表示插件1、插件2 依次类推
+        -   businessName：businessName相同的插件，context获取的Dir是相同的。businessName留空，表示和宿主相同业务，直接使用宿主的Dir
+        -   partKey：插件的唯一标识，一个 partKey 需要对应一个唯一的插件
+        -   buildTask：对应插件应用的打包任务
+        -   apkName：打成插件压缩包时插件 apk 的名字
+        -   apkPath：执行 `buildTask` 后插件 APK 所在的路径
+        -   hostWhiteList：白名单，可以用来在插件中加载宿主相关包下的类
+
+        其他的部分一般采用默认值即可，无需修改。同步之后命令行执行：
+
+        ```shell
+        ./gradlew packageDebugPlugin 
+        
+        #或
+        
+        ./gradlew packageReleasePlugin 
+        ```
+
+        即可在根项目下的 build 目录中生成对应的 `plugin-debug.zip` 或 `plugin-release.zip` 压缩包。
+
+        
+
+4.  plugin-aidl 
+
+    相关的 AIDL 模块，需要和宿主中的 AIDL  模块保持一致，主要是为了实现宿主和插件的双向通信，这里不作过多展开介绍。感兴趣的读者需要自行了解一下 AIDL 的相关知识，使用示例可参考 [TestService](https://github.com/Heart-Beats/ShadowPlugin/blob/main/plugin/test/src/main/java/com/hl/myplugin/TestService.kt) 中的相关部分。
+
+
+
+##### 3.2.3 宿主中启动插件
+
+经过前番折腾，宿主和插件中相应的工作已经准备完毕了，这时候就可以启动插件，在启动插件之前需要在应用初始化时初始化 PluginManager，如下：
+
+```kotlin
+class MyApplication : Application() {
+
+    override fun onCreate() {
+        //...
+        
+        if (mApplication.isProcess(":plugin")) {
+            // 插件进程也有 log 打印需要初始化
+            LoggerFactory.setILoggerFactory(AndroidLoggerFactory.getInstance())
+
+            //在全动态架构中，Activity组件没有打包在宿主而是位于被动态加载的 runtime，
+            //为了防止插件crash后，系统自动恢复crash前的Activity组件，此时由于没有加载runtime而发生classNotFound异常，导致二次crash
+            //因此这里恢复加载上一次的runtime
+            DynamicRuntime.recoveryRuntime(mApplication)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                WebView.setDataDirectorySuffix("plugin")
+            }
+        } else {
+            //PluginManager.apk文件路径
+            this.assets.list("plugins")?.first { it.contains("My-PluginManager") }?.also { pluginManagerName ->
+                val pluginManagerSavePath =
+                    File(this.getExternalFilesDir(null), "plugins/$pluginManagerName").absolutePath
+                val pluginManagerZipPath =
+                    this.putFileOfAssetsToPath("plugins/$pluginManagerName", pluginManagerSavePath)
+                Shadow.initDynamicPluginManager(pluginManagerZipPath)
+            }
+        }
+        
+        //...        
+    }
+}
+```
+
+这里将打包的 PluginManager APK 放在应用的 Assets/plugins 的目录下，并在运行时存放到应用私有文件目录下并初始化 PluginManager。
+
+
+
+PluginManager 初始化就可以在想要启动 Shadow 插件的地方调用其 enter 方法，该方法定义如下：
+
+```java
+public interface PluginManager {
+
+    /**
+     * @param context context
+     * @param formId  标识本次请求的来源位置，用于区分入口
+     * @param bundle  参数列表
+     * @param callback 用于从PluginManager实现中返回View
+     */
+    void enter(Context context, long formId, Bundle bundle, EnterCallback callback);
+}
+```
+
+其中 formId 可以用来区分启动插件中的 Activity 还是 Service，为了方便起见，我对 bundle 中的相关 Key 作了定义，`MyPluginManager` 中会读取相关 Key 的数据并作处理。目前  定义的 Key  如下：
+
+```kotlin
+object Constant {
+	/**
+     * 插件 apk/zip 路径
+     */
+    const val KEY_PLUGIN_ZIP_PATH = "pluginZipPath"
+
+    /**
+     * partKey 用来区分入口， 用来实现多个插件不同的加载
+     */
+    const val KEY_PLUGIN_PART_KEY = "KEY_PLUGIN_PART_KEY"
+
+    /**
+     * 启动的插件 Activity 或 Service 路径
+     */
+    const val KEY_CLASSNAME = "KEY_CLASSNAME"
+
+    /**
+     * 需要传入到启动插件里的参数，为 Bundle，它会传递存放在启动的 Intent 的 extras 字段中
+     */
+    const val KEY_EXTRAS = "KEY_EXTRAS"
+
+    /**
+     * 打开 Activity 传入的 formId
+     */
+    const val FROM_ID_START_ACTIVITY = 1001L
+
+    /**
+     * 打开 Service 传入的 formId
+     */
+    const val FROM_ID_CALL_SERVICE = 1002L
+
+    /**
+     *  启动 Intent 的 action
+     */
+    const val KEY_INTENT_ACTION = "KEY_INTENT_ACTION"
+}
+```
+
+根据以上的 key 传入对应的数据，宿主和插件中相关的设置没有任何问题，即可正常启动插件，同时传入的 EnterCallback 对象的 `onEnterComplete` 方法会得到回调。怎么样？是不是感觉虽然有些麻烦但还是比较简单的，当你接入 Shadow 并能成功启动相关插件时，相信你会享受它的神奇的！
+
+
+
+
+
+#### 3.3 集成使用注意点
+
+1.  插件 APP 中通过 `apply plugin: 'com.tencent.shadow.plugin'` 使用 Shadow Gradle 插件一定要在 `android{}` 之后，同时插件的 applicationId 必须与宿主保持一致。
+
+2.  插件中 loader 和 runtime 除了 Shadow 依赖，可以无需其他任何依赖，尤其注意不可有 `androidx.core:core` 相关的依赖，否则打包插件运行时会有异常。
+
+3.  启动插件中相关的四大组件时，Intent 传递的序列化对象会由于跨进程不能被插件 app 的 `PathClassLoader` 所加载而导致反序列化异常，解决方法：
 
     -   打包插件时添加宿主白名单：hostWhiteList，处于白名单中的包的类，加载时会被宿主的 PathClassLoader 加载。
 
@@ -475,7 +951,7 @@ public class SampleComponentManager extends ComponentManager {
 
     -   Intent  跨进程在不同的 app 传递数据时不要传递序列化的对象，而应该传递基本数据类型 + String 。
 
-4.  宿主若想和插件实现双向通信，建议使用 AIDL 方式进行， PluginManager 中可以在添加个宿主接口，用于获取 Service 绑定后的回调。
+4.  宿主若想和插件实现双向通信，建议使用 AIDL 方式进行， PluginManager 中可以再添加个宿主接口白名单，用于获取 Service 绑定后的回调。
 
 5.  四大组件在插件中是和在正常应用中一样的，都需要在 `AndroidManifest` 中注册，否则启动相关组件时会异常。
 

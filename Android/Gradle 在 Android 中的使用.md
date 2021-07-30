@@ -1,4 +1,4 @@
-# Gradle 在 Android 中的应用
+# Gradle 的介绍
 
 [TOC]
 
@@ -8,17 +8,13 @@
 
 
 
-### 1. Gradle 构建
-
-
-
-#### 1.1 创建 Gradle 构建
+### 1.  创建 Gradle 构建
 
 Gradle 既然是构建工具，那么肯定是针对具体的项目的，接下来我们就看看使用它可以构建怎样的项目结构？
 
 
 
-##### 1.1.1 构建单软件多模块项目
+#### 1.1 构建单软件多模块项目
 
 首先，单软件多模块项目指的是什么呢？它通常对应的是项目由一个根模块与多个子模块组成，其中：根模块又依赖于子模块提供的某些功能特性从而实现工程化。
 
@@ -70,7 +66,7 @@ Gradle 既然是构建工具，那么肯定是针对具体的项目的，接下�
 
 
 
-##### 1.1.2 微调项目结构
+#### 1.2 微调项目结构
 
 单软件多模块项目始终由具有单个根的树表示，树中的每个元素代表一个模块，同时每个模块都有一个路径，代表它在项目树中的位置。一般情况下，该路径与模块在文件系统中的物理位置一致。但是此路径是可以配置的，项目树在 `settings.gradle` 文件中创建，它所在的位置也是根模块的位置。
 
@@ -101,7 +97,7 @@ Gradle 既然是构建工具，那么肯定是针对具体的项目的，接下�
 
 
 
-##### 1.1.3 构建多软件多模块项目（复合构建）
+#### 1.3 构建多软件多模块项目（复合构建）
 
 一般在大型系统中，会将软件分为几个独立的组件，再通过某些依赖关系将它们联系在一起运行。
 
@@ -173,7 +169,7 @@ Gradle 既然是构建工具，那么肯定是针对具体的项目的，接下�
         ...
         ```
 
-        同时必须在 android  模块的 build.gradle 中给其设置 group ，这样 server-application 才能通过坐标引用它，如
+        同时==必须在 android  模块的 build.gradle 中给其设置 group== ，这样 server-application 才能通过坐标引用它，如
 
         ```groovy
         // android 的 build.gradle
@@ -219,7 +215,11 @@ Gradle 既然是构建工具，那么肯定是针对具体的项目的，接下�
 
 
 
-#### 1.2  Gradle 配置构建环境
+------
+
+
+
+### 2. 使用 Gradle 属性配置构建环境
 
 > Gradle 可在以下的位置中按照优先级的顺序找到第一个选项应用：
 >
@@ -230,30 +230,32 @@ Gradle 既然是构建工具，那么肯定是针对具体的项目的，接下�
 
 
 
-##### 1.2.1  Gradle 属性
+#### 2.1  Gradle 属性
 
 以下属性可用于配置 Gradle 构建环境：
 
-- **org.gradle.caching=(true,false)**： 启用构建缓存
-- **org.gradle.caching.debug=(true,false)**： debug 模式启用构建缓存
-- **org.gradle.configureondemand=(true,false)**：启用孵化配置，仅配置必要的项目
-- **org.gradle.console=(auto,plain,rich,verbose)**：自定义控制台输出颜色或详细程度，默认值取决于 Gradle 的调用方式
-- **org.gradle.daemon=(true,false)**：启用守护进程，默认开启
-- **org.gradle.daemon.idletimeout=(# of idle millis)**： 守护进程在指定的空闲毫秒数后自行终止，默认三小时
-- **org.gradle.debug=(true,false)**：Gradle 将在启用远程调试的情况下运行构建，侦听端口 5005。会等待调试器连接
-- **org.gradle.java.home=(path to JDK home)**：为 Gradle 构建过程指定 Java 主目录。该值可以设置为 `jdk` 或 `jre` 路径，使用 jdk 更安全，未设置使用 `JAVA_HOME`
-- **org.gradle.jvmargs=(JVM arguments)**：指定用于 Gradle 守护进程的 JVM 参数
-- **org.gradle.logging.level=(quiet,warn,lifecycle,info,debug)**：设置 Gradle 的日志级别，不区分大小写，默认 lifecycle
-- **org.gradle.parallel=(true,false)**：任务并行执行
-- **org.gradle.priority=(low,normal)**：指定 Gradle 守护进程及其启动的所有进程的调度优先级。默认为`normal`
-- **org.gradle.vfs.verbose=(true,false)**：在[查看文件系统](https://docs.gradle.org/current/userguide/gradle_daemon.html#sec:daemon_watch_fs)时配置详细日志记录。 默认为关闭
-- **org.gradle.vfs.watch=(true,false)**：切换[监视文件系统](https://docs.gradle.org/current/userguide/gradle_daemon.html#sec:daemon_watch_fs)
-- **org.gradle.warning.mode=(all,fail,summary,none)**：当设置为`all`,`summary`或 时`none`，Gradle 将使用不同的警告类型显示
-- **org.gradle.workers.max=(max # of worker processes)**：使用最多给定数量的工作人员，默认为 cpu 处理器数
+|                             属性                             |                             作用                             |
+| :----------------------------------------------------------: | :----------------------------------------------------------: |
+|              org.gradle.caching = (true, false)              |                         启用构建缓存                         |
+|           org.gradle.caching.debug = (true, false)           |                    debug 模式启用构建缓存                    |
+|         org.gradle.configureondemand = (true, false)         |                启用孵化配置，仅配置必要的项目                |
+|      org.gradle.console = (auto, plain, rich, verbose)       | 自定义控制台输出颜色或详细程度，默认值取决于 Gradle 的调用方式 |
+|              org.gradle.daemon = (true, false)               |                    启用守护进程，默认开启                    |
+|      org.gradle.daemon.idletimeout = (# of idle millis)      |       守护进程在指定的空闲毫秒数后自行终止，默认三小时       |
+|               org.gradle.debug = (true, false)               | Gradle 将在启用远程调试的情况下运行构建，侦听端口 5005。会等待调试器连接 |
+|          org.gradle.java.home = (path to JDK home)           | 为 Gradle 构建过程指定 Java 主目录。该值可以设置为 `jdk` 或 `jre` 路径，使用 jdk 更安全，未设置使用 `JAVA_HOME` |
+|             org.gradle.jvmargs = (JVM arguments)             |             指定用于 Gradle 守护进程的 JVM 参数              |
+| org.gradle.logging.level = (quiet, warn, lifecycle, info, debug) |     设置 Gradle 的日志级别，不区分大小写，默认 lifecycle     |
+|             org.gradle.parallel = (true, false)              |                         任务并行执行                         |
+|             org.gradle.priority = (low, normal)              | 指定 Gradle 守护进程及其启动的所有进程的调度优先级。默认为`normal` |
+|            org.gradle.vfs.verbose = (true, false)            | 在[查看文件系统](https://docs.gradle.org/current/userguide/gradle_daemon.html#sec:daemon_watch_fs)时配置详细日志记录。 默认为关闭 |
+|             org.gradle.vfs.watch = (true, false)             | 切换[监视文件系统](https://docs.gradle.org/current/userguide/gradle_daemon.html#sec:daemon_watch_fs) |
+|     org.gradle.warning.mode = (all, fail, summary, none)     | 当设置为`all`, `summary` 或  `none` 时，Gradle 将使用不同的警告类型显示 |
+|     org.gradle.workers.max = (max # of worker processes)     |       使用最多给定数量的工作人员，默认为 cpu 处理器数        |
 
 
 
-##### 1.2.2 系统属性
+#### 2.2 系统属性
 
 在 `gradle.properties` 文件中以 `systemProp.` 开头的为系统属性，如：
 
@@ -273,7 +275,7 @@ systemProp.gradle.wrapperPassword=我的密码
 
 
 
-##### 1.2.3 环境变量
+#### 2.3 环境变量
 
 以下环境变量可用于 `gradle` 命令。请注意，命令行选项和系统属性优先于环境变量。
 
@@ -283,7 +285,7 @@ systemProp.gradle.wrapperPassword=我的密码
 
 
 
-##### 1.2.4 项目属性
+#### 2.4 项目属性
 
 可以通过属性文件或者环境变量来设置项目的自定义属性：
 
@@ -305,7 +307,7 @@ systemProp.gradle.wrapperPassword=我的密码
 
 
 
-##### 1.2.5 配置 JVM 内存
+#### 2.5 配置 JVM 内存
 
 可以通过以下方式调整 Gradle 的 JVM 选项：
 
@@ -323,7 +325,7 @@ systemProp.gradle.wrapperPassword=我的密码
 
 
 
-##### 1.2.6 通过 HTTP 代理访问网络
+#### 2.6 通过 HTTP 代理访问网络
 
 可以在 `gradle.properties` 中指定属性来配置  HTTP 或 HTTPS 代理：
 
@@ -349,15 +351,17 @@ systemProp.gradle.wrapperPassword=我的密码
 
 
 
+------
 
 
-#### 1.3  Gradle 守护进程
+
+### 3.  Gradle 守护进程
 
 Daemon（守护进程）是一个长期存在的进程，不仅能够避免每次构建的 JVM 启动成本，而且能够在内存中缓存有关项目结构、文件、任务等的信息，并且在可用系统内存不足时会在空闲时自行停止。从 Gradle 3.0 开始，Gradle 守护进程默认启用。
 
 
 
-##### 1.3.1 获取守护进程状态
+#### 3.1 获取守护进程状态
 
 要获取正在运行的 Gradle 守护程序及其状态的列表，请使用该`--status`命令，输出示例如下：
 
@@ -369,7 +373,7 @@ Daemon（守护进程）是一个长期存在的进程，不仅能够避免每�
 
 
 
-##### 1.3.2 禁用守护进程
+#### 3.2 禁用守护进程
 
 1. 通过 `GRADLE_USER_HOME/gradle.properties` 文件
 
@@ -387,7 +391,7 @@ Daemon（守护进程）是一个长期存在的进程，不仅能够避免每�
 
 
 
-##### 1.3.3 停止现有的守护进程
+#### 3.3 停止现有的守护进程
 
 一般情况下无需自主停止守护进程，如果需要明确停止运行守护进程，只需执行下面的命令：
 
@@ -399,13 +403,17 @@ Daemon（守护进程）是一个长期存在的进程，不仅能够避免每�
 
 
 
-#### 1.4  初始化脚本
+------
+
+
+
+### 4.  初始化脚本
 
 初始化脚本（又名*init scripts*）类似于 Gradle 中的其他脚本。但是，这些脚本在整个项目构建开始之前运行。
 
 
 
-##### 1.4.1 使用初始化脚本
+#### 4.1 使用初始化脚本
 
 有以下几种使用初始化脚本的方法：
 
@@ -417,7 +425,7 @@ Daemon（守护进程）是一个长期存在的进程，不仅能够避免每�
 
 2. 在 `USER_HOME/.gradle/` 目录中创建 `init.gradle` 文件
 
-3. 在 `USER_HOME/.gradle/init.d` 中创建以 `.gradle`（或`.init.gradle.kts`对于 Kotlin）结尾的文件 
+3. 在 `USER_HOME/.gradle/init.d` 中创建以 `.gradle`（或 `.init.gradle.kts` 对于 Kotlin）结尾的文件 
 
     
 
@@ -425,9 +433,9 @@ Gradle  会依次按照上面顺序全部执行一遍来查找初始化脚本，
 
 
 
-##### 1.4.2  编写初始化脚本
+#### 4.2  编写初始化脚本
 
-类似于 Gradle 构建脚本，init 脚本是 Groovy 或 Kotlin 脚本。每个 init 脚本都有一个与之关联的 [Gradle](https://docs.gradle.org/current/dsl/org.gradle.api.invocation.Gradle.html) 实例。init 脚本中的任何属性引用和方法调用都将委托给该`Gradle`实例。每个 init 脚本还实现了 [Script](https://docs.gradle.org/current/dsl/org.gradle.api.Script.html) 接口，那么我们可以用它来做什么呢？
+类似于 Gradle 构建脚本，init 脚本是 Groovy 或 Kotlin 脚本。每个 init 脚本都有一个与之关联的 [Gradle](https://docs.gradle.org/current/dsl/org.gradle.api.invocation.Gradle.html) 实例。init 脚本中的任何属性引用和方法调用都将委托给该 `Gradle` 实例。每个 init 脚本还实现了 [Script](https://docs.gradle.org/current/dsl/org.gradle.api.Script.html) 接口，那么我们可以用它来做什么呢？
 
 
 
@@ -512,7 +520,7 @@ Gradle  会依次按照上面顺序全部执行一遍来查找初始化脚本，
 
 
 
-#### 1. 2 Gradle Build 生命周期
+### 5. Gradle Build 生命周期
 
 Gradle 进行构建时，会经历3个生命周期：
 
@@ -522,23 +530,21 @@ Gradle 进行构建时，会经历3个生命周期：
 
 3.  执行阶段
 
-    
+    <img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/99987b264ab2348bed178526f381635efd8c1a01/images/Gradle%20build%20%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.png" alt="Gradle build 生命周期" style="zoom:80%;" />
 
-    <img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/23948686-7b9eb1ab625b9786.image" alt="img" style="zoom: 80%;" />
-
-##### 1.2.1 初始化阶段
+#### 5.1 初始化阶段
 
 初始化阶段确定有多少工程需要构建，创建整个项目层次，并为每个 module 创建一个 Project 对象。项目初始化阶段会执行 setting.gradle 文件，setting.gradle 中所配置的 module 路径会决定 Gradle 创建哪些 project。
 
 
 
-##### 1.2.2 配置阶段
+#### 5.2 配置阶段
 
 配置阶段会执行 Project 对象和 Task 对象的代码，可以称这个阶段为配置阶段，配置阶段主要执行读取配置参数，创建 Task 对象，根据 Task 之间的依赖关系，构建出有向无环图，进而规定 Task 的执行顺序。**对于 task 对象而言，需要明确区分配置和执行这两个阶段**。整个配置阶段的运行顺序参照顶层 build.gradle 所代表的 Project 对象 -> setting.gradle 所声明的 Project 对象的顺序执行。
 
 
 
-##### 1.2.3 执行阶段
+#### 5.3 执行阶段
 
 执行阶段会按照配置中规定的顺序执行所有的 Task ，调用 Task 的 doFirst、doLast 方法传入的闭包会存入 Task 的 actions 列表（Task 中的 doFirst、doLast 方法均可调用多次）。
 
@@ -550,7 +556,7 @@ Gradle 生命周期提供了丰富的回调接口帮助使用者方便的 Hook �
 
 
 
-#### 1.3 Gradle Task 
+### 6. Gradle Task
 
 > Gradle 的构建实际上是基于任务（工作单元）的一个有向无环图 (DAG)，创建任务图后，Gradle 会确定哪些任务需要以何种顺序运行，然后继续执行它们。
 >
@@ -790,7 +796,7 @@ gradle 提供的预置 Task Types 非常多，具体参见：https://docs.gradle
 
 
 
-#### 1.4 Gradle 项目依赖管理
+### 1.4 Gradle 项目依赖管理
 
 > 依赖管理的条件：
 >
@@ -880,7 +886,7 @@ repositories {
 
 
 
-#### 1.4.5 Gradle project
+### 1.4.5 Gradle project
 
 在 Android 中每个 module 就对应着一个 project，gradle 在编译时期会为每一个 project 创建一个 Project 对象用来构建项目。这一过程是在初始化阶段，通过解析 settings.gradle 中的配置来创建相应的 Project。
 
@@ -904,7 +910,7 @@ repositories {
 
 
 
-#### 1.4.6 buildSrc 统筹依赖管理
+### 1.4.6 buildSrc 统筹依赖管理
 
 随着项目越来越大，工程中的 module 越来越多，依赖的三方库也越来越多。一般情况下我们会在一个集中的地方统一管理这些三方库的版本。比如像谷歌官方推荐的使用 ext 变量，在根 module 的 build.gradle 中，使用 ext 集中声明各种三方库的版本，如下所示：
 
@@ -968,7 +974,7 @@ buildSrc 是 Android 项目中一个比较特殊的 project，在 buildSrc 中�
 
 
 
-#### 1.7 解决依赖冲突
+### 1.7 解决依赖冲突
 
 
 

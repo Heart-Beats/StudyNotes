@@ -71,31 +71,73 @@
 
 主要是通过在 Gradle 构建脚本中指定 NDK 的配置，可以使用 cmake 和 ndk-build 两种编译方式。借助 AndroidStudio，可以有两种方式方便地配置 CMake 编译：
 
-1. Add C++ To Module
 
-    <img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/Add%20C%2B%2B%20to%20Module.gif" alt="Add C++ to Module" style="zoom: 67%;" />
 
-    在需要添加 C++ 支持的 Module (图中为 `:app`) 上右键如图所示操作，点击 OK 后，Module 下会生成一个 cpp 目录，其中生成文件如下：
+###### 2.2.1.1 Add C++ To Module
 
-    <img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/image-20210804225958094.png" alt="image-20210804225958094" style="zoom:67%;" />
+<img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/Add%20C%2B%2B%20to%20Module.gif" alt="Add C++ to Module" style="zoom: 67%;" />
 
-    - CMakeLists.txt
+在需要添加 C++ 支持的 Module (图中为 `:app`) 上右键如图所示操作，点击 OK 后，Module 下会生成一个 cpp 目录，其中生成文件如下：
 
-        CMake 编译文件，后续会解释其中内容
+<img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/image-20210804225958094.png" alt="image-20210804225958094" style="zoom:67%;" />
 
-    - xxx.cpp：
+- CMakeLists.txt
 
-        C ++ 源文件，其中可以实现 JNI 方法
+    CMake 编译文件，后续会解释其中内容
 
+- xxx.cpp：
+
+    C ++ 源文件，其中可以实现 JNI 方法
+
+
+
+同时 `build.gradle` 构建脚本文件会添加 CMake 的支持，如下：
+
+```groovy
+// ...
+android {
     
+    defaultConfig {
 
-    同时 `build.gradle` 构建脚本文件会添加 CMake 的支持，如下：
-
-    ```groovy
+        // ...
+        externalNativeBuild {
+            // 配置 CMake 的命令参数
+            cmake {
+                cppFlags ""
+            }
+        }
+    }
     
-    ```
+    externalNativeBuild {
+		// 配置 CMake 的版本以及 CMakeList.txt 的路径
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+            version "3.10.2"
+        }
+    }
+    // ...
+}
+
+// ...
+```
+
+由于此方式声明  Java Native 方法，并不能自动提示为我们生成相应的 C++ 实现方法，因此更推荐第二种方式。
 
 
 
-2. 
+###### 2.2.1.1 Android Native Library
+
+<img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/image-20210806180332802.png" alt="image-20210806180332802" style="zoom:80%;" />
+
+如上图所示，创建一个类型为 Android Native Library 的 Module，创建完成以后该 Module 的目录如下：
+
+<img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/image-20210806180612762.png" alt="image-20210806180612762"  />
+
+这时该 Module 就成为了一个原生库，与正常的 Android 库一样，可以直接使用 java 目录下类中的公开方法，其中的 Java Native 方法都可以在 cpp 目录下的源码找到对应的实现。
+
+
+
+##### 2.2.2 声明  Java Native 方法
+
+
 

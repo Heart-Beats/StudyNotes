@@ -53,6 +53,36 @@ public abstract class Service extends ContextWrapper implements ComponentCallbac
 }
 ```
 
+这里 `onStartCommand()` 的返回值很重要，共有如下四种不同的取值：
+
+1.  `START_STICKY`
+
+    -   ==粘性的==
+
+    -   `onStartCommand()` 使用这个返回值执行后，如果 `service` 进程被 kill 掉，保留 `service` 的状态为开始状态，但不保留递送的 `intent` 对象；系统随后会尝试重新创建 `service`，由于服务状态为开始状态，所以创建服务后一定会调用 `onStartCommand (Intent, int, int)` 方法。如果在此期间没有任何启动命令被传递到 `service` , 那么参数 `Intent` 将为 `null` 。
+
+        
+
+2.  `START_NOT_STICKY`
+
+    -   ==非粘性的==
+
+    -   使用这个返回值时 , 如果在执行完 `onStartCommand()` 后 , 服务被异常 `kill` 掉 ，系统不会自动重启该服务。
+
+        
+
+3.  `START_REDELIVER_INTENT`
+
+    -   ==重传 `Intent`==
+
+    -   使用这个返回值时，如果在执行完 `onStartCommand()` 后，服务被异常 kill 掉，系统会自动重启该服务 , 并将 Intent 的值传入。
+
+        
+
+4.  `START_STICKY_COMPATIBILITY`
+
+    -   ==`START_STICKY` 的兼容版本== , 但不保证服务被 `kill` 后一定能重启。
+
 
 
 
@@ -578,5 +608,165 @@ public abstract class IntentService extends Service {
 
 
 
+------
 
 
+
+### 2. Service 的保活
+
+Android 系统会尽可能长的延续一个应用程序进程，但在内存过低的时候，仍然会不可避免需要移除旧的进程。为了决定哪些进程留下，哪些进程被杀死，系统根据在进程中在运行的组件及组件的状态，为每一个进程分配了一个优先级等级。优先级最低的进程首先被杀死。这个进程重要性的层次结构主要有五个等级。
+
+
+
+#### 2.1 进程的五个常用等级:
+
+主要分为：
+
+1.  **前台进程（Foreground process）**
+
+2.  **可见进程（Visible process）**
+
+3.  **服务进程 （Service process）**
+
+4.  **后台进程 （Background process）**
+
+5.  **空进程**
+
+    
+
+了解这些以后，你就能明白为啥不建议在 Activity 中开线程处理耗时任务？
+
+主要原因如下：
+
+-   Activity 中开线程做耗时操作，切到桌面会变成后台进程
+-   启动 Service 新建线程处理耗时任务，这时会变为服务进程
+
+因为服务进程的优先级比后台进程的优先级高，所以此方式处理耗时任务更好。 同时，==使用 Service 将会保证 app 至少有服务进程的优先级==。
+
+
+
+##### 2.1.1 **前台进程**
+
+前台进程是用户当前做的事所必须的进程，如果满足下面各种情况中的一种，一个进程被认为是在前台：
+
+1.  进程持有一个正在与用户交互的 Activity。
+
+2.  进程持有一个 Service，这个 Service 处于这几种状态:
+
+    -   Service 与用户正在交互的 Activity 绑定。
+
+    -   Service 是在前台运行的，即它调用了 `startForeground()`。
+
+    -   Service 正在执行它的生命周期回调函数 —— `onCreate()`、 `onStart()` 或 `onDestroy()`。
+
+3.  进程持有一个 BroadcastReceiver，这个 BroadcastReceiver 正在执行它的 `onReceive()` 方法。
+
+    
+
+杀死前台进程需要用户交互，因为前台进程的优先级是最高的。
+
+
+
+##### 2.1.2 可见进程
+
+如果一个进程不含有任何前台的组件，但仍可被用户在屏幕上所见。当满足如下任一条件时，进程被认为是可见的：
+
+1.  进程持有一个 Activity，这个 Activity 不在前台，但是仍然被用户可见，即处于 `onPause()` 状态。
+
+2.  进程持有一个 Service，这个 Service 和一个可见的 Activity 绑定。
+
+    
+
+可见的进程也被认为是很重要的，一般不会被销毁，除非是为了保证所有前台进程的运行而不得不杀死可见进程的时候。
+
+
+
+##### 2.1.3 服务进程
+
+如果一个进程中运行着一个 Service，这个 Service 是通过 `startService()` 开启的，并且不属于上面两种较高优先级的情况（未进行任何绑定），这个进程就是一个服务进程。
+
+
+
+尽管服务进程没有和用户可以看到的东西绑定，但是它们一般在做的事情是用户关心的，比如后台播放音乐，后台下载数据等。所以系统会尽量维持它们的运行，除非系统内存不足以维持前台进程和可见进程的运行需要。
+
+
+
+##### 2.1.4 后台进程
+
+如果进程不属于上面三种情况，但是它持有一个用户不可见的activity（Activity的 `onStop()` 被调用，但是 `onDestroy()` 没有调用的状态），就认为进程是一个后台进程。
+
+
+
+后台进程不直接影响用户体验，系统会为了前台进程、可见进程、服务进程而任意杀死后台进程。
+
+通常会有很多个后台进程存在，它们会被保存在一个 LRU (least recently used) 列表中，这样就可以确保用户最近使用的 Activity 最后被销毁，即最先销毁时间最远的 Activity。
+
+
+
+
+
+##### 2.1.5 空进程
+
+如果一个进程不包含任何活跃的应用组件，则认为是空进程。
+
+
+
+例如：一个进程当中已经没有数据在运行，但是内存当中还为这个应用驻留了一个进程空间。
+
+保存这种进程的唯一理由是为了缓存的需要，为了加快下次要启动这个进程中的组件时的启动时间。系统为了平衡进程缓存和底层内核缓存的资源，经常会杀死空进程。
+
+
+
+
+
+#### 2.2 Service 保活的常用技巧
+
+
+
+1.  设置最高优先级
+
+    ```xml
+    <service  
+         android:name="com.dbjtech.acbxt.waiqin.UploadService"  
+         android:enabled="true" >  
+         <intent-filter android:priority="1000" >  
+             <action android:name="xxxx" />  
+         </intent-filter>  
+    </service>
+    ```
+
+    如上，Service 对于 intent-filter 可以通过 `android:priority = “1000”` 这个属性设置最高优先级，1000是最高值，如果数字越小则优先级越低，同时适用于广播。
+
+    
+
+2.  使用前台服务
+
+    Service 创建时通过 `startForeground()` 方法把 Service 提升为前台进程级别，在 `onDestroy()` 里面要记得调用 `stopForeground() `方法。
+
+    
+
+3.  复写`onStartCommand()` 方法，返回 `START_STICKY`
+
+    当 Service 因内存不足被 kill，当内存又有的时候，Service 就会被重新创建启动。
+
+    注意：但是不能保证任何情况下都被重建，比如进程被干掉了….
+
+    
+
+4.  `onDestroy()` 方法里发广播重启 Service
+
+    Service + Broadcast 方式，就是当 Service 走 `onDestory()` 的时候，发送一个自定义的广播，当收到广播的时候，重新启动service。
+
+    注意：第三方应用或是在 setting 里-应用-强制停止时，APP 进程就直接被干掉了，`onDestroy()` 方法都进不来，所以无法保证会执行
+
+    
+
+5.  监听系统广播判断 Service 状态
+
+    通过系统的一些广播，比如：手机重启、界面唤醒、应用状态改变等等监听并捕获，然后判断我们的 Service 是否还存活决定是否重新启动。
+
+    
+
+6.  Application 加上 Persistent 属性 
+
+    该属性相当于将该进程设置为常驻内存进程，即系统应用。一般为安装在/system/app下的 app，正常的三方应用安装在 /data/app 下。

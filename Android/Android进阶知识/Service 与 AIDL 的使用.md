@@ -755,7 +755,7 @@ Android 系统会尽可能长的延续一个应用程序进程，但在内存过
 
 4.  `onDestroy()` 方法里发广播重启 Service
 
-    Service + Broadcast 方式，就是当 Service 走 `onDestory()` 的时候，发送一个自定义的广播，当收到广播的时候，重新启动service。
+    Service + Broadcast 方式，就是当 Service 走 `onDestory()` 的时候，发送一个自定义的广播，当收到广播的时候，重新启动 Service。
 
     注意：第三方应用或是在 setting 里-应用-强制停止时，APP 进程就直接被干掉了，`onDestroy()` 方法都进不来，所以无法保证会执行
 
@@ -770,3 +770,759 @@ Android 系统会尽可能长的延续一个应用程序进程，但在内存过
 6.  Application 加上 Persistent 属性 
 
     该属性相当于将该进程设置为常驻内存进程，即系统应用。一般为安装在/system/app下的 app，正常的三方应用安装在 /data/app 下。
+
+
+
+------
+
+
+
+### 3. AIDL 的使用
+
+> Android 接口定义语言 (AIDL)，利用它定义客户端与服务均认可的编程接口，以便二者使用进程间通信 (IPC) 进行相互通信。
+>
+> 跨进程通信 (IPC) 的方式很多，AIDL 是其中一种。还有 `Binder`、文件共享、`Messenger`、`ContentProvider` 和 `Socket` 等进程间通信的方式。AIDL 是接口定义语言，只是一个工具。具体通信还是得用Binder 来进行。Binder 是 Android 独有的跨进程通信方式，只需要一次拷贝，更快速和安全。
+>
+> 官方推荐用 `Messenger` 来进行跨进程通信，但是 `Messenger` 是以串行的方式来处理客户端发来的消息，如果大量的消息同时发送到服务端，服务端仍然只能一个个处理。因此对于大量的并发请求，这种情况就得用 AIDL 。其实 Messenger 的底层也是 AIDL，只不过系统做了层封装，简化使用。
+
+
+
+#### 3.1 Messenger (串行处理)
+
+
+
+##### 3.1.1 服务端
+
+1. 创建一个 Handler 对象，并实现 `hanlemessage` 方法，用于接收来自客户端的消息，并作处理
+2. 创建一个 Messenger，封装 Handler
+3. `messenger.getBinder()` 方法获取一个 IBinder 对象，通过 `onBind` 返回给客户端
+
+
+
+使用示例如下：
+
+```java
+public class MessengerService extends Service {
+    
+    // 存储客户端发送的 Messenger 对象
+    ArrayList<Messenger> mClients = new ArrayList<Messenger>();
+    
+    int mValue = 0;
+    
+    /**
+     *  客户端请求注册 Messenger 
+     */
+    static final int MSG_REGISTER_CLIENT = 1;
+    
+    /**
+     * 客户端请求反注册 Messenger 
+     */
+    static final int MSG_UNREGISTER_CLIENT = 2;
+    
+
+    /**
+     * 客户端请求设值，相当于请求其他命令
+     */
+    static final int MSG_SET_VALUE = 3;
+    
+
+    class IncomingHandler extends Handler {
+        
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_REGISTER_CLIENT:
+                    mClients.add(msg.replyTo);
+                    break;
+                case MSG_UNREGISTER_CLIENT:
+                    mClients.remove(msg.replyTo);
+                    break;
+                case MSG_SET_VALUE:
+                    mValue = msg.arg1;
+                    for (int i=mClients.size()-1; i>=0; i--) {
+                        try {
+                            // 取得客户端传送的 Messenger，发送消息回 Messenger 实现双向通信
+                            mClients.get(i).send(Message.obtain(null, MSG_SET_VALUE, mValue, 0));
+                        } catch (RemoteException e) {
+							// 客户端有可能在此过程中死了产生异常，需要移除
+                            mClients.remove(i);
+                        }
+                    }
+                    break;
+                default:
+                    super.handleMessage(msg);
+            }
+        }
+    }
+    
+    final Messenger mMessenger = new Messenger(new IncomingHandler());
+    
+    @Override
+    public IBinder onBind(Intent intent) {
+        return mMessenger.getBinder();
+    }
+}
+```
+
+注意：==该Service 在声明时必须对外开放，即 `android:exported="true"`==
+
+
+
+##### 3.1.2 客户端
+
+1. 在 Activity 中绑定服务
+2. 创建 ServiceConnection ，在其 `onServiceConnected()`  方法中通过参数 IBinder 将 Messenger 实例化 
+3. 使用 Messenger 向服务端发送命令，或需要接收服务器端的返回信息，则还要创建一个 `Messenger(handler)`，并将这个 Messenger 传递给服务端，在handler 中接收处理服务端的消息，这就实现了客户端和服务端的双向通信
+
+
+
+使用示例如下：
+
+```java
+public class MessengerServiceActivities extends Activity{
+
+    // 向服务端发送命令的 Messenger
+    private Messenger mService = null;
+    
+    private boolean mIsBound;
+    
+    private TextView mCallbackText;
+    
+    private class IncomingHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MessengerService.MSG_SET_VALUE:
+                    mCallbackText.setText("Received from service: " + msg.arg1);
+                    break;
+                default:
+                    super.handleMessage(msg);
+            }
+        }
+    }
+    
+    // 接收服务端返回消息的 Messenger
+    private final Messenger mMessenger = new Messenger(new IncomingHandler());
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        
+        public void onServiceConnected(ComponentName className, IBinder service) {
+			// 连接时获取与服务端交互的 Messenger
+            mService = new Messenger(service);
+            mCallbackText.setText("Attached.");
+
+            try {
+                // 将需要接收服务端返回消息的 Messenger 发送在消息体中
+                Message msg = Message.obtain(null, MessengerService.MSG_REGISTER_CLIENT);
+                msg.replyTo = mMessenger;
+                mService.send(msg);
+                
+                // 向服务端发送设值命令
+                msg = Message.obtain(null, MessengerService.MSG_SET_VALUE, this.hashCode(), 0);
+                mService.send(msg);
+            } catch (RemoteException e) {
+                // xxx
+            }
+
+            Toast.makeText(this, R.string.remote_service_connected, Toast.LENGTH_SHORT).show();
+        }
+        
+        public void onServiceDisconnected(ComponentName className) {
+            mService = null;
+            mCallbackText.setText("Disconnected.");
+            Toast.makeText(this, R.string.remote_service_disconnected,Toast.LENGTH_SHORT).show();
+        }
+    };
+    
+    void doBindService() {
+        bindService(new Intent(this, MessengerService.class), mConnection, Context.BIND_AUTO_CREATE);
+        mIsBound = true;
+        mCallbackText.setText("Binding.");
+    }
+    
+    void doUnbindService() {
+        if (mIsBound) {
+            if (mService != null) {
+                try {
+                    // 解绑时移除服务端中添加的 Messenger，取消消息接收
+                    Message msg = Message.obtain(null, MessengerService.MSG_UNREGISTER_CLIENT);
+                    msg.replyTo = mMessenger;
+                    mService.send(msg);
+                } catch (RemoteException e) {
+                    //xxx
+                }
+            }
+            
+            unbindService(mConnection);
+            mIsBound = false;
+            mCallbackText.setText("Unbinding.");
+        }
+    }
+}
+```
+
+
+
+
+
+#### 3.2  AIDL(并行处理)
+
+
+
+步骤：
+
+1. 创建 .aidl 文件：
+
+    定义 AIDL 接口
+
+    
+
+2. 实现接口：
+
+    Android SDK 工具会基于 .aidl 文件，使用 Java 编程语言生成继承自 `IInterface` 接口的接口。生成的接口拥有一个继承自 Binder 类名为 Stub 的内部抽象类，并声明 AIDL 接口中的抽象方法。大概结构如下：
+
+    ```java
+    public interface IInterface{
+        public IBinder asBinder();
+    }
+    
+    public interface xxxInterface extends android.os.IInterface{
+    
+        public static abstract class Stub extends android.os.Binder implements xxxInterface{
+            
+            @Override 
+            public android.os.IBinder asBinder() {
+              	return this;
+            }
+            
+            xxxx
+        }
+        
+        // AIDL 中声明的抽象方法
+        xxxx
+    }
+    ```
+
+    
+
+3. 向客户端公开接口：
+
+    实现 Service 并重写 onBind(),从而返回 Stub 类的实现.
+
+
+
+##### 3.2.1 定义 AIDL 接口
+
+ 在 `src/main` 下面创建 aidl 目录，然后新建 `IPersonManager.aidl` 文件，里面声明方法用于客户端调用，服务端实现。如下：
+
+```java
+package com.xfhy.allinone.ipc.aidl;
+import com.xfhy.allinone.ipc.aidl.Person;
+interface IPersonManager {
+    List<Person> getPersonList();
+    //in: 从客户端流向服务端
+    boolean addPerson(in Person person);
+}
+```
+
+这个接口和平常我们定义接口时差别不是很大，需要注意的是==即使 Person 和 PersonManager 在同一个包下面还是得导包，这是AIDL的规则==。
+
+
+
+1. **AIDL 支持的数据类型**
+
+    在 AIDL 文件中，不是所有数据类型都是可以使用的，支持的数据类型如下：
+
+    - Java 编程语言中的所有原语类型（如 int、long、char、boolean 等）
+
+    - String 和 CharSequence
+
+    - List：只支持 ArrayList，里面每个元素都必须能够被 AIDL 支持
+
+    - Map：只支持HashMap，里面的每个元素都必须被 AIDL 支持，包括 key 和 value
+
+    - Parcelable：所有实现了Parcelable接口的对象
+
+    - AIDL：所有的AIDL接口本身也可以在 AIDL 文件中使用
+
+        
+
+2. **定义传输的对象**
+
+    在 kotlin 或 Java 这边需要定义好这个需要传输的对象 Person,，或者定义在 aidl 目录下， 但需要通过 `sourceSet{}` 将此目录定义为 kotlin 或 java 源码目录，这里以在 kotlin 下为示例：
+
+    ```kotlin
+    class Person(var name: String? = "") : Parcelable {
+        constructor(parcel: Parcel) : this(parcel.readString())
+    
+        override fun toString(): String {
+            return "Person(name=$name) hashcode = ${hashCode()}"
+        }
+    
+        override fun writeToParcel(parcel: Parcel, flags: Int) {
+            parcel.writeString(name)
+        }
+    
+        fun readFromParcel(parcel: Parcel) {
+            this.name = parcel.readString()
+        }
+    
+        override fun describeContents(): Int {
+            return 0
+        }
+    
+        companion object CREATOR : Parcelable.Creator<Person> {
+            override fun createFromParcel(parcel: Parcel): Person {
+                return Person(parcel)
+            }
+    
+            override fun newArray(size: Int): Array<Person?> {
+                return arrayOfNulls(size)
+            }
+        }
+    ```
+
+    然后得在 aidl 的相同目录下也需要声明一下这个 Person 对象，新建一个 Person.aidl：
+
+    ```java
+    package com.xfhy.allinone.ipc.aidl;
+    
+    parcelable Person;
+    ```
+
+    注意：==当需要传递对象时，则该对象必须实现 Parcelable 接口并且需要指示数据走向的方向标记==
+
+    | 方向标记 |                             意义                             |
+    | :------: | :----------------------------------------------------------: |
+    |    in    |    数据只能由客户端流向服务端，服务端修改数据不会同步返回    |
+    |   out    | 数据只能由服务端流向客户端，客户端会新创建一个无参对象传递到服务端，服务端修改数据会同步返回 |
+    |  inout   | 数据可在服务端与客户端之间双向流通，服务端和客户端同步共用一个对象 |
+
+    原语类型（基本类型）默认是 in，inout  开销很大，因此慎用。==调用 AIDL 生成接口的为客户端，实现接口方为服务端==。
+
+    
+
+    都完成了之后，rebuild 一下，AS 会自动生成`IPersonManager.java` 接口文件。
+
+
+
+##### 3.2.2 服务端实现接口
+
+定义一个 Service， 然后将其 process 设置成一个新的进程，与主进程区分开，模拟跨进程访问，它里面需要实现 `.aidl` 生成的接口，如下：
+
+```kotlin
+class RemoteService : Service() {
+
+    private val mPersonList = mutableListOf<Person?>()
+
+    private val mBinder: Binder = object : IPersonManager.Stub() {
+        
+        override fun getPersonList(): MutableList<Person?> = mPersonList
+
+        override fun addPerson(person: Person?): Boolean {
+            return mPersonList.add(person)
+        }
+    }
+
+    override fun onBind(intent: Intent?): IBinder? {
+        return mBinder
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        mPersonList.add(Person("Garen"))
+        mPersonList.add(Person("Darius"))
+    }
+}
+```
+
+实现的 `IPersonManager.Stub` 是一个 Binder，需要通过 `onBind()` 返回，客户端需要通过这个 Binder 来跨进程调用 Service 这边的服务。
+
+
+
+##### 3.2.3 客户端与服务端进行通信
+
+客户端这边需要通过 `bindService()` 来连接此 Service，进而实现通信。客户端的 `onServiceConnected()` 回调会接收 Service 的 `onBind()` 方法所返回的 binder 实例。再调用 `XxxInterface.Stub.asInterface(service)` 就能转换取得 XxxInterface 实例。如下：
+
+```kotlin
+class AidlActivity : TitleBarActivity() {
+
+    companion object {
+        const val TAG = "xfhy_aidl"
+    }
+
+    private var remoteServer: IPersonManager? = null
+
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            log(TAG, "onServiceConnected")
+            //在onServiceConnected调用IPersonManager.Stub.asInterface 获取接口类型的实例
+            //通过这个实例调用服务端的服务
+            remoteServer = IPersonManager.Stub.asInterface(service)
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            log(TAG, "onServiceDisconnected")
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_aidl)
+
+        btnConnect.setOnClickListener {
+            connectService()
+        }
+        btnGetPerson.setOnClickListener {
+            getPerson()
+        }
+        btnAddPerson.setOnClickListener {
+            addPerson()
+        }
+    }
+
+    private fun connectService() {
+        val intent = Intent()
+        //action 和 package(app的包名)
+        intent.action = "com.xfhy.aidl.Server.Action"
+        intent.setPackage("com.xfhy.allinone")
+        val bindServiceResult = bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+        log(TAG, "bindService $bindServiceResult")
+
+        //如果targetSdk是30,那么需要处理Android 11中的程序包可见性  具体参见:        https://developer.android.com/about/versions/11/privacy/package-visibility
+    }
+
+    private fun addPerson() {
+        //客户端调服务端方法时,需要捕获以下几个异常:
+        //RemoteException 异常：
+        //DeadObjectException 异常：连接中断时会抛出异常；
+        //SecurityException 异常：客户端和服务端中定义的 AIDL 发生冲突时会抛出异常；
+        try {
+            val addPersonResult = remoteServer?.addPerson(Person("盖伦"))
+            log(TAG, "addPerson result = $addPersonResult")
+        } catch (e: RemoteException) {
+            e.printStackTrace()
+        } catch (e: DeadObjectException) {
+            e.printStackTrace()
+        } catch (e: SecurityException) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun getPerson() {
+        val personList = remoteServer?.personList
+        log(TAG, "person 列表 $personList")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        //最后记得unbindService
+        unbindService(serviceConnection)
+    }
+}
+```
+
+测试时先 getPerson 再 addPerson 最后 getPerson，输出日志：
+
+```shell
+2020-12-24 12:41:00.170 24785-24785/com.xfhy.allinone D/xfhy_aidl: bindService true
+2020-12-24 12:41:00.906 24785-24785/com.xfhy.allinone D/xfhy_aidl: onServiceConnected
+2020-12-24 12:41:04.253 24785-24785/com.xfhy.allinone D/xfhy_aidl: person 列表 [Person(name=Garen), Person(name=Darius)]
+2020-12-24 12:41:05.952 24785-24785/com.xfhy.allinone D/xfhy_aidl: addPerson result = true
+2020-12-24 12:41:09.022 24785-24785/com.xfhy.allinone D/xfhy_aidl: person 列表 [Person(name=Garen), Person(name=Darius), Person(name=盖伦)]
+```
+
+注意：==在客户端调用这些远程方法时是同步调用，在主线程调用可能会导致 ANR，应该在子线程去调用==。
+
+
+
+##### 3.2.4 oneway 关键字（异步）
+
+将 aidl 接口的方法前加上 `oneway` 关键字则这个方法就是异步调用，不会阻塞调用线程。当客户端调用服务端的方法不需要知道返回结果时，使用异步调用可以提高客户端的执行效率。
+
+
+
+##### 3.2.5 线程安全
+
+**AIDL 的方法是在服务端的 Binder 线程池中执行的**，所以多个客户端同时进行连接且操作数据时可能存在多个线程同时访问的情形。这时就需要在服务端 AIDL 方法中处理多线程同步问题。
+
+先看下服务端的 AIDL 方法是在哪个线程中:
+
+```kotlin
+override fun addPerson(person: Person?): Boolean {
+    log(TAG, "服务端 addPerson() 当前线程 : ${Thread.currentThread().name}")
+    return mPersonList.add(person)
+}
+
+//日志输出
+服务端 addPerson() 当前线程 : Binder:3961_3
+```
+
+可以看到，确实是在非主线程中执行的，那确实会存在多线程安全问题。这就需要将 mPersonList 的类型修改为 CopyOnWriteArrayList，以确保线程安全：
+
+```kotlin
+//服务端
+private val mPersonList = CopyOnWriteArrayList<Person?>()
+
+override fun getPersonList(): MutableList<Person?> = mPersonList
+
+//客户端
+private fun getPerson() {
+    val personList = remoteServer?.personList
+    personList?.let {
+        log(TAG, "personList ${it::class.java}")
+    }
+}
+
+//输出日志
+personList class java.util.ArrayList
+```
+
+另外还有 ConcurrentHashMap 也是同样的道理，这里就不验证了。
+
+
+
+##### 3.2.6 AIDL 监听器(观察者? 双向通信?)
+
+上面的案例中，只能在客户端每次去调服务端的方法然后获得结果。若想服务端数据有变动就通知一下客户端，这就需要添加监听器了。
+
+
+
+因为这个监听器 Listener 是需要跨进程的，这里首先就需要为这个 Listener 创建一个 aidl 的回调接口`IPersonChangeListener.aidl`
+
+```java
+interface IPersonChangeListener {
+ 	 // 这里由服务端调用此接口，因此服务端其实充当 "Client"，数据流通方向标记为 in 更合理
+	  void onPersonDataChanged(in Person person);
+}
+```
+
+有了监听器，还需要在 `IPersonManager.aidl` 中加上注册/反注册监听的方法：
+
+```java
+interface IPersonManager {
+    ......
+    void registerListener(IPersonChangeListener listener);
+    void unregisterListener(IPersonChangeListener listener);
+}
+```
+
+现在我们在服务端实现这个注册/反注册的方法，这还不简单吗? 搞一个` List<IPersonChangeListener>` 来存放 Listener 集合，当数据变化的时候遍历这个集合，通知一下这些Listener就行。
+
+
+
+仔细想想这样真的行吗?  这个 `IPersonChangeListener` 是需要跨进程的，那么客户端每次传过来的对象是经过序列化与反序列化的，服务端这边接收到的根本不是客户端传过来的那个对象。 虽然传过来的 Listener 不同，但是用来通信的 Binder 是同一个，利用这个原理 Android 提供了一个 `RemoteCallbackList` 的东西，专门用于存放监听接口的集合的。`RemoteCallbackList` 内部将数据存储于一个 ArrayMap 中，key 就是用来传输的 binder，value 就是监听接口的封装。如下：
+
+```java
+//RemoteCallbackList.java  源码有删减
+public class RemoteCallbackList<E extends IInterface> {
+    ArrayMap<IBinder, Callback> mCallbacks = new ArrayMap<IBinder, Callback>();
+
+    private final class Callback implements IBinder.DeathRecipient {
+        final E mCallback;
+        final Object mCookie;
+
+        Callback(E callback, Object cookie) {
+            mCallback = callback;
+            mCookie = cookie;
+        }
+    }
+
+    public boolean register(E callback, Object cookie) {
+        synchronized (mCallbacks) {
+            IBinder binder = callback.asBinder();
+            Callback cb = new Callback(callback, cookie);
+            mCallbacks.put(binder, cb);
+            return true;
+        }
+    }
+}
+```
+
+`RemoteCallbackList` 内部在操作数据的时候已经做了线程同步的操作，所以不需要单独做额外的线程同步操作。现在来实现一下这个注册/反注册方法：
+
+```kotlin
+private val mListenerList = RemoteCallbackList<IPersonChangeListener?>()
+
+private val mBinder: Binder = object : IPersonManager.Stub() {
+    .....
+    override fun registerListener(listener: IPersonChangeListener?) {
+        mListenerList.register(listener)
+    }
+
+    override fun unregisterListener(listener: IPersonChangeListener?) {
+        mListenerList.unregister(listener)
+    }
+}
+```
+
+`RemoteCallbackList` 添加与删除数据对应着 `register()/unregister()`方法，然后我们模拟一下服务端数据更新的情况，开个线程每隔 5 秒添加一个 Person 数据，然后通知一下观察者：
+
+```kotlin
+//死循环 每隔5秒添加一次person,通知观察者
+private val serviceWorker = Runnable {
+    while (!Thread.currentThread().isInterrupted) {
+        Thread.sleep(5000)
+        val person = Person("name${Random().nextInt(10000)}")
+        log(AidlActivity.TAG, "服务端 onDataChange() 生产的 person = $person}")
+        mPersonList.add(person)
+        onDataChange(person)
+    }
+}
+private val mServiceListenerThread = Thread(serviceWorker)
+
+//数据变化->通知观察者
+private fun onDataChange(person: Person?) {
+    //1. 使用RemoteCallbackList时,必须首先调用beginBroadcast(), 最后调用finishBroadcast(). 得成对出现
+    //这里拿到的是监听器的数量
+    val callbackCount = mListenerList.beginBroadcast()
+    for (i in 0 until callbackCount) {
+        try {
+            //这里try一下避免有异常时无法调用finishBroadcast()
+            mListenerList.getBroadcastItem(i)?.onPersonDataChanged(person)
+        } catch (e: RemoteException) {
+            e.printStackTrace()
+        }
+    }
+    
+    //3. 最后调用finishBroadcast()  必不可少
+    mListenerList.finishBroadcast()
+}
+
+override fun onCreate() {
+    .....
+    mServiceListenerThread.start()
+}
+
+override fun onDestroy() {
+    super.onDestroy()
+    mServiceListenerThread.interrupt()
+}
+```
+
+服务端实现好了，客户端就比较好办：
+
+```kotlin
+private val mPersonChangeListener = object : IPersonChangeListener.Stub() {
+    override fun onPersonDataChanged(person: Person?) {
+        log(TAG, "客户端 onPersonDataChanged() person = $person}")
+    }
+}
+
+private fun registerListener() {
+    remoteServer?.registerListener(mPersonChangeListener)
+}
+
+private fun unregisterListener() {
+    remoteServer?.asBinder()?.isBinderAlive?.let {
+        remoteServer?.unregisterListener(mPersonChangeListener)
+    }
+}
+```
+
+因为是需要跨进程通信的，所以需要继承自 IPersonChangeListener.Stub 从而生成一个监听器对象。最后输出日志如下:
+
+```shell
+服务端 onDataChange() 生产的 person = Person(name=name9398) hashcode = 130037351}
+客户端 onPersonDataChanged() person = Person(name=name9398) hashcode = 217703225}
+```
+
+
+
+##### 3.2.7 Binder 死亡通知
+
+服务端进程可能随时会被杀掉，这时需要在客户端能够被感知到 binder 已经死亡，从而做一些收尾清理工作或者进程重新连接。有如下 4 种方式能知道服务端是否已经挂掉：
+
+1. 调用 binder 的 `pingBinder()` 检查，返回 false 则说明远程服务失效
+2. 调用 binder 的 `linkToDeath()` 注册监听器，当远程服务失效时，就会收到==回调==
+3. 绑定 Service 时用到的 ServiceConnection 有个 `onServiceDisconnected()` 回调在服务端断开时也能收到==回调==
+4. 客户端调用远程方法时，抛出 `DeadObjectException(RemoteException)`
+
+
+
+写份代码验证一下，在客户端修改为如下:
+
+```kotlin
+private val mDeathRecipient = object : IBinder.DeathRecipient {
+    
+    override fun binderDied() {
+        //监听 binder died
+        log(TAG, "binder died")
+        //移除死亡通知
+        mService?.unlinkToDeath(this, 0)
+        mService = null
+        //重新连接
+        connectService()
+    }
+}
+
+private val serviceConnection = object : ServiceConnection {
+    
+    override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+        this@AidlActivity.mService = service
+        log(TAG, "onServiceConnected")
+
+        //给binder设置一个死亡代理
+        service?.linkToDeath(mDeathRecipient, 0)
+
+        mRemoteServer = IPersonManager.Stub.asInterface(service)
+    }
+
+    override fun onServiceDisconnected(name: ComponentName?) {
+        log(TAG, "onServiceDisconnected")
+    }
+}
+```
+
+绑定服务之后,将服务端进程杀掉,输出日志如下:
+
+```shell
+//第一次连接
+bindService true
+onServiceConnected, thread = main
+
+//杀掉服务端 
+binder died, thread = Binder:29391_3
+onServiceDisconnected, thread = main
+
+//重连
+bindService true
+onServiceConnected, thread = main
+```
+
+确实是监听到服务端断开连接的时刻，然后重新连接也是 ok 的。 
+
+注意：==`binderDied()` 方法是运行在子线程的，`onServiceDisconnected()`是运行在主线程的，如果要在这里更新UI，得注意一下==。
+
+
+
+##### 3.2.8 权限验证
+
+有没有注意到，目前的 Service 是完全暴露的，任何 app 都可以访问这个 Service 并且远程调用 Service 的服务，这样不太安全。可以在清单文件中加入自定义权限，然后在 Service 中校验一下客户端有没有这个权限即可。如下：
+
+```xml
+<permission
+    android:name="com.xfhy.allinone.ipc.aidl.ACCESS_PERSON_SERVICE"
+    android:protectionLevel="normal" />
+```
+
+客户端需要在清单文件中声明这个权限:
+
+```xml
+<uses-permission android:name="com.xfhy.allinone.ipc.aidl.ACCESS_PERSON_SERVICE"/>
+```
+
+服务端 Service 校验权限:
+
+```kotlin
+override fun onBind(intent: Intent?): IBinder? {
+    val check = checkCallingOrSelfPermission("com.xfhy.allinone.ipc.aidl.ACCESS_PERSON_SERVICE")
+    if (check == PackageManager.PERMISSION_DENIED) {
+        log(TAG,"没有权限")
+        return null
+    }
+    log(TAG,"有权限")
+    return mBinder
+}
+```
+

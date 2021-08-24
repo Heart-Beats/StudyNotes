@@ -474,33 +474,56 @@ Gradle  会依次按照上面顺序全部执行一遍来查找初始化脚本，
 
     类似于 Gradle 构建脚本或 Gradle 设置文件，插件也可以应用于初始化脚本。
 
-    ```groovy
-    //init.gradle
+    ```kotlin
+    apply<AliyunMavenRepositoryPlugin>()
     
-    apply plugin: EnterpriseRepositoryPlugin
+    class AliyunMavenRepositoryPlugin: Plugin<Gradle> {
     
-    class EnterpriseRepositoryPlugin implements Plugin<Gradle> {
+        override fun apply(gradle: Gradle) {
     
-        private static String ENTERPRISE_REPOSITORY_URL = "https://repo.gradle.org/gradle/repo"
+            println("开始应用插件，添加仓库地址为阿里云仓库")
     
-        void apply(Gradle gradle) {
-            // ONLY USE ENTERPRISE REPO FOR DEPENDENCIES
-            gradle.allprojects { project ->
-                project.repositories {
+            gradle.allprojects {
+                repositories {
     
-                    // Remove all repositories not pointing to the enterprise repository url
-                    all { ArtifactRepository repo ->
-                        if (!(repo instanceof MavenArtifactRepository) ||
-                              repo.url.toString() != ENTERPRISE_REPOSITORY_URL) {
-                            project.logger.lifecycle "Repository ${repo.url} removed. Only $ENTERPRISE_REPOSITORY_URL is allowed"
-                            remove repo
-                        }
+                    // jcenter {
+    				// 	name = "aliyunJcenter" 
+    				// 	url = uri("https://maven.aliyun.com/repository/jcenter")
+    				
+                    // }
+                    // google {
+                    // 	name = "aliyunGoogle"
+    				// 	url = uri("https://maven.aliyun.com/repository/google")
+                    // }
+                    // mavenCentral {
+                    // 	name = "aliyunMavenCentral"
+                    // 	url = uri("https://maven.aliyun.com/repository/public")
+                    // }
+    
+                    // central仓和jcenter仓的聚合仓
+                    maven{
+                        name = "aliyunPublic" 
+                        url = uri("https://maven.aliyun.com/repository/public")
                     }
     
-                    // add the enterprise repository
-                    maven {
-                        name "STANDARD_ENTERPRISE_REPO"
-                        url ENTERPRISE_REPOSITORY_URL
+                    maven{
+                        name = "aliyunMavenCentral"
+                     	url = uri("https://maven.aliyun.com/repository/central")
+                    }
+    
+                    maven{
+                        name = "aliyunJcenter" 
+                        url = uri("https://maven.aliyun.com/repository/public")
+                    }
+    
+                    maven{
+                       name = "aliyunGoogle"
+                       url = uri("https://maven.aliyun.com/repository/google")
+                    }
+    
+                    maven{
+                       name = "aliyunGradlePlugin"
+                       url = uri("https://maven.aliyun.com/repository/gradle-plugin")
                     }
                 }
             }
@@ -530,7 +553,7 @@ Gradle 进行构建时，会经历3个生命周期：
 
 3.  执行阶段
 
-    <img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/99987b264ab2348bed178526f381635efd8c1a01/images/Gradle%20build%20%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.png" alt="Gradle build 生命周期" style="zoom:80%;" />
+    <img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/99987b264ab2348bed178526f381635efd8c1a01/images/Gradle build 生命周期.png" alt="Gradle build 生命周期" style="zoom:80%;" />
 
 #### 5.1 初始化阶段
 
@@ -573,7 +596,7 @@ Gradle 生命周期提供了丰富的回调接口帮助使用者方便的 Hook �
 我们可以在 build.gradle 中使用关键字 task 来自定义一个 Task。比如创建 build.gradle 文件，并添加 task，如下所示：
 
 ```groovy
-task A {
+tasks.register('A'){
     println '这是任务 A'
 }
 ```
@@ -595,7 +618,7 @@ BUILD SUCCESSFUL in 1s
 ==gradle 的构建生命周期包含 3 部分：初始化阶段 --> 配置阶段 --> 执行阶段==。在 task A 中添加 doFirst 闭包，如下所示：
 
 ```groovy
-task A {
+tasks.register('A'){
     println '这是任务 A'
     doFirst {
         println '正在执行 A'
@@ -634,7 +657,7 @@ BUILD SUCCESSFUL in 796ms
 当执行 task 时，其内部的 Action 集合会按次序逐个执行，因此==可以借助 `doFirst()`, `doLast()` 等方法来控制 Action 在队列中的顺序，同时也是执行的顺序==：
 
 ```groovy
-task A {
+tasks.register('A'){
     println '这是任务 A'
 
     doFirst {
@@ -653,7 +676,7 @@ task A {
 同时==gradle 在运行期会执行所有 task 的配置语句，然后才会执行指定的 Task==，假设有Task A 和 Task B 如下：
 
 ```groovy
-task A {
+tasks.register('A') {
     println '这是任务 A'
 
     doFirst {
@@ -661,7 +684,7 @@ task A {
     }
 }
 
-task B {
+tasks.register('B') {
     println '这是任务 B - 1'
     doFirst {
         println '正在执行 B'
@@ -688,61 +711,279 @@ BUILD SUCCESSFUL in 821ms
 1 actionable task: 1 executed
 ```
 
+注意：还有其他方法可以创建任务，不鼓励使用这些方法，并将在未来版本中弃用。例如，`task A`  、`tasks.create('C')`
 
 
-##### 1.3.2 Task 之间可以存在依赖关系
 
-gradle 中的 Task 可以通过 dependsOn 来指定它依赖另一个 Task，如下所示：
+##### 1.3.2 定位任务
+
+通常，任务可通过 `tasks` 集合获得。使用返回*任务提供者*的方法 `register()`  或者 `named()` 可以定位到相关任务，如：
 
 ```groovy
-task A {
-    println '配置任务 A'
+tasks.register('hello')
+tasks.register('copy', Copy)
 
-    doFirst {
-        println '开始执行 A'
-    }
+println tasks.named('hello').get().name
+
+println tasks.named('copy').get().destinationDir
+```
+
+还可以使用 `tasks.withType()` 方法访问特定类型的任务。这可以轻松避免代码重复并减少冗余：
+
+```groovy
+tasks.withType(Tar).configureEach {
+    enabled = false
 }
 
-//另一种创建 Task 的方式
-tasks.create('C') {
-    println '配置任务 C'
-
-    dependsOn('A')
-
-    doFirst {
-        println '开始执行 C'
-    }
+tasks.register('test') {
+    dependsOn tasks.withType(Copy)
 }
 ```
 
-这样就通过 `dependsOn`  这个方法指定了 task C 依赖于 task A，再执行一下 task C 看看结果：
+还可以使用 `tasks.getByPath()` 方法使用任务的路径从任何项目访问任务， `getByPath()` 可以使用任务名称、相对路径或绝对路径调用该方法。但这不是推荐的做法，因为它破坏了[任务配置避免](https://docs.gradle.org/current/userguide/task_configuration_avoidance.html#task_configuration_avoidance)和项目隔离。
 
 ```groovy
-D:\AndroidProject\flutter_demo_app\android>gradlew c
+tasks.register('hello')
 
-> Configure project :
-配置任务 A
-配置任务 C
-
-> Task :A
-开始执行 A
-
-> Task :C
-开始执行 C
-
-BUILD SUCCESSFUL in 842ms
-2 actionable tasks: 2 executed
+println tasks.getByPath('hello').path
+println tasks.getByPath(':hello').path
+println tasks.getByPath('project-a:hello').path
+println tasks.getByPath(':project-a:hello').path
 ```
 
-可以看出虽然我们只是执行了 task C，但是因为依赖关系的存在，task A 也会被执行。
-
-> gradle 会在配置 Configure 阶段，确定依赖关系。
->
-> 对于 Android 项目来说即为执行各个 module 下的 build.gradle 文件，这样各个 build.gradle 文件中的 task 的依赖关系就被确认下来了，而这个依赖关系的确定就是在 Configuration 阶段。
 
 
+##### 1.3.3 配置任务
 
-##### 1.3.3 Gradle 自定义方法
+1.  使用系统预置 Task
+
+    自定义 task 时，还可以使用系统提供的各种显式 task 来完成相应的任务。如：
+
+    ```groovy
+    tasks.register('copy', Copy) {
+       from 'src'
+       into 'dst'
+       include('**/*.txt', '**/*.xml', '**/*.properties')
+    }
+    ```
+
+    如上的 task 就是使用 Copy 这个显式 task 将 src 中的文件复制到 dst 。
+
+    除了 Copy 之外，还有很多其他显式的 task 可用，比如可以通过自定义 task 实现将编译后的 .class 输出到某一特定路径，具体实现如下所示：
+
+    ```groovy
+    tasks.register('javaCompile', JavaCompile) { //  1.指定是编译 Java 类的 task
+        source('src')               //  2.指定需要编译类的文件路径
+        include {
+            'Demo.java'				// 3.指定需要编译哪一个 Java 类
+        }
+        classpath(files("."))			   // 4.设置用于编译源文件的类路径。
+        destinationDir(file('./build'))   // 5.指定编译之后，生成 .class 文件的保存路径
+    }
+    ```
+
+    gradle 提供的预置 Task Types 非常多，具体参见：https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Copy.html 网页左侧的 Task types。
+
+    
+
+2.  将参数传递给任务构造函数
+
+    与 `Task` 在创建后配置可变属性相反，也可以将参数值传递给 `Task` 类的构造函数。为了将值传递给 `Task` 的构造函数，必须使用 `@javax.inject.Inject` 。如下：
+
+    ```groovy
+    abstract class CustomTask extends DefaultTask {
+        final String message
+        final int number
+    
+        @Inject
+        CustomTask(String message, int number) {
+            this.message = message
+            this.number = number
+        }
+    }
+    ```
+
+    然后可以创建一个任务，在参数列表的末尾传递构造函数参数。
+
+    ```groovy
+    tasks.register('myTask', CustomTask, 'hello', 42)
+    ```
+
+    
+
+3.  向 Task  添加依赖 Task
+
+    -   使用任务名称定义依赖项
+
+        任务名称可以为同一项目中的任务，也可以是其他项目中的任务。要引用另一个项目中的任务，需要在任务名称前加上它所属项目的路径。下面是一个 `project-a:taskX` 添加依赖 `project-b:taskY` 的例子：
+
+        ```groovy
+        project('project-a') {
+            tasks.register('taskX')  {
+                dependsOn ':project-b:taskY'
+                doLast {
+                    println 'taskX'
+                }
+            }
+        }
+        
+        project('project-b') {
+            tasks.register('taskY') {
+        		println '正在配置 :project-b:taskY'  // 配置阶段就会执行（Gradle Async）
+                doLast {
+                    println 'taskY'
+                }
+            }
+        }
+        ```
+
+        输出如下：
+
+        ```shell
+        > gradle -q taskX 
+        taskY 
+        taskX
+        ```
+
+        
+
+    -   使用 `TaskProvider` 对象定义依赖项
+
+        除了任务名称，还可以使用 `TaskProvider` 声明依赖项，如：
+
+        ```groovy
+        def taskX = tasks.register('taskX') {
+            doLast {
+                println 'taskX'
+            }
+        }
+        
+        def taskY = tasks.register('taskY') {
+            doLast {
+                println 'taskY'
+            }
+        }
+        
+        // 通过此方法配置任务依赖
+        taskX.configure {
+            dependsOn taskY
+        }
+        ```
+
+        执行后输出结果与使用任务名称一致。
+
+        
+
+    -   使用惰性块定义多个依赖
+
+        使用惰性块时可以定义 Task 依赖单个 `Task` 或一组 `Task` 对象。以下示例 `taskX` 依赖项目中名称所有以 `lib` 开头的任务：
+
+        ```groovy
+        def taskX = tasks.register('taskX') {
+            doLast {
+                println 'taskX'
+            }
+        }
+        
+        // Using a Gradle Provider
+        taskX.configure {
+            dependsOn(provider {
+                tasks.findAll { task -> task.name.startsWith('lib') }
+            })
+        }
+        
+        tasks.register('lib1') {
+            doLast {
+                println('lib1')
+            }
+        }
+        
+        tasks.register('lib2') {
+            doLast {
+                println('lib2')
+            }
+        }
+        
+        tasks.register('notALib') {
+            doLast {
+                println('notALib')
+            }
+        }
+        ```
+
+        执行输出如下：
+
+        ```shell
+        > gradle -q taskX 
+        lib1 
+        lib2 
+        taskX
+        ```
+
+        
+
+##### 1.3.4 Task 执行顺序控制
+
+>   在某些情况下，控制 2  个任务的执行顺序很有用，而无需在这些任务之间引入显式依赖关系。任务排序和任务依赖之间的主要区别在于：排序规则不影响将执行哪些任务，只影响执行的顺序。
+
+
+
+主要有两种可用的排序规则：==“ must run after ”== 和 ==“  should run after”==。
+
+-   must run after
+
+    `taskB.mustRunAfter(taskA)` 这种情况，无论何时 `taskA` 和 `taskB` 都将运行。
+
+-    should run after
+
+    排序规则类似但不那么严格，应该在排序有用但不是严格要求的情况下使用它。
+
+
+
+有了这些规则，可以在 `taskA` 没有执行的情况下执行 `taskB` ，反之亦然。如：
+
+```groovy
+def taskX = tasks.register('taskX') {
+    doLast {
+        println 'taskX'
+    }
+}
+
+def taskY = tasks.register('taskY') {
+    doLast {
+        println 'taskY'
+    }
+}
+
+//①
+taskY.configure {
+    mustRunAfter taskX
+}
+
+// ②
+taskY.configure {
+    shouldRunAfter taskX
+}
+```
+
+这两种情况下，执行 `gradle -q taskY taskX` ，输出都会如下：
+
+```groovy
+> gradle -q taskY taskX 
+taskX 
+taskY
+```
+
+但任务排序并不意味着任务执行，第二种情况就可以在 `taskY` 不导致 `taskX` 运行的情况下执行：
+
+```shell
+> gradle -q taskY 
+taskY
+```
+
+
+
+##### 1.3.4 Gradle 自定义方法
 
 我们可以在 build.gradle 中使用 `def` 关键字自定义方法，比如以下代码中自定义了 getDateTime 方法，并在 task 中使用此方法：
 
@@ -759,36 +1000,6 @@ task('my_task'){
     }
 }
 ```
-
-
-
-##### 1.3.4 系统预置 task
-
-自定义 task 时，还可以使用系统提供的各种显式 task 来完成相应的任务。具体就是使用关键字 type 来指定使用的是哪一个 task：
-
-```groovy
-task copy(type: Copy){
-    from("src")
-    into("dst")
-}
-```
-
-如上的 task 就是使用 Copy这个显式 task 将 src 中的文件复制到 dst 。
-
-除了 Copy 之外，还有很多其他显式的 task 可用，比如可以通过自定义 task 实现将编译后的 .class 输出到某一特定路径，具体实现如下所示：
-
-```groovy
-task compile(type: JavaCompile) { //  1.指定是编译 Java 类的 task
-    source('src')               //  2.指定需要编译类的文件路径
-    include {
-        'Demo.java'				// 3.指定需要编译哪一个 Java 类
-    }
-    classpath(files("."))			   // 4.设置用于编译源文件的类路径。
-    destinationDir(file('./build'))   // 5.指定编译之后，生成 .class 文件的保存路径
-}
-```
-
-gradle 提供的预置 Task Types 非常多，具体参见：https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Copy.html 网页左侧的 Task types。
 
 
 

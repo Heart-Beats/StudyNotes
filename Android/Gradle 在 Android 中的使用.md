@@ -591,7 +591,7 @@ Gradle 生命周期提供了丰富的回调接口帮助使用者方便的 Hook �
 
 
 
-##### 1.3.1 自定义 Task
+#### 6.1 自定义 Task
 
 我们可以在 build.gradle 中使用关键字 task 来自定义一个 Task。比如创建 build.gradle 文件，并添加 task，如下所示：
 
@@ -715,7 +715,7 @@ BUILD SUCCESSFUL in 821ms
 
 
 
-##### 1.3.2 定位任务
+#### 6.2 定位任务
 
 通常，任务可通过 `tasks` 集合获得。使用返回*任务提供者*的方法 `register()`  或者 `named()` 可以定位到相关任务，如：
 
@@ -753,7 +753,7 @@ println tasks.getByPath(':project-a:hello').path
 
 
 
-##### 1.3.3 配置任务
+#### 6.3 配置任务 —— 类型、参数和依赖
 
 1.  使用系统预置 Task
 
@@ -922,7 +922,7 @@ println tasks.getByPath(':project-a:hello').path
 
         
 
-##### 1.3.4 Task 执行顺序控制
+#### 6.4 Task 执行顺序控制
 
 >   在某些情况下，控制 2  个任务的执行顺序很有用，而无需在这些任务之间引入显式依赖关系。任务排序和任务依赖之间的主要区别在于：排序规则不影响将执行哪些任务，只影响执行的顺序。
 
@@ -932,7 +932,7 @@ println tasks.getByPath(':project-a:hello').path
 
 -   must run after
 
-    `taskB.mustRunAfter(taskA)` 这种情况，无论何时 `taskA` 和 `taskB` 都将运行。
+    `taskB.mustRunAfter(taskA)` 这种情况，无论何时 `taskB` 都将在 `taskA` 之后运行。
 
 -    should run after
 
@@ -981,25 +981,588 @@ taskY
 taskY
 ```
 
+注意：
+
+1. 排序不意味着任务之间有任何执行依赖性，它是在两个任务都计划执行时才有效。
+
+2. 使用运行时参数 `--continue`，则 `B` 可以在 `A` 失败的情况下执行。
+
+3. 如果引入排序循环，“应该在之后运行” 排序规则将被忽略，如：
+
+    ```groovy
+    def taskX = tasks.register('taskX') {
+        doLast {
+            println 'taskX'
+        }
+    }
+    def taskY = tasks.register('taskY') {
+        doLast {
+            println 'taskY'
+        }
+    }
+    def taskZ = tasks.register('taskZ') {
+        doLast {
+            println 'taskZ'
+        }
+    }
+    taskX.configure { dependsOn(taskY) }
+    taskY.configure { dependsOn(taskZ) }
+    taskZ.configure { shouldRunAfter(taskX) }
+    ```
+
+    输出如下：
+
+    ```shell
+    > gradle -q taskX
+    任务Z
+    任务Y
+    任务X
+    ```
+
+    可以看出任务 Z 并不是在任务 X 之后执行。
 
 
-##### 1.3.4 Gradle 自定义方法
 
-我们可以在 build.gradle 中使用 `def` 关键字自定义方法，比如以下代码中自定义了 getDateTime 方法，并在 task 中使用此方法：
+#### 6.5 添加描述
+
+给任务添加描述非常简单，使用 `description` 方法即可，如下：
 
 ```groovy
-def getDateTime(){
-    LocalDateTime now = LocalDateTime.now(ZoneId.of('Asia/Shanghai'))
-    return now.format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"))
+tasks.register('copy', Copy) {
+   description 'Copies the resource directory to the target directory.'
+   from 'resources'
+   into 'target'
+   include('**/*.txt', '**/*.xml', '**/*.properties')
+}
+```
+
+
+
+#### 6.6 跳过任务
+
+1. 使用谓词
+
+    使用 `onlyIf()` 方法将谓词附加到任务，仅当谓词评估为真时才执行任务的操作。如下：
+
+    ```groovy
+    def hello = tasks.register('hello') {
+        doLast {
+            println 'hello world'
+        }
+    }
+    
+    hello.configure {
+        onlyIf { !project.hasProperty('skipHello') }  //仅当闭包返回值为真时才执行任务
+    }
+    ```
+
+    
+
+2. 使用异常停止执行
+
+    当任务执行时满足某些条件，可以抛出 `StopExecutionException` 异常，这会将当前任务的后续动作都跳过，执行下一个任务。如：
+
+    ```groovy
+    def compile = tasks.register('compile') {
+        doLast {
+            println 'We are doing the compile.'
+        }
+    }
+    
+    compile.configure {
+        doFirst {
+            // 这需要替换为满足的真实条件
+            if (true) {
+                throw new StopExecutionException()
+            }
+        }
+    }
+    tasks.register('myTask') {
+        dependsOn('compile')
+        doLast {
+            println 'I am not affected'
+        }
+    }
+    ```
+
+    输出如下：
+
+    ```shell
+    > gradle -q myTask
+    I am not affected
+    ```
+
+    
+
+#### 6.7 启用和禁用任务
+
+每个任务都有一个 `enabled`  属性，它默认为 `true` 。将其设置为 `false`  就会阻止任务执行。禁用的任务将被标记为已跳过，因此==也可以使用此方法跳过任务==。
+
+```groovy
+def disableMe = tasks.register('disableMe') {
+    doLast {
+        println 'This should not be printed if the task is disabled.'
+    }
 }
 
-//另一种创建 tak 方式
-task('my_task'){
-    doFirst {
-        println "当前日期时间：${getDateTime()}"  // 当前日期时间：2020/06/30 15:57:22
+disableMe.configure {
+    enabled = false
+}
+```
+
+输出如下：
+
+```shell
+> gradle disableMe
+> 任务 :disableMe SKIPPED
+
+在 0 秒内构建成功
+```
+
+
+
+#### 6.8 任务超时
+
+每个任务都有一个 `timeout` 属性，可用于限制其执行时间。当任务超时时，其任务执行线程被中断。如果运行时使用 `--continue` 参数，其他任务可以在它中断之后继续运行。
+
+```groovy
+tasks.register("hangingTask") {
+    doLast {
+        Thread.sleep(100000)
+    }
+    timeout = Duration.ofMillis(500)
+}
+```
+
+
+
+#### 6.9 增量构建
+
+> 任务输入与输出：
+>
+> 在最常见的情况下，任务接受一些输入并生成一些输出。如果使用前面的编译示例，可以看到源文件是输入，而在 Java 的情况下，生成的类文件是输出。其他输入可能包括诸如是否应包含调试信息之类的内容。
+>
+> 作为增量构建的一部分，Gradle 测试自上次构建以来是否有任何任务输入或输出发生了变化。如果没有，Gradle 可以认为任务是最新的，因此跳过执行其操作。
+
+
+
+注册任务属性为输入或输出主要有以下方式：
+
+- 自定义任务类型
+- 运行时 API 
+
+
+
+1. 自定义任务类型
+
+    如果自定义任务作为类来实现，那么只需两个步骤即可使其与增量构建一起工作：
+
+    - 为每个任务的输入和输出创建类型化属性（通过 getter 方法）
+
+    - 为每个属性添加适当的注释，注释必须放在 getter 或 Groovy 属性上
+
+        
+
+    Gradle 支持三个主要类别的输入和输出：
+
+    - 简单值：字符串和数字之类实现了 Serializable 的类型
+
+    - 文件系统类型：包括标准`File` 类，但也包括 Gradle 的 [FileCollection](https://docs.gradle.org/current/javadoc/org/gradle/api/file/FileCollection.html) 类型及其子类
+
+    - 嵌套值：不符合其他两个类别但具有自己的输入或输出属性的自定义类型
+
+        
+
+    例如，假设有一个任务处理不同类型的模板，例如 FreeMarker、Velocity、Moustache 等。它获取模板源文件并将它们与一些模型数据组合以生成模板文件的填充版本。
+
+    此任务将具有三个输入和一个输出：
+
+    - 模板源文件
+    - 模型数据
+    - 模板引擎
+    - 输出文件的写入位置
+
+    当编写自定义任务类时，很容易通过注释将属性注册为输入或输出。如：
+
+    buildSrc/src/main/java/org/example/ProcessTemplates.java
+
+    ```java
+    package org.example;
+    
+    import java.util.HashMap;
+    import org.gradle.api.DefaultTask;
+    import org.gradle.api.file.ConfigurableFileCollection;
+    import org.gradle.api.file.DirectoryProperty;
+    import org.gradle.api.provider.Property;
+    import org.gradle.api.tasks.*;
+    
+    public abstract class ProcessTemplates extends DefaultTask {
+    
+        @Input
+        public abstract Property<TemplateEngineType> getTemplateEngine();  //模板引擎
+    
+        @InputFiles
+        public abstract ConfigurableFileCollection getSourceFiles();   // 模板源文件
+    
+        @Nested
+        public abstract TemplateData getTemplateData();              // 模型数据
+    
+        @OutputDirectory
+        public abstract DirectoryProperty getOutputDir();           //输出文件的写入位置
+    
+        @TaskAction
+        public void processTemplates() {
+            // ...
+        }
+    }
+    ```
+
+    buildSrc/src/main/java/org/example/TemplateData.java
+
+    ```java
+    package org.example;
+    
+    import org.gradle.api.provider.MapProperty;
+    import org.gradle.api.provider.Property;
+    import org.gradle.api.tasks.Input;
+    
+    public abstract class TemplateData {
+    
+        @Input
+        public abstract Property<String> getName();
+    
+        @Input
+        public abstract MapProperty<String, String> getVariables();
+    }
+    ```
+
+    执行 `gradle processTemplates` 输出如下：
+
+    ```shell
+    > gradle processTemplates
+    > 任务：processTemplates
+    
+    在 0 秒内构建成功
+    3 个可操作的任务：3 个最新的
+    ```
+
+    再次执行输出：
+
+    ```shell
+    > gradle processTemplates
+    > 任务：processTemplates 最新
+    
+    在 0 秒内构建成功
+    3 个可操作的任务：3 个最新的
+    ```
+
+    上述这些带注释的属性意味着，如果自上次 Gradle 执行任务以来，源文件、模板引擎、模型数据或生成的文件都没有发生变化，Gradle 将跳过该任务，这通常会节省大量时间。
+
+    
+
+    接下来，就看看 *增量构建属性* 中有哪些可以使用的注释：
+
+    |           注解            |                     预期属性类型                     |                             描述                             |
+    | :-----------------------: | :--------------------------------------------------: | :----------------------------------------------------------: |
+    |         `@Input`          |               任何 `Serializable` 类型               |                       一个简单的输入值                       |
+    |       `@InputFile`        |                       `File`*                        |                   单个输入文件（不是目录）                   |
+    |     `@InputDirectory`     |                       `File`*                        |                   单个输入目录（不是文件）                   |
+    |       `@InputFiles`       |                  `Iterable<File>`*                   |                     输入文件和目录的迭代                     |
+    |       `@Classpath`        |                  `Iterable<File>`*                   |         代表 Java 类路径的输入文件和目录的可迭代对象         |
+    |    `@CompileClasspath`    |                  `Iterable<File>`*                   |       代表 Java 编译类路径的输入文件和目录的可迭代对象       |
+    |       `@OutputFile`       |                       `File`*                        |                   单个输出文件（不是目录）                   |
+    |    `@OutputDirectory`     |                       `File`*                        |                   单个输出目录（不是文件）                   |
+    |      `@OutputFiles`       |      `Map<String, File>`** 或`Iterable<File>`*       | 输出文件的可迭代或映射，使用文件树会关闭任务的[缓存](https://docs.gradle.org/current/userguide/build_cache.html#sec:task_output_caching) |
+    |   `@OutputDirectories`    |      `Map<String, File>`** 或`Iterable<File>`*       | 一个可迭代的输出目录，使用文件树会关闭任务的[缓存](https://docs.gradle.org/current/userguide/build_cache.html#sec:task_output_caching) |
+    |        `@Destroys`        |              `File`或`Iterable<File>`*               | 指定此任务删除的一个或多个文件。请注意，任务可以定义输入/输出或可销毁对象，但不能同时定义两者。 |
+    |       `@LocalState`       |              `File`或`Iterable<File>`*               | 指定一个或多个代表[任务本地状态的](https://docs.gradle.org/current/userguide/custom_tasks.html#sec:storing_incremental_task_state)文件。当任务从缓存加载时，这些文件将被删除。 |
+    |         `@Nested`         |                    任何自定义类型                    |                  一种自定义类型，可能未实现                  |
+    |        `@Console`         |                       任何类型                       | 表示该属性既不是输入也不是输出。它只是以某种方式影响任务的控制台输出，例如增加或减少任务的详细程度。 |
+    |        `@Internal`        |                       任何类型                       |        表示该属性在内部使用，但既不是输入也不是输出。        |
+    |       `@ReplacedBy`       |                       任何类型                       |       表示该属性已被另一个替换，应作为输入或输出忽略。       |
+    |     `@SkipWhenEmpty`      |              `File`或`Iterable<File>`*               | 与 `@InputFiles` 或 `@InputDirectory` 一起使用，如果相应的文件或目录为空，则告诉 Gradle 跳过任务，以及使用此注释声明的所有其他输入文件。 |
+    |      `@Incremental`       | `Provider<FileSystemLocation>` 或者 `FileCollection` | 与 `@InputFiles` 或 `@InputDirectory` 用于指示 Gradle 跟踪对带注释的文件属性的更改，对于增量任务，可以通过``@InputChanges.getFileChanges()` 查询更改 |
+    |        `@Optional`        |                       任何类型                       | 与[可选](https://docs.gradle.org/current/javadoc/org/gradle/api/tasks/Optional.html)API 文档中列出的任何属性类型注释一起使用。此注释禁用对相应属性的验证检查。有关更多详细信息，请参阅[验证部分](https://docs.gradle.org/current/userguide/more_about_tasks.html#sec:task_input_output_validation)。 |
+    |     `@PathSensitive`      |              `File`或`Iterable<File>`*               | 与任何输入文件属性一起使用，告诉 Gradle 只将文件路径的给定部分视为重要的。例如，如果一个属性用 注释`@PathSensitive(PathSensitivity.NAME_ONLY)`，那么在不更改其内容的情况下移动文件不会使任务过时。 |
+    | `@IgnoreEmptyDirectories` |              `File`或`Iterable<File>`*               | 与 `@InputFiles` 或 `@InputDirectory `一起使用，指示 Gradle 仅跟踪目录内容的更改，而不跟踪目录本身的差异。例如，在目录结构中的某处删除、重命名或添加空目录不会使任务过时。 |
+    |  `@NormalizeLineEndings`  |              `File`或`Iterable<File>`*               | 与 `@InputFiles`, `@InputDirectory` 或 ` @Classpath` 一起使用，用于指示 Gradle 在计算最新检查或构建缓存键时规范化行尾。例如，在 Unix 行尾和 Windows 行尾（或反之亦然）之间切换文件不会使任务过时。 |
+
+    注意： 这些注释的类型子类可被继承，同时子类可以重写覆盖相关属性的类型。
+
+    
+
+2. 运行时 API
+
+    如果无权访问自定义任务类的源代码，则无法为它添加任何增量注释。此种情况下就需要使用运行时 API。
+
+    这个运行时 API 是通过几个恰当命名的属性提供的，这些属性可用于每个 Gradle 任务：
+
+    - [TaskInputs ](https://docs.gradle.org/current/dsl/org.gradle.api.Task.html#org.gradle.api.Task:inputs)类型的 [Task.getInputs ](https://docs.gradle.org/current/javadoc/org/gradle/api/tasks/TaskInputs.html)[()](https://docs.gradle.org/current/dsl/org.gradle.api.Task.html#org.gradle.api.Task:inputs)
+    - [TaskOutputs](https://docs.gradle.org/current/dsl/org.gradle.api.Task.html#org.gradle.api.Task:outputs) 类型的[ Task.getOutputs ](https://docs.gradle.org/current/javadoc/org/gradle/api/tasks/TaskOutputs.html)[()](https://docs.gradle.org/current/dsl/org.gradle.api.Task.html#org.gradle.api.Task:outputs)
+    - [Task.getDestroyables() ](https://docs.gradle.org/current/dsl/org.gradle.api.Task.html#org.gradle.api.Task:destroyables)类型 [TaskDestroyables](https://docs.gradle.org/current/javadoc/org/gradle/api/tasks/TaskDestroyables.html)
+
+    这些对象具有允许指定构成任务输入和输出的文件、目录和值的方法。事实上，运行时 API 几乎具有与注释相同的特性。它所缺少的只是.`@Nested`。
+
+    
+
+    以之前的模板处理示例为例，看看它如何作为使用运行时 API 的临时任务：
+
+    ```groovy
+    tasks.register('processTemplatesAdHoc') {
+        inputs.property('engine', TemplateEngineType.FREEMARKER)
+        inputs.files(fileTree('src/templates'))
+            .withPropertyName('sourceFiles')
+            .withPathSensitivity(PathSensitivity.RELATIVE)
+        inputs.property('templateData.name', 'docs')
+        inputs.property('templateData.variables', [year: '2013'])
+        outputs.dir(layout.buildDirectory.dir('genOutput2'))
+            .withPropertyName('outputDir')
+    
+        doLast {
+            // Process the templates here
+        }
+    }
+    ```
+
+    执行输出如下：
+
+    ```shell
+    > gradle processTemplatesAdHoc 
+    > Task :processTemplatesAdHoc 
+    
+    BUILD SUCCESSFUL in 0s 
+    3 个可操作的任务：3 个执行
+    ```
+
+    和以前一样，首先，应该为此编写一个自定义任务同时没有任务属性来存储根源文件夹、输出目录的位置或任何其他设置。这是故意强调这样一个事实，即运行时 API 不需要任务具有任何状态。在增量构建方面，上述临时任务的行为与自定义任务类相同。
+
+    所有输入和输出的定义是通过在方法完成 `inputs` 和 `outputs` ，如 `property()`，`files()`和`dir()`。Gradle 对参数值执行最新检查，以确定任务是否需要再次运行。每个方法对应一个增量构建注释，例如 `inputs.property()` 对应 `@Input`、`outputs.dir() `对应 `@OutputDirectory`。
+
+
+
+
+
+增量构建除了加快构建速度，还有一些其他重要的有益点：
+
+- 推断任务依赖关系
+- 输入和输出验证
+- 持续构建
+- 任务并行性
+
+
+
+1. 推断任务依赖关系
+
+    如果一个任务的输入设置为另一个任务的输出，这意味着第一个任务依赖于第二个。如：
+
+    ```groovy
+    tasks.register('packageFiles', Zip) {
+        from processTemplates.map {it.outputs }
+    }
+    ```
+
+    输出如下：
+
+    ```shell
+    > gradle clean packageFiles 
+    > Task :processTemplates 
+    > Task :packageFiles 
+    
+    BUILD SUCCESSFUL in 0s 
+    5 个可操作的任务：4 个已执行，1 个是最新的
+    ```
+
+    显然 Gradle 会自动将` packageFiles` 依赖 `processTemplates`，此过程就是任务依赖关系的推断。
+
+    上面的例子也可以写成：
+
+    ```groovy
+    tasks.register('packageFiles2', Zip) {
+        from processTemplates
+    }
+    ```
+
+    这是因为 `from()` 方法可以接受任务对象作为参数。在幕后，`from()` 使用 `project.files()` 方法包装参数，这反过来将任务的正式输出公开为文件集合。换句话说，这是一个特例！
+
+    
+
+2. 输入和输出验证
+
+    增量构建注解为 Gradle 提供了足够的信息来对注解的属性执行一些基本的验证。特别是，它在任务执行之前对每个属性执行以下操作：
+
+    - `@InputFile` ：验证该属性是否具有值以及该路径是否对应于存在的文件（而不是目录）。
+
+    - `@InputDirectory`： 与 `@InputFile` 相同，但路径必须对应于目录。
+
+    - `@OutputDirectory` ： 验证路径是否与文件不匹配，如果目录不存在，还会创建目录。
+
+        
+
+    此类验证提高了构建的稳健性，能够快速识别与输入和输出相关的问题。
+
+    有时偶尔会想要禁用某些这种验证，特别是当输入文件可能不存在时。这就是 Gradle 提供 `@Optional` 注释的原因：使用它来告诉 Gradle 特定输入是可选的，因此如果相应的文件或目录不存在，构建不应失败。
+
+    
+
+3. 持续构建
+
+    定义任务输入和输出的另一个好处是持续构建。由于 Gradle 知道任务依赖于哪些文件，因此如果任何输入发生变化，它可以自动再次运行任务。通过在运行 Gradle 时激活连续构建（通过`--continuous`或`-t`选项），您将使 Gradle 进入一种状态，在该状态下它会不断检查更改并在遇到此类更改时执行请求的任务。
+
+    
+
+4. 任务并行性
+
+    定义任务输入和输出的最后一个好处是，当使用 “`--parallel`” 选项时，Gradle 可以使用此信息来决定如何运行任务。例如，Gradle 将在选择下一个要运行的任务时检查任务的输出，并避免并发执行写入同一输出目录的任务。
+
+    
+
+
+
+#### 6.10  任务规则
+
+有时，希望任务的行为取决于参数的大范围或无限数值范围。提供此类任务的一种非常好且富有表现力的方式是任务规则：
+
+```groovy
+tasks.addRule("Pattern: ping<ID>") { String taskName ->
+
+    if (taskName.startsWith("ping")) {
+        task(taskName) {
+            doLast {
+                println "Pinging: " + (taskName - 'ping')
+            }
+        }
     }
 }
 ```
+
+输出如下：
+
+```shell
+> gradle -q pingServer1 
+Ping：Server1
+```
+
+规则不仅在从命令行调用任务时使用。还可以在基于规则的任务上创建依赖关系：
+
+```groovy
+tasks.addRule("Pattern: ping<ID>") { String taskName ->
+
+    if (taskName.startsWith("ping")) {
+        task(taskName) {
+            doLast {
+                println "Pinging: " + (taskName - 'ping')
+            }
+        }
+    }
+}
+
+tasks.register('groupPing') {
+    dependsOn 'pingServer1', 'pingServer2'
+}
+```
+
+输出如下：
+
+```shell
+> gradle -q groupPing 
+Ping：Server1 
+Ping：Server2
+```
+
+如果运行 `gradle -q tasks` 将找不到名为 `pingServer1` 或的任务 `pingServer2`，但此脚本正在根据运行这些任务的请求执行逻辑。
+
+
+
+#### 6.11 终结器任务 —— 与依赖相反
+
+当完成的任务计划运行时，终结器任务会自动添加到任务图中。
+
+```groovy
+def taskX = tasks.register('taskX') {
+    doLast {
+        println 'taskX'
+    }
+}
+def taskY = tasks.register('taskY') {
+    doLast {
+        println 'taskY'
+    }
+}
+
+taskX.configure { finalizedBy taskY }
+```
+
+执行 taskX 输出如下：
+
+```shell
+> gradle -q taskX 
+taskX 
+taskY
+```
+
+==即使完成的任务失败，也会执行终结器任务==：
+
+```groovy
+def taskX = tasks.register('taskX') {
+    doLast {
+        println 'taskX'
+        throw new RuntimeException()
+    }
+}
+def taskY = tasks.register('taskY') {
+    doLast {
+        println 'taskY'
+    }
+}
+
+taskX.configure { finalizedBy taskY }
+```
+
+再次执行 taskX，输出如下：
+
+```shell
+> gradle -q taskX 
+taskX 
+taskY
+
+失败：构建失败，出现异常。
+
+* 其中：
+构建文件 '/home/user/gradle/samples/build.gradle' 行：4 
+
+* 出了什么问题：
+任务 ':taskX' 执行失败。
+> java.lang.RuntimeException（无错误消息）
+
+* 尝试：
+使用 --stacktrace 选项运行以获取堆栈跟踪。使用 --info 或 --debug 选项运行以获得更多日志输出。使用 --scan 运行以获得完整的见解。
+
+* 在 https://help.gradle.org 获得更多帮助
+
+BUILD FAILED in 0s
+```
+
+另一方面，==如果完成的任务没有做任何工作，则不会执行终结器任务，例如，如果它被认为是最新的或依赖的任务失败==。
+
+因此，终结器任务在构建创建资源的情况下很有用，无论构建失败还是成功都必须清理该资源。
+
+
+
+#### 6.12 生命周期任务
+
+生命周期任务是本身不工作的任务。它们通常没有任何任务操作。生命周期任务可以代表几个概念：
+
+- 工作流程步骤（例如，使用 运行所有检查`check`）
+
+- 一个可构建的东西（例如，使用 为本机组件创建一个调试 32 位可执行文件`debug32MainExecutable`）
+
+- 执行许多相同逻辑任务的便利任务（例如，使用 运行所有编译任务`compileAll`）
+
+    
+
+基本插件定义了几个 [标准的生命周期的任务](https://docs.gradle.org/current/userguide/base_plugin.html#sec:base_tasks)，如 `build`，`assemble `和 `check`。所有核心语言插件，如 [Java 插件](https://docs.gradle.org/current/userguide/java_plugin.html#java_plugin)，都应用基础插件，因此具有相同的基本生命周期任务集。
+
+除非生命周期任务具有操作，否则其[结果](https://docs.gradle.org/current/userguide/more_about_tasks.html#sec:task_outcomes)由其任务依赖关系决定。如果执行这些依赖项中的任何一个，则将考虑生命周期任务 `EXECUTED`。如果所有任务依赖项都是最新的、已跳过或来自缓存，则将考虑生命周期任务 `UP-TO-DATE`。
 
 
 

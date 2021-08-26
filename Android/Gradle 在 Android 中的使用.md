@@ -1570,6 +1570,80 @@ BUILD FAILED in 0s
 
 
 
+### 7. 构建脚本中的一些知识
+
+
+
+#### 7.1 项目 API
+
+构建脚本通过配置*项目来*描述构建。项目是一个抽象概念，通常将 Gradle 项目映射到需要构建的软件组件，例如库或应用程序。每个构建脚本都与一个 [Project](https://docs.gradle.org/current/dsl/org.gradle.api.Project.html) 类型的对象相关联，并且当构建脚本执行时，它会配置这个 `Project`。
+
+该 `Project` 对象提供了一些标准属性，这些属性在您的构建脚本中可用。下表列出了一些常用的：
+
+|    属性名     |                             类型                             |        默认值        |
+| :-----------: | :----------------------------------------------------------: | :------------------: |
+|   `project`   | [Project](https://docs.gradle.org/current/dsl/org.gradle.api.Project.html) |   该`Project`实例    |
+|    `name`     |                           `String`                           |    项目目录的名称    |
+|    `path`     |                           `String`                           |    项目的绝对路径    |
+| `description` |                           `String`                           |      项目的描述      |
+| `projectDir`  |                            `File`                            |  包含构建脚本的目录  |
+|  `buildDir`   |                            `File`                            | `*projectDir*/build` |
+|    `group`    |                           `Object`                           |    `unspecified`     |
+|   `version`   |                           `Object`                           |    `unspecified`     |
+|     `ant`     | [AntBuilder](https://docs.gradle.org/current/javadoc/org/gradle/api/AntBuilder.html) | 一个`AntBuilder`实例 |
+
+
+
+#### 7.2 [脚本API](https://docs.gradle.org/current/userguide/writing_build_scripts.html#sec:the_script_api)
+
+当 Gradle 执行 Groovy 构建脚本 ( `.gradle`) 时，它会将脚本编译成一个实现 [Script](https://docs.gradle.org/current/dsl/org.gradle.api.Script.html) 的类。这意味着 `Script` 接口声明的所有属性和方法都可以在脚本中使用。 执行 Kotlin 构建脚本 ( `.gradle.kts`) 时，它会将脚本编译为 [KotlinBuildScript](https://gradle.github.io/kotlin-dsl-docs/api/org.gradle.kotlin.dsl/-kotlin-build-script/index.html) 的子类，也是类似。
+
+
+
+#### 7.3 声明变量
+
+1.  局部变量
+
+    局部变量用 `def` 关键字声明。它们只在它们被声明的范围内可见。关键字与使用的构建脚本语言有关：
+
+    ```groovy
+    def dest = 'dest'
+    
+    tasks.register('copy', Copy) {
+        from 'source'
+        into dest
+    }
+    ```
+
+    
+
+2.  额外属性
+
+    可以通过 `ext`  关键字为 Project 设置额外的属性或者使用 `ext` 块一次添加多个属性：
+
+    ```groovy
+    // build.gradle
+    
+    plugins {
+        id 'java-library'
+    }
+    
+    ext {
+        springVersion = "3.1.0.RELEASE"
+        emailNotification = "build@master.org"
+    }
+    ```
+
+注意： ==这里的变量并不仅仅可以为普通对象，也可以是一个闭包==。因为闭包在 Groovy 中也是一个对象。
+
+
+
+#### 7.4 配置对象
+
+
+
+
+
 ### 1.4 Gradle 项目依赖管理
 
 > 依赖管理的条件：

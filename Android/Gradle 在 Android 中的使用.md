@@ -1640,6 +1640,526 @@ BUILD FAILED in 0s
 
 #### 7.4 配置对象
 
+1. 配置任意对象
+
+    可以通过以下非常易读的方式配置任意对象
+
+    ```groovy
+    import java.text.FieldPosition
+    
+    tasks.register('configure') {
+        doLast {
+            def pos = configure(new FieldPosition(10)) {
+                beginIndex = 1
+                endIndex = 5
+            }
+            println pos.beginIndex
+            println pos.endIndex
+        }
+    }
+    ```
+
+    输出如下：
+
+    ```groovy
+    > gradle -q configure
+    1
+    5
+    ```
+
+    
+
+2. 使用外部脚本配置任意对象
+
+    build.gradle：
+
+    ```groovy
+    tasks.register('configure') {
+        doLast {
+            def pos = new java.text.FieldPosition(10)
+            // Apply the script
+            apply from: 'other.gradle', to: pos
+            println pos.beginIndex
+            println pos.endIndex
+        }
+    }
+    ```
+
+    other.gradle：
+
+    ```groovy
+    // Set properties.
+    beginIndex = 1
+    endIndex = 5
+    ```
+
+    输出如下：
+
+    ```shell
+    > gradle -q 配置
+    1 
+    5
+    ```
+
+    
+
+#### 7.5 默认导入
+
+为了使构建脚本更加简洁，Gradle 会自动向 Gradle 脚本添加一组导入语句。这意味着 `throw new org.gradle.api.tasks.StopExecutionException()` 可以使用`throw new StopExecutionException() ` 代替，具体默认导入包见：[Gradle 默认导入](https://docs.gradle.org/current/userguide/writing_build_scripts.html#script-default-imports)
+
+
+
+------
+
+
+
+### 8. 处理文件
+
+几乎每个 Gradle 构建都以某种方式与文件交互：考虑源文件、文件依赖项、报告等。这就是 Gradle 附带一个全面的 API 的原因，它可以轻松执行所需的文件操作。
+
+
+
+API 主要有两个部分：
+
+- 指定要处理的文件和目录
+- 指定如何处理它们
+
+
+
+#### 8.1 复制单个文件
+
+可以通过创建 Gradle 的内置 [复制](https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Copy.html) 任务的实例并使用文件的位置和要放置它的位置对其进行配置来复制文件，如下：
+
+```groovy
+tasks.register('copyReport', Copy) {
+    from layout.buildDirectory.file("reports/my-report.pdf")
+    into layout.buildDirectory.dir("toArchive")
+}
+```
+
+甚至可以在没有 `file()` 方法的情况下直接使用路径（*使用隐式字符串路径*）：
+
+```groovy
+tasks.register('copyReport2', Copy) {
+    from "$buildDir/reports/my-report.pdf"
+    into "$buildDir/toArchive"
+}
+```
+
+尽管硬编码路径可以用作简单的示例，但它们也会使构建变得脆弱。最好使用可靠的单一事实来源，例如任务或共享项目属性。在以下修改后的示例中，我们使用在其他地方定义的报告任务，该任务将报告的位置存储在其 `outputFile` 属性中：
+
+```groovy
+tasks.register('copyReport3', Copy) {
+    from myReportTask.outputFile
+    into archiveReportsTask.dirToArchive
+}
+```
+
+
+
+#### 8.2 复制多个文件
+
+通过向 `from()` 方法提供多个参数，可以轻松地实现复制多个文件，如：
+
+```groovy
+tasks.register('copyReportsForArchiving', Copy) {
+    from layout.buildDirectory.file("reports/my-report.pdf"), layout.projectDirectory.file("src/docs/manual.pdf")
+    into layout.buildDirectory.dir("toArchive")
+}
+```
+
+现在考虑另一个示例：如果想复制目录中的所有 PDF 而不必指定每个 PDF 怎么办？为此，请将包含或排除模式附加到复制规范。这里使用字符串模式来仅包含 PDF：
+
+```groovy
+tasks.register('copyPdfReportsForArchiving', Copy) {
+    from layout.buildDirectory.dir("reports")
+    include "*.pdf"   // 排除使用  exclude
+    into layout.buildDirectory.dir("toArchive")
+}
+```
+
+需要注意的是：==这种方式并不会复制子目录中的 PDF，若想复制子目录中的文件，需要使用 Ant 样式的 glob 模式 ( `**/*`)==。如：
+
+```groovy
+tasks.register('copyAllPdfReportsForArchiving', Copy) {
+    from layout.buildDirectory.dir("reports")
+    include "**/*.pdf"
+    into layout.buildDirectory.dir("toArchive")
+}
+```
+
+但要注意此方式的副作用：它会复制子目录以及子目录中的文件，如果只想复制没有目录结构的文件，则需要使用显式表达式。在[文件树](https://docs.gradle.org/current/userguide/working_with_files.html#sec:file_trees)的部分会更多地讨论文件树和文件集合之间的区别。
+
+
+
+#### 8.3 复制目录层次结构
+
+有时不仅需要复制文件，还需要复制它们所在的目录结构。这是指定目录作为 `from()` 参数时的默认行为，如以下示例所示，该示例将 `reports` 目录中的所有内容（包括其所有子目录）复制到目标：
+
+```groovy
+tasks.register('copyReportsDirForArchiving', Copy) {
+    from layout.buildDirectory.dir("reports")
+    into layout.buildDirectory.dir("toArchive")
+}
+```
+
+此种方式仅仅会将 reports 下的文件和目录复制到 toArchive 目录下，而 reports  目录本身不会被复制。那么如何确保 `reports` 自己也被复制呢？这就需要添加为包含模式：
+
+```groovy
+tasks.register('copyReportsDirForArchiving2', Copy) {
+    from(layout.buildDirectory) {
+        include "reports/**"  // 这里的 include 仅使用于这个 from 方法
+    }
+    into layout.buildDirectory.dir("toArchive")
+}
+```
+
+
+
+#### 8.4 创建档案（zip、tar 等）
+
+从 Gradle 的角度来看，将文件打包到存档中实际上是一个副本，其中目标是存档文件而不是文件系统上的目录。这意味着创建档案看起来很像复制，具有所有相同的功能！
+
+最简单的情况涉及归档目录的全部内容，本示例通过创建 `toArchive` 目录的 ZIP 来演示：
+
+```groovy
+tasks.register('packageDistribution', Zip) {
+    archiveFileName = "my-distribution.zip"  // 指定压缩包名称
+    
+    from layout.buildDirectory.dir("toArchive")
+    destinationDirectory = layout.buildDirectory.dir('dist')
+}
+```
+
+注意这里==指定压缩包的存放目的地并不是使用 `into()`==。
+
+每种类型的存档都有自己的任务类型，最常见的是 [Zip](https://docs.gradle.org/current/dsl/org.gradle.api.tasks.bundling.Zip.html)、[Tar](https://docs.gradle.org/current/dsl/org.gradle.api.tasks.bundling.Tar.html) 和 [Jar](https://docs.gradle.org/current/dsl/org.gradle.api.tasks.bundling.Jar.html)。它们都共享大部分配置选项`Copy`，包括过滤和重命名。
+
+
+
+最常见的场景之一是将文件复制到存档的指定子目录中。例如，假设要将所有 PDF 打包到 `docs` 存档根目录中的一个目录中，但 `docs` 目录并不存在，因此必须将其创建为存档的一部分。可以通过 `into()` 为  PDF 添加一个声明来做到这一点：
+
+```groovy
+plugins {
+    id 'base'
+}
+
+version = "1.0.0"
+
+tasks.register('packageDistribution', Zip) {
+    from(layout.buildDirectory.dir("toArchive")) {
+        exclude "**/*.pdf"
+    }
+
+    from(layout.buildDirectory.dir("toArchive")) {
+        include "**/*.pdf"
+        into "docs"
+    }
+}
+```
+
+
+
+#### 8.5 解压档案
+
+存档实际上是自包含的文件系统，因此解压它们就是将文件从该文件系统复制到本地文件系统，甚至复制到另一个存档中。Gradle 通过提供一些包装函数来实现这一点，这些函数使档案可用作文件的分层集合（[文件树](https://docs.gradle.org/current/userguide/working_with_files.html#sec:file_trees)）。
+
+可以使用 [Project.zipTree(java.lang.Object)](https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:zipTree(java.lang.Object)) 和 [Project.tarTree(java.lang.Object)](https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:tarTree(java.lang.Object)) 这两个函数从相应的存档文件生成 [FileTree](https://docs.gradle.org/current/javadoc/org/gradle/api/file/FileTree.html)。然后可以在 `from()` 规范中使用该文件树，如下所示：
+
+```groovy
+tasks.register('unpackFiles', Copy) {
+    from zipTree("src/resources/thirdPartyResources.zip") //解压生成文件树 
+    into layout.buildDirectory.dir("resources")
+}
+```
+
+同样，也可以通过 [过滤器](https://docs.gradle.org/current/userguide/working_with_files.html#sec:filtering_files) 控制解包哪些文件，甚至可以在解包时 [重命名文件](https://docs.gradle.org/current/userguide/working_with_files.html#sec:renaming_files)，同时借助 [eachFile()](https://docs.gradle.org/current/dsl/org.gradle.api.tasks.AbstractCopyTask.html#eachFile(org.gradle.api.Action)) 方法可以进行更高级的处理。例如，将存档的不同子树提取到目标目录中的不同路径中。
+
+
+
+以下示例使用该方法将存档 `libs` 目录中的文件提取到根目标目录中，而不是提取到 `libs` 子目录中：
+
+```groovy
+tasks.register('unpackLibsDirectory', Copy) {
+    from(zipTree("src/resources/thirdPartyResources.zip")) {
+        include "libs/**"   // 仅提取驻留在libs目录中的文件子集
+        eachFile { fcd ->
+            fcd.relativePath = new RelativePath(true, fcd.relativePath.segments.drop(1))   // 通过 libs 从文件路径中删除段，将提取文件的路径重新映射到目标目录
+        }
+        includeEmptyDirs = false     // 忽略因重新映射而产生的空目录
+    }
+    into layout.buildDirectory.dir("resources")
+}
+```
+
+注意：如果您是一名 Java 开发人员并且想知道为什么没有 `jarTree()` 方法，那是因为 `zipTree()` 非常适用于 JAR、WAR 和 EAR。
+
+
+
+#### 8.6 创建 Uber 或 Fat JAR
+
+在 Java 中，应用程序及其依赖项通常被打包为单独 的 JAR。但现在有另一种常见的需求：将依赖项的类和资源直接放入应用程序 JAR 中，创建所谓的 uber 或 fat JAR。
+
+Gradle 使这种需求易于实现，如下就是将其他 JAR 文件的内容复制到应用程序 JAR 中：
+
+```groovy
+plugins {
+    id 'java'
+}
+
+version = '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'commons-io:commons-io:2.6'
+}
+
+tasks.register('uberJar', Jar) {
+    archiveClassifier = 'uber'
+
+    from sourceSets.main.output
+
+    dependsOn configurations.runtimeClasspath  // 获取项目的运行时依赖项,依赖此任务，此任务会先执行 
+    from {
+        configurations.runtimeClasspath.findAll { it.name.endsWith('jar') }.collect { zipTree(it) }
+    }
+}
+```
+
+
+
+#### 8.7  创建目录
+
+许多任务需要创建目录来存储它们生成的文件，这就是 Gradle 在明确定义文件和目录输出时自动管理任务的这方面的原因。所有核心 Gradle 任务都确保在必要时使用增量构建创建它们需要的任何输出目录。
+
+如果需要手动创建目录，可以在构建脚本或自定义任务实现中使用 [Project.mkdir(java.lang.Object)](https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:mkdir(java.lang.Object)) 方法，如下：
+
+```groovy
+tasks.register('ensureDirectory') {
+    doLast {
+        mkdir "images" // 如果该目录已存在，则不执行任何操作
+    }
+}
+```
+
+
+
+#### 8.8 移动文件和目录
+
+Gradle 没有用于移动文件和目录的 API，但可以使用 [Apache Ant 集成](https://docs.gradle.org/current/userguide/ant.html#ant) 轻松完成此操作，如下例所示：
+
+```groovy
+tasks.register('moveReports') {
+    doLast {
+        ant.move file: "${buildDir}/reports",
+                 todir: "${buildDir}/toArchive"
+    }
+}
+```
+
+这不是一个常见的要求，应该谨慎使用，因为会丢失信息并且很容易破坏构建，通常最好复制目录和文件。
+
+
+
+#### 8.9 复制时重命名文件
+
+Gradle 允许使用 `rename()` 配置将其作为复制规范的一部分来执行，以下示例从具有它的任何文件的名称中删除 “-staging-” 标记：
+
+```groovy
+tasks.register('copyFromStaging', Copy) {
+    from "src/main/webapp"
+    into layout.buildDirectory.dir('explodedWar')
+
+    rename '(.+)-staging(.+)', '$1$2'  // 使用正则去除文件名中的 -staging
+}
+```
+
+可以为此使用正则表达式，如上例所示，或者使用更复杂的逻辑来确定目标文件名。例如，以下任务会截断文件名：
+
+```groovy
+tasks.register('copyWithTruncate', Copy) {
+    from layout.buildDirectory.dir("reports")
+    rename { String filename ->
+        if (filename.size() > 10) {
+            return filename[0..7] + "~" + filename.size()
+        }
+        else return filename
+    }
+    into layout.buildDirectory.dir("toArchive")
+}
+```
+
+
+
+#### 8.10 删除文件和目录
+
+可以使用 [Delete](https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Delete.html) 任务或 [Project.delete(org.gradle.api.Action)](https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:delete(org.gradle.api.Action)) 方法轻松删除文件和目录。
+
+
+
+例如，以下任务删除构建输出目录的全部内容：
+
+```groovy
+tasks.register('myClean', Delete) {
+    delete buildDir
+}
+```
+
+==如果想更好地控制删除哪些文件，则不能像复制文件一样使用包含和排除==。相反，必须使用内置的过滤机制 `FileCollection` 和 `FileTree`。下面的示例是从源目录中清除临时文件：
+
+```groovy
+tasks.register('cleanTempFiles', Delete) {
+    delete fileTree("src").matching {
+        include "**/*.tmp"
+    }
+}
+```
+
+
+
+#### 8.11 深入的文件路径
+
+为了对文件执行某些操作，需要知道它在哪里，这就是文件路径提供的信息。Gradle 建立在标准 Java `File` 类的基础上，该类表示单个文件的位置，并提供新的 API 来处理路径集合。
+
+
+
+##### 8.11.1 硬编码的文件路径
+
+直接使用字符串代表文件路径这就是硬编码，虽易于理解，但对于真正的构建来说这不是一个好的做法。问题是路径经常改变，需要改变的地方越多，就越有可能错过一个并破坏构建。
+
+
+
+在可能的情况下，应该使用任务、任务属性和 [项目属性](https://docs.gradle.org/current/userguide/writing_build_scripts.html#sec:extra_properties)（按优先顺序）来配置文件路径。例如，如果要创建一个打包 Java 应用程序的已编译类的任务，目标应该是这样的：
+
+```groovy
+def archivesDirPath = layout.buildDirectory.dir('archives')
+
+tasks.register('packageClasses', Zip) {
+    archiveAppendix = "classes"
+    destinationDirectory = archivesDirPath
+
+    from compileJava
+}
+```
+
+
+
+##### 8.11.2 单个文件和目录
+
+Gradle 提供了 [Project.file(java.lang.Object)](https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:file(java.lang.Object)) 方法来指定单个文件或目录的位置。相对路径是相对于项目目录解析的，而绝对路径保持不变。
+
+
+
+以下是使用 `file()` 具有不同类型参数的方法的一些示例：
+
+```groovy
+// 使用相对路径
+File configFile = file('src/config.xml')
+
+// 使用绝对路径
+configFile = file(configFile.absolutePath)
+
+// Using a File object with a relative path
+configFile = file(new File('src/config.xml'))
+
+// Using a java.nio.file.Path object with a relative path
+configFile = file(Paths.get('src', 'config.xml'))
+
+// Using an absolute java.nio.file.Path object
+configFile = file(Paths.get(System.getProperty('user.home')).resolve('global-config.xml'))
+```
+
+注意： ==永远不要使用 `new File(relative path)` ，因为这会创建一个相对于当前工作目录 (CWD) 的路径。Gradle 不能保证 CWD 的位置，这意味着依赖它的构建可能随时中断==。
+
+
+
+在多项目构建中，该 `file()` 方法得到的相对路径始终为相对于当前项目目录的路径，该目录可能是子项目。如果要使用相对于*根项目*目录的路径，则需要使用特殊的 [Project.getRootDir()](https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:rootDir) 属性来构造绝对路径，如下所示：
+
+```groovy
+File configFile = file("$rootDir/shared/config.xml")   //rootDir 为 Project 的属性，它的 setter/ getter 方法在 Groovy中可以简化 
+```
+
+
+
+##### 8.11.3 文件集
+
+一个文件集合是由多个文件组成的集合，这些文件可以没有任何相关性。
+
+
+
+指定文件集合的推荐方法是使用 [ProjectLayout.files(java.lang.Object...)](https://docs.gradle.org/current/javadoc/org/gradle/api/file/ProjectLayout.html#files-java.lang.Object...-) 方法，该方法返回一个 `FileCollection` 实例。这种方法非常灵活，允许传递多个字符串、`File` 实例、字符串集合、`Files` 集合等等。如果任务已[定义输出](https://docs.gradle.org/current/userguide/more_about_tasks.html#sec:task_inputs_outputs)，甚至可以将任务作为参数传递。
+
+
+
+与  `Project.file()` 方法一样， 以下示例演示了可以使用的各种参数类型中的一些  -—— 字符串、实例、列表和 `File Path`：
+
+```groovy
+FileCollection collection = layout.files('src/file1.txt',
+                                  new File('src/file2.txt'),
+                                  ['src/file3.csv', 'src/file4.csv'],
+                                  Paths.get('src', 'file5.txt'))
+```
+
+
+
+文件集合在 Gradle 中有一些重要的属性，它们可以：
+
+- 懒惰创建
+
+- 迭代
+
+- 过滤
+
+- 合并
+
+    
+
+1. 懒惰创建
+
+    当需要在构建运行时评估构成集合的文件时，文件集合的*延迟创建*非常有用。在下面的例子中，我们查询文件系统以找出特定目录中存在哪些文件，然后将它们组合成一个文件集合：
+
+    ```groovy
+    tasks.register('list') {
+        doLast {
+            File srcDir
+    
+            // Create a file collection using a closure
+            collection = layout.files { srcDir.listFiles() }
+    
+            srcDir = file('src')
+            println "Contents of $srcDir.name"
+            collection.collect { relativePath(it) }.sort().each { println it }
+    
+            srcDir = file('src2')
+            println "Contents of $srcDir.name"
+            collection.collect { relativePath(it) }.sort().each { println it }
+        }
+    }
+    ```
+
+    执行输出如下：
+
+    ```shell
+    > gradle -q list 
+    src 
+    src/dir1 
+    src/file1.txt 
+    src2 
+    src2/dir1 
+    Contents of src2/dir2
+    ```
+
+    惰性创建的关键是将闭包（在 Groovy 中）或 `Provider`（在 Kotlin 中）传递给 `files()` 方法，同时闭包中的返回值为 `files()` 类型，例如 `List<File>`，`String`，`FileCollection` 等。
+
+
+
+
+
+------
+
 
 
 

@@ -755,172 +755,174 @@ println tasks.getByPath(':project-a:hello').path
 
 #### 6.3 配置任务 —— 类型、参数和依赖
 
-1.  使用系统预置 Task
 
-    自定义 task 时，还可以使用系统提供的各种显式 task 来完成相应的任务。如：
 
-    ```groovy
-    tasks.register('copy', Copy) {
-       from 'src'
-       into 'dst'
-       include('**/*.txt', '**/*.xml', '**/*.properties')
+##### 6.3.1 使用系统预置 Task
+
+自定义 task 时，还可以使用系统提供的各种显式 task 来完成相应的任务。如：
+
+```groovy
+tasks.register('copy', Copy) {
+   from 'src'
+   into 'dst'
+   include('**/*.txt', '**/*.xml', '**/*.properties')
+}
+```
+
+如上的 task 就是使用 Copy 这个显式 task 将 src 中的文件复制到 dst 。
+
+除了 Copy 之外，还有很多其他显式的 task 可用，比如可以通过自定义 task 实现将编译后的 .class 输出到某一特定路径，具体实现如下所示：
+
+```groovy
+tasks.register('javaCompile', JavaCompile) { //  1.指定是编译 Java 类的 task
+    source('src')               //  2.指定需要编译类的文件路径
+    include {
+        'Demo.java'				// 3.指定需要编译哪一个 Java 类
     }
-    ```
+    classpath(files("."))			   // 4.设置用于编译源文件的类路径。
+    destinationDir(file('./build'))   // 5.指定编译之后，生成 .class 文件的保存路径
+}
+```
 
-    如上的 task 就是使用 Copy 这个显式 task 将 src 中的文件复制到 dst 。
+gradle 提供的预置 Task Types 非常多，具体参见：https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Copy.html 网页左侧的 Task types。
 
-    除了 Copy 之外，还有很多其他显式的 task 可用，比如可以通过自定义 task 实现将编译后的 .class 输出到某一特定路径，具体实现如下所示：
 
-    ```groovy
-    tasks.register('javaCompile', JavaCompile) { //  1.指定是编译 Java 类的 task
-        source('src')               //  2.指定需要编译类的文件路径
-        include {
-            'Demo.java'				// 3.指定需要编译哪一个 Java 类
-        }
-        classpath(files("."))			   // 4.设置用于编译源文件的类路径。
-        destinationDir(file('./build'))   // 5.指定编译之后，生成 .class 文件的保存路径
+
+##### 6.3.2 将参数传递给任务构造函数
+
+与 `Task` 在创建后配置可变属性相反，也可以将参数值传递给 `Task` 类的构造函数。为了将值传递给 `Task` 的构造函数，必须使用 `@javax.inject.Inject` 。如下：
+
+```groovy
+abstract class CustomTask extends DefaultTask {
+    final String message
+    final int number
+
+    @Inject
+    CustomTask(String message, int number) {
+        this.message = message
+        this.number = number
     }
-    ```
+}
+```
 
-    gradle 提供的预置 Task Types 非常多，具体参见：https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Copy.html 网页左侧的 Task types。
+然后可以创建一个任务，在参数列表的末尾传递构造函数参数。
 
-    
+```groovy
+tasks.register('myTask', CustomTask, 'hello', 42)
+```
 
-2.  将参数传递给任务构造函数
 
-    与 `Task` 在创建后配置可变属性相反，也可以将参数值传递给 `Task` 类的构造函数。为了将值传递给 `Task` 的构造函数，必须使用 `@javax.inject.Inject` 。如下：
 
-    ```groovy
-    abstract class CustomTask extends DefaultTask {
-        final String message
-        final int number
-    
-        @Inject
-        CustomTask(String message, int number) {
-            this.message = message
-            this.number = number
-        }
-    }
-    ```
+##### 6.3.3 向 Task  添加依赖 Task
 
-    然后可以创建一个任务，在参数列表的末尾传递构造函数参数。
+1.  使用任务名称定义依赖项
+
+    任务名称可以为同一项目中的任务，也可以是其他项目中的任务。要引用另一个项目中的任务，需要在任务名称前加上它所属项目的路径。下面是一个 `project-a:taskX` 添加依赖 `project-b:taskY` 的例子：
 
     ```groovy
-    tasks.register('myTask', CustomTask, 'hello', 42)
-    ```
-
-    
-
-3.  向 Task  添加依赖 Task
-
-    -   使用任务名称定义依赖项
-
-        任务名称可以为同一项目中的任务，也可以是其他项目中的任务。要引用另一个项目中的任务，需要在任务名称前加上它所属项目的路径。下面是一个 `project-a:taskX` 添加依赖 `project-b:taskY` 的例子：
-
-        ```groovy
-        project('project-a') {
-            tasks.register('taskX')  {
-                dependsOn ':project-b:taskY'
-                doLast {
-                    println 'taskX'
-                }
-            }
-        }
-        
-        project('project-b') {
-            tasks.register('taskY') {
-        		println '正在配置 :project-b:taskY'  // 配置阶段就会执行（Gradle Async）
-                doLast {
-                    println 'taskY'
-                }
-            }
-        }
-        ```
-
-        输出如下：
-
-        ```shell
-        > gradle -q taskX 
-        taskY 
-        taskX
-        ```
-
-        
-
-    -   使用 `TaskProvider` 对象定义依赖项
-
-        除了任务名称，还可以使用 `TaskProvider` 声明依赖项，如：
-
-        ```groovy
-        def taskX = tasks.register('taskX') {
+    project('project-a') {
+        tasks.register('taskX')  {
+            dependsOn ':project-b:taskY'
             doLast {
                 println 'taskX'
             }
         }
-        
-        def taskY = tasks.register('taskY') {
+    }
+    
+    project('project-b') {
+        tasks.register('taskY') {
+    		println '正在配置 :project-b:taskY'  // 配置阶段就会执行（Gradle Async）
             doLast {
                 println 'taskY'
             }
         }
-        
-        // 通过此方法配置任务依赖
-        taskX.configure {
-            dependsOn taskY
+    }
+    ```
+
+    输出如下：
+
+    ```shell
+    > gradle -q taskX 
+    taskY 
+    taskX
+    ```
+
+    
+
+2.  使用 `TaskProvider` 对象定义依赖项
+
+    除了任务名称，还可以使用 `TaskProvider` 声明依赖项，如：
+
+    ```groovy
+    def taskX = tasks.register('taskX') {
+        doLast {
+            println 'taskX'
         }
-        ```
-
-        执行后输出结果与使用任务名称一致。
-
-        
-
-    -   使用惰性块定义多个依赖
-
-        使用惰性块时可以定义 Task 依赖单个 `Task` 或一组 `Task` 对象。以下示例 `taskX` 依赖项目中名称所有以 `lib` 开头的任务：
-
-        ```groovy
-        def taskX = tasks.register('taskX') {
-            doLast {
-                println 'taskX'
-            }
+    }
+    
+    def taskY = tasks.register('taskY') {
+        doLast {
+            println 'taskY'
         }
-        
-        // Using a Gradle Provider
-        taskX.configure {
-            dependsOn(provider {
-                tasks.findAll { task -> task.name.startsWith('lib') }
-            })
-        }
-        
-        tasks.register('lib1') {
-            doLast {
-                println('lib1')
-            }
-        }
-        
-        tasks.register('lib2') {
-            doLast {
-                println('lib2')
-            }
-        }
-        
-        tasks.register('notALib') {
-            doLast {
-                println('notALib')
-            }
-        }
-        ```
+    }
+    
+    // 通过此方法配置任务依赖
+    taskX.configure {
+        dependsOn taskY
+    }
+    ```
 
-        执行输出如下：
+    执行后输出结果与使用任务名称一致。
 
-        ```shell
-        > gradle -q taskX 
-        lib1 
-        lib2 
-        taskX
-        ```
+    
 
-        
+3.  使用惰性块定义多个依赖
+
+    使用惰性块时可以定义 Task 依赖单个 `Task` 或一组 `Task` 对象。以下示例 `taskX` 依赖项目中名称所有以 `lib` 开头的任务：
+
+    ```groovy
+    def taskX = tasks.register('taskX') {
+        doLast {
+            println 'taskX'
+        }
+    }
+    
+    // Using a Gradle Provider
+    taskX.configure {
+        dependsOn(provider {
+            tasks.findAll { task -> task.name.startsWith('lib') }
+        })
+    }
+    
+    tasks.register('lib1') {
+        doLast {
+            println('lib1')
+        }
+    }
+    
+    tasks.register('lib2') {
+        doLast {
+            println('lib2')
+        }
+    }
+    
+    tasks.register('notALib') {
+        doLast {
+            println('notALib')
+        }
+    }
+    ```
+
+    执行输出如下：
+
+    ```shell
+    > gradle -q taskX 
+    lib1 
+    lib2 
+    taskX
+    ```
+
+    
 
 #### 6.4 Task 执行顺序控制
 
@@ -1040,59 +1042,61 @@ tasks.register('copy', Copy) {
 
 #### 6.6 跳过任务
 
-1. 使用谓词
 
-    使用 `onlyIf()` 方法将谓词附加到任务，仅当谓词评估为真时才执行任务的操作。如下：
 
-    ```groovy
-    def hello = tasks.register('hello') {
-        doLast {
-            println 'hello world'
+##### 6.6.1 使用谓词
+
+使用 `onlyIf()` 方法将谓词附加到任务，仅当谓词评估为真时才执行任务的操作。如下：
+
+```groovy
+def hello = tasks.register('hello') {
+    doLast {
+        println 'hello world'
+    }
+}
+
+hello.configure {
+    onlyIf { !project.hasProperty('skipHello') }  //仅当闭包返回值为真时才执行任务
+}
+```
+
+
+
+##### 6.6.2 使用异常停止执行
+
+当任务执行时满足某些条件，可以抛出 `StopExecutionException` 异常，这会将当前任务的后续动作都跳过，执行下一个任务。如：
+
+```groovy
+def compile = tasks.register('compile') {
+    doLast {
+        println 'We are doing the compile.'
+    }
+}
+
+compile.configure {
+    doFirst {
+        // 这需要替换为满足的真实条件
+        if (true) {
+            throw new StopExecutionException()
         }
     }
-    
-    hello.configure {
-        onlyIf { !project.hasProperty('skipHello') }  //仅当闭包返回值为真时才执行任务
+}
+tasks.register('myTask') {
+    dependsOn('compile')
+    doLast {
+        println 'I am not affected'
     }
-    ```
+}
+```
 
-    
+输出如下：
 
-2. 使用异常停止执行
+```shell
+> gradle -q myTask
+I am not affected
+```
 
-    当任务执行时满足某些条件，可以抛出 `StopExecutionException` 异常，这会将当前任务的后续动作都跳过，执行下一个任务。如：
 
-    ```groovy
-    def compile = tasks.register('compile') {
-        doLast {
-            println 'We are doing the compile.'
-        }
-    }
-    
-    compile.configure {
-        doFirst {
-            // 这需要替换为满足的真实条件
-            if (true) {
-                throw new StopExecutionException()
-            }
-        }
-    }
-    tasks.register('myTask') {
-        dependsOn('compile')
-        doLast {
-            println 'I am not affected'
-        }
-    }
-    ```
-
-    输出如下：
-
-    ```shell
-    > gradle -q myTask
-    I am not affected
-    ```
-
-    
 
 #### 6.7 启用和禁用任务
 
@@ -1153,190 +1157,190 @@ tasks.register("hangingTask") {
 
 
 
-1. 自定义任务类型
+##### 6.9.1 自定义任务类型
 
-    如果自定义任务作为类来实现，那么只需两个步骤即可使其与增量构建一起工作：
+如果自定义任务作为类来实现，那么只需两个步骤即可使其与增量构建一起工作：
 
-    - 为每个任务的输入和输出创建类型化属性（通过 getter 方法）
+- 为每个任务的输入和输出创建类型化属性（通过 getter 方法）
 
-    - 为每个属性添加适当的注释，注释必须放在 getter 或 Groovy 属性上
+- 为每个属性添加适当的注释，注释必须放在 getter 或 Groovy 属性上
 
-        
-
-    Gradle 支持三个主要类别的输入和输出：
-
-    - 简单值：字符串和数字之类实现了 Serializable 的类型
-
-    - 文件系统类型：包括标准`File` 类，但也包括 Gradle 的 [FileCollection](https://docs.gradle.org/current/javadoc/org/gradle/api/file/FileCollection.html) 类型及其子类
-
-    - 嵌套值：不符合其他两个类别但具有自己的输入或输出属性的自定义类型
-
-        
-
-    例如，假设有一个任务处理不同类型的模板，例如 FreeMarker、Velocity、Moustache 等。它获取模板源文件并将它们与一些模型数据组合以生成模板文件的填充版本。
-
-    此任务将具有三个输入和一个输出：
-
-    - 模板源文件
-    - 模型数据
-    - 模板引擎
-    - 输出文件的写入位置
-
-    当编写自定义任务类时，很容易通过注释将属性注册为输入或输出。如：
-
-    buildSrc/src/main/java/org/example/ProcessTemplates.java
-
-    ```java
-    package org.example;
     
-    import java.util.HashMap;
-    import org.gradle.api.DefaultTask;
-    import org.gradle.api.file.ConfigurableFileCollection;
-    import org.gradle.api.file.DirectoryProperty;
-    import org.gradle.api.provider.Property;
-    import org.gradle.api.tasks.*;
+
+Gradle 支持三个主要类别的输入和输出：
+
+- 简单值：字符串和数字之类实现了 Serializable 的类型
+
+- 文件系统类型：包括标准`File` 类，但也包括 Gradle 的 [FileCollection](https://docs.gradle.org/current/javadoc/org/gradle/api/file/FileCollection.html) 类型及其子类
+
+- 嵌套值：不符合其他两个类别但具有自己的输入或输出属性的自定义类型
+
     
-    public abstract class ProcessTemplates extends DefaultTask {
-    
-        @Input
-        public abstract Property<TemplateEngineType> getTemplateEngine();  //模板引擎
-    
-        @InputFiles
-        public abstract ConfigurableFileCollection getSourceFiles();   // 模板源文件
-    
-        @Nested
-        public abstract TemplateData getTemplateData();              // 模型数据
-    
-        @OutputDirectory
-        public abstract DirectoryProperty getOutputDir();           //输出文件的写入位置
-    
-        @TaskAction
-        public void processTemplates() {
-            // ...
-        }
+
+例如，假设有一个任务处理不同类型的模板，例如 FreeMarker、Velocity、Moustache 等。它获取模板源文件并将它们与一些模型数据组合以生成模板文件的填充版本。
+
+此任务将具有三个输入和一个输出：
+
+- 模板源文件
+- 模型数据
+- 模板引擎
+- 输出文件的写入位置
+
+当编写自定义任务类时，很容易通过注释将属性注册为输入或输出。如：
+
+buildSrc/src/main/java/org/example/ProcessTemplates.java
+
+```java
+package org.example;
+
+import java.util.HashMap;
+import org.gradle.api.DefaultTask;
+import org.gradle.api.file.ConfigurableFileCollection;
+import org.gradle.api.file.DirectoryProperty;
+import org.gradle.api.provider.Property;
+import org.gradle.api.tasks.*;
+
+public abstract class ProcessTemplates extends DefaultTask {
+
+    @Input
+    public abstract Property<TemplateEngineType> getTemplateEngine();  //模板引擎
+
+    @InputFiles
+    public abstract ConfigurableFileCollection getSourceFiles();   // 模板源文件
+
+    @Nested
+    public abstract TemplateData getTemplateData();              // 模型数据
+
+    @OutputDirectory
+    public abstract DirectoryProperty getOutputDir();           //输出文件的写入位置
+
+    @TaskAction
+    public void processTemplates() {
+        // ...
     }
-    ```
+}
+```
 
-    buildSrc/src/main/java/org/example/TemplateData.java
+buildSrc/src/main/java/org/example/TemplateData.java
 
-    ```java
-    package org.example;
-    
-    import org.gradle.api.provider.MapProperty;
-    import org.gradle.api.provider.Property;
-    import org.gradle.api.tasks.Input;
-    
-    public abstract class TemplateData {
-    
-        @Input
-        public abstract Property<String> getName();
-    
-        @Input
-        public abstract MapProperty<String, String> getVariables();
+```java
+package org.example;
+
+import org.gradle.api.provider.MapProperty;
+import org.gradle.api.provider.Property;
+import org.gradle.api.tasks.Input;
+
+public abstract class TemplateData {
+
+    @Input
+    public abstract Property<String> getName();
+
+    @Input
+    public abstract MapProperty<String, String> getVariables();
+}
+```
+
+执行 `gradle processTemplates` 输出如下：
+
+```shell
+> gradle processTemplates
+> 任务：processTemplates
+
+在 0 秒内构建成功
+3 个可操作的任务：3 个最新的
+```
+
+再次执行输出：
+
+```shell
+> gradle processTemplates
+> 任务：processTemplates 最新
+
+在 0 秒内构建成功
+3 个可操作的任务：3 个最新的
+```
+
+上述这些带注释的属性意味着，如果自上次 Gradle 执行任务以来，源文件、模板引擎、模型数据或生成的文件都没有发生变化，Gradle 将跳过该任务，这通常会节省大量时间。
+
+
+
+接下来，就看看 *增量构建属性* 中有哪些可以使用的注释：
+
+|           注解            |                     预期属性类型                     |                             描述                             |
+| :-----------------------: | :--------------------------------------------------: | :----------------------------------------------------------: |
+|         `@Input`          |               任何 `Serializable` 类型               |                       一个简单的输入值                       |
+|       `@InputFile`        |                       `File`*                        |                   单个输入文件（不是目录）                   |
+|     `@InputDirectory`     |                       `File`*                        |                   单个输入目录（不是文件）                   |
+|       `@InputFiles`       |                  `Iterable<File>`*                   |                     输入文件和目录的迭代                     |
+|       `@Classpath`        |                  `Iterable<File>`*                   |         代表 Java 类路径的输入文件和目录的可迭代对象         |
+|    `@CompileClasspath`    |                  `Iterable<File>`*                   |       代表 Java 编译类路径的输入文件和目录的可迭代对象       |
+|       `@OutputFile`       |                       `File`*                        |                   单个输出文件（不是目录）                   |
+|    `@OutputDirectory`     |                       `File`*                        |                   单个输出目录（不是文件）                   |
+|      `@OutputFiles`       |      `Map<String, File>`** 或`Iterable<File>`*       | 输出文件的可迭代或映射，使用文件树会关闭任务的[缓存](https://docs.gradle.org/current/userguide/build_cache.html#sec:task_output_caching) |
+|   `@OutputDirectories`    |      `Map<String, File>`** 或`Iterable<File>`*       | 一个可迭代的输出目录，使用文件树会关闭任务的[缓存](https://docs.gradle.org/current/userguide/build_cache.html#sec:task_output_caching) |
+|        `@Destroys`        |              `File`或`Iterable<File>`*               | 指定此任务删除的一个或多个文件。请注意，任务可以定义输入/输出或可销毁对象，但不能同时定义两者。 |
+|       `@LocalState`       |              `File`或`Iterable<File>`*               | 指定一个或多个代表[任务本地状态的](https://docs.gradle.org/current/userguide/custom_tasks.html#sec:storing_incremental_task_state)文件。当任务从缓存加载时，这些文件将被删除。 |
+|         `@Nested`         |                    任何自定义类型                    |                  一种自定义类型，可能未实现                  |
+|        `@Console`         |                       任何类型                       | 表示该属性既不是输入也不是输出。它只是以某种方式影响任务的控制台输出，例如增加或减少任务的详细程度。 |
+|        `@Internal`        |                       任何类型                       |        表示该属性在内部使用，但既不是输入也不是输出。        |
+|       `@ReplacedBy`       |                       任何类型                       |       表示该属性已被另一个替换，应作为输入或输出忽略。       |
+|     `@SkipWhenEmpty`      |              `File`或`Iterable<File>`*               | 与 `@InputFiles` 或 `@InputDirectory` 一起使用，如果相应的文件或目录为空，则告诉 Gradle 跳过任务，以及使用此注释声明的所有其他输入文件。 |
+|      `@Incremental`       | `Provider<FileSystemLocation>` 或者 `FileCollection` | 与 `@InputFiles` 或 `@InputDirectory` 用于指示 Gradle 跟踪对带注释的文件属性的更改，对于增量任务，可以通过``@InputChanges.getFileChanges()` 查询更改 |
+|        `@Optional`        |                       任何类型                       | 与[可选](https://docs.gradle.org/current/javadoc/org/gradle/api/tasks/Optional.html)API 文档中列出的任何属性类型注释一起使用。此注释禁用对相应属性的验证检查。有关更多详细信息，请参阅[验证部分](https://docs.gradle.org/current/userguide/more_about_tasks.html#sec:task_input_output_validation)。 |
+|     `@PathSensitive`      |              `File`或`Iterable<File>`*               | 与任何输入文件属性一起使用，告诉 Gradle 只将文件路径的给定部分视为重要的。例如，如果一个属性用 注释`@PathSensitive(PathSensitivity.NAME_ONLY)`，那么在不更改其内容的情况下移动文件不会使任务过时。 |
+| `@IgnoreEmptyDirectories` |              `File`或`Iterable<File>`*               | 与 `@InputFiles` 或 `@InputDirectory `一起使用，指示 Gradle 仅跟踪目录内容的更改，而不跟踪目录本身的差异。例如，在目录结构中的某处删除、重命名或添加空目录不会使任务过时。 |
+|  `@NormalizeLineEndings`  |              `File`或`Iterable<File>`*               | 与 `@InputFiles`, `@InputDirectory` 或 ` @Classpath` 一起使用，用于指示 Gradle 在计算最新检查或构建缓存键时规范化行尾。例如，在 Unix 行尾和 Windows 行尾（或反之亦然）之间切换文件不会使任务过时。 |
+
+注意： 这些注释的类型子类可被继承，同时子类可以重写覆盖相关属性的类型。
+
+
+
+##### 6.9.2 运行时 API
+
+如果无权访问自定义任务类的源代码，则无法为它添加任何增量注释。此种情况下就需要使用运行时 API。
+
+这个运行时 API 是通过几个恰当命名的属性提供的，这些属性可用于每个 Gradle 任务：
+
+- [TaskInputs ](https://docs.gradle.org/current/dsl/org.gradle.api.Task.html#org.gradle.api.Task:inputs)类型的 [Task.getInputs ](https://docs.gradle.org/current/javadoc/org/gradle/api/tasks/TaskInputs.html)[()](https://docs.gradle.org/current/dsl/org.gradle.api.Task.html#org.gradle.api.Task:inputs)
+- [TaskOutputs](https://docs.gradle.org/current/dsl/org.gradle.api.Task.html#org.gradle.api.Task:outputs) 类型的[ Task.getOutputs ](https://docs.gradle.org/current/javadoc/org/gradle/api/tasks/TaskOutputs.html)[()](https://docs.gradle.org/current/dsl/org.gradle.api.Task.html#org.gradle.api.Task:outputs)
+- [Task.getDestroyables() ](https://docs.gradle.org/current/dsl/org.gradle.api.Task.html#org.gradle.api.Task:destroyables)类型 [TaskDestroyables](https://docs.gradle.org/current/javadoc/org/gradle/api/tasks/TaskDestroyables.html)
+
+这些对象具有允许指定构成任务输入和输出的文件、目录和值的方法。事实上，运行时 API 几乎具有与注释相同的特性。它所缺少的只是.`@Nested`。
+
+
+
+以之前的模板处理示例为例，看看它如何作为使用运行时 API 的临时任务：
+
+```groovy
+tasks.register('processTemplatesAdHoc') {
+    inputs.property('engine', TemplateEngineType.FREEMARKER)
+    inputs.files(fileTree('src/templates'))
+        .withPropertyName('sourceFiles')
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+    inputs.property('templateData.name', 'docs')
+    inputs.property('templateData.variables', [year: '2013'])
+    outputs.dir(layout.buildDirectory.dir('genOutput2'))
+        .withPropertyName('outputDir')
+
+    doLast {
+        // Process the templates here
     }
-    ```
+}
+```
 
-    执行 `gradle processTemplates` 输出如下：
+执行输出如下：
 
-    ```shell
-    > gradle processTemplates
-    > 任务：processTemplates
-    
-    在 0 秒内构建成功
-    3 个可操作的任务：3 个最新的
-    ```
+```shell
+> gradle processTemplatesAdHoc 
+> Task :processTemplatesAdHoc 
 
-    再次执行输出：
+BUILD SUCCESSFUL in 0s 
+3 个可操作的任务：3 个执行
+```
 
-    ```shell
-    > gradle processTemplates
-    > 任务：processTemplates 最新
-    
-    在 0 秒内构建成功
-    3 个可操作的任务：3 个最新的
-    ```
+和以前一样，首先，应该为此编写一个自定义任务同时没有任务属性来存储根源文件夹、输出目录的位置或任何其他设置。这是故意强调这样一个事实，即运行时 API 不需要任务具有任何状态。在增量构建方面，上述临时任务的行为与自定义任务类相同。
 
-    上述这些带注释的属性意味着，如果自上次 Gradle 执行任务以来，源文件、模板引擎、模型数据或生成的文件都没有发生变化，Gradle 将跳过该任务，这通常会节省大量时间。
-
-    
-
-    接下来，就看看 *增量构建属性* 中有哪些可以使用的注释：
-
-    |           注解            |                     预期属性类型                     |                             描述                             |
-    | :-----------------------: | :--------------------------------------------------: | :----------------------------------------------------------: |
-    |         `@Input`          |               任何 `Serializable` 类型               |                       一个简单的输入值                       |
-    |       `@InputFile`        |                       `File`*                        |                   单个输入文件（不是目录）                   |
-    |     `@InputDirectory`     |                       `File`*                        |                   单个输入目录（不是文件）                   |
-    |       `@InputFiles`       |                  `Iterable<File>`*                   |                     输入文件和目录的迭代                     |
-    |       `@Classpath`        |                  `Iterable<File>`*                   |         代表 Java 类路径的输入文件和目录的可迭代对象         |
-    |    `@CompileClasspath`    |                  `Iterable<File>`*                   |       代表 Java 编译类路径的输入文件和目录的可迭代对象       |
-    |       `@OutputFile`       |                       `File`*                        |                   单个输出文件（不是目录）                   |
-    |    `@OutputDirectory`     |                       `File`*                        |                   单个输出目录（不是文件）                   |
-    |      `@OutputFiles`       |      `Map<String, File>`** 或`Iterable<File>`*       | 输出文件的可迭代或映射，使用文件树会关闭任务的[缓存](https://docs.gradle.org/current/userguide/build_cache.html#sec:task_output_caching) |
-    |   `@OutputDirectories`    |      `Map<String, File>`** 或`Iterable<File>`*       | 一个可迭代的输出目录，使用文件树会关闭任务的[缓存](https://docs.gradle.org/current/userguide/build_cache.html#sec:task_output_caching) |
-    |        `@Destroys`        |              `File`或`Iterable<File>`*               | 指定此任务删除的一个或多个文件。请注意，任务可以定义输入/输出或可销毁对象，但不能同时定义两者。 |
-    |       `@LocalState`       |              `File`或`Iterable<File>`*               | 指定一个或多个代表[任务本地状态的](https://docs.gradle.org/current/userguide/custom_tasks.html#sec:storing_incremental_task_state)文件。当任务从缓存加载时，这些文件将被删除。 |
-    |         `@Nested`         |                    任何自定义类型                    |                  一种自定义类型，可能未实现                  |
-    |        `@Console`         |                       任何类型                       | 表示该属性既不是输入也不是输出。它只是以某种方式影响任务的控制台输出，例如增加或减少任务的详细程度。 |
-    |        `@Internal`        |                       任何类型                       |        表示该属性在内部使用，但既不是输入也不是输出。        |
-    |       `@ReplacedBy`       |                       任何类型                       |       表示该属性已被另一个替换，应作为输入或输出忽略。       |
-    |     `@SkipWhenEmpty`      |              `File`或`Iterable<File>`*               | 与 `@InputFiles` 或 `@InputDirectory` 一起使用，如果相应的文件或目录为空，则告诉 Gradle 跳过任务，以及使用此注释声明的所有其他输入文件。 |
-    |      `@Incremental`       | `Provider<FileSystemLocation>` 或者 `FileCollection` | 与 `@InputFiles` 或 `@InputDirectory` 用于指示 Gradle 跟踪对带注释的文件属性的更改，对于增量任务，可以通过``@InputChanges.getFileChanges()` 查询更改 |
-    |        `@Optional`        |                       任何类型                       | 与[可选](https://docs.gradle.org/current/javadoc/org/gradle/api/tasks/Optional.html)API 文档中列出的任何属性类型注释一起使用。此注释禁用对相应属性的验证检查。有关更多详细信息，请参阅[验证部分](https://docs.gradle.org/current/userguide/more_about_tasks.html#sec:task_input_output_validation)。 |
-    |     `@PathSensitive`      |              `File`或`Iterable<File>`*               | 与任何输入文件属性一起使用，告诉 Gradle 只将文件路径的给定部分视为重要的。例如，如果一个属性用 注释`@PathSensitive(PathSensitivity.NAME_ONLY)`，那么在不更改其内容的情况下移动文件不会使任务过时。 |
-    | `@IgnoreEmptyDirectories` |              `File`或`Iterable<File>`*               | 与 `@InputFiles` 或 `@InputDirectory `一起使用，指示 Gradle 仅跟踪目录内容的更改，而不跟踪目录本身的差异。例如，在目录结构中的某处删除、重命名或添加空目录不会使任务过时。 |
-    |  `@NormalizeLineEndings`  |              `File`或`Iterable<File>`*               | 与 `@InputFiles`, `@InputDirectory` 或 ` @Classpath` 一起使用，用于指示 Gradle 在计算最新检查或构建缓存键时规范化行尾。例如，在 Unix 行尾和 Windows 行尾（或反之亦然）之间切换文件不会使任务过时。 |
-
-    注意： 这些注释的类型子类可被继承，同时子类可以重写覆盖相关属性的类型。
-
-    
-
-2. 运行时 API
-
-    如果无权访问自定义任务类的源代码，则无法为它添加任何增量注释。此种情况下就需要使用运行时 API。
-
-    这个运行时 API 是通过几个恰当命名的属性提供的，这些属性可用于每个 Gradle 任务：
-
-    - [TaskInputs ](https://docs.gradle.org/current/dsl/org.gradle.api.Task.html#org.gradle.api.Task:inputs)类型的 [Task.getInputs ](https://docs.gradle.org/current/javadoc/org/gradle/api/tasks/TaskInputs.html)[()](https://docs.gradle.org/current/dsl/org.gradle.api.Task.html#org.gradle.api.Task:inputs)
-    - [TaskOutputs](https://docs.gradle.org/current/dsl/org.gradle.api.Task.html#org.gradle.api.Task:outputs) 类型的[ Task.getOutputs ](https://docs.gradle.org/current/javadoc/org/gradle/api/tasks/TaskOutputs.html)[()](https://docs.gradle.org/current/dsl/org.gradle.api.Task.html#org.gradle.api.Task:outputs)
-    - [Task.getDestroyables() ](https://docs.gradle.org/current/dsl/org.gradle.api.Task.html#org.gradle.api.Task:destroyables)类型 [TaskDestroyables](https://docs.gradle.org/current/javadoc/org/gradle/api/tasks/TaskDestroyables.html)
-
-    这些对象具有允许指定构成任务输入和输出的文件、目录和值的方法。事实上，运行时 API 几乎具有与注释相同的特性。它所缺少的只是.`@Nested`。
-
-    
-
-    以之前的模板处理示例为例，看看它如何作为使用运行时 API 的临时任务：
-
-    ```groovy
-    tasks.register('processTemplatesAdHoc') {
-        inputs.property('engine', TemplateEngineType.FREEMARKER)
-        inputs.files(fileTree('src/templates'))
-            .withPropertyName('sourceFiles')
-            .withPathSensitivity(PathSensitivity.RELATIVE)
-        inputs.property('templateData.name', 'docs')
-        inputs.property('templateData.variables', [year: '2013'])
-        outputs.dir(layout.buildDirectory.dir('genOutput2'))
-            .withPropertyName('outputDir')
-    
-        doLast {
-            // Process the templates here
-        }
-    }
-    ```
-
-    执行输出如下：
-
-    ```shell
-    > gradle processTemplatesAdHoc 
-    > Task :processTemplatesAdHoc 
-    
-    BUILD SUCCESSFUL in 0s 
-    3 个可操作的任务：3 个执行
-    ```
-
-    和以前一样，首先，应该为此编写一个自定义任务同时没有任务属性来存储根源文件夹、输出目录的位置或任何其他设置。这是故意强调这样一个事实，即运行时 API 不需要任务具有任何状态。在增量构建方面，上述临时任务的行为与自定义任务类相同。
-
-    所有输入和输出的定义是通过在方法完成 `inputs` 和 `outputs` ，如 `property()`，`files()`和`dir()`。Gradle 对参数值执行最新检查，以确定任务是否需要再次运行。每个方法对应一个增量构建注释，例如 `inputs.property()` 对应 `@Input`、`outputs.dir() `对应 `@OutputDirectory`。
+所有输入和输出的定义是通过在方法完成 `inputs` 和 `outputs` ，如 `property()`，`files()`和`dir()`。Gradle 对参数值执行最新检查，以确定任务是否需要再次运行。每个方法对应一个增量构建注释，例如 `inputs.property()` 对应 `@Input`、`outputs.dir() `对应 `@OutputDirectory`。
 
 
 
@@ -2084,13 +2088,13 @@ File configFile = file("$rootDir/shared/config.xml")   //rootDir 为 Project 的
 
 
 
-##### 8.11.3 文件集
+##### 8.11.3 文件集合
 
 一个文件集合是由多个文件组成的集合，这些文件可以没有任何相关性。
 
 
 
-指定文件集合的推荐方法是使用 [ProjectLayout.files(java.lang.Object...)](https://docs.gradle.org/current/javadoc/org/gradle/api/file/ProjectLayout.html#files-java.lang.Object...-) 方法，该方法返回一个 `FileCollection` 实例。这种方法非常灵活，允许传递多个字符串、`File` 实例、字符串集合、`Files` 集合等等。如果任务已[定义输出](https://docs.gradle.org/current/userguide/more_about_tasks.html#sec:task_inputs_outputs)，甚至可以将任务作为参数传递。
+指定文件集合的推荐方法是使用 [ProjectLayout.files(java.lang.Object...)](https://docs.gradle.org/current/javadoc/org/gradle/api/file/ProjectLayout.html#files-java.lang.Object...-) 方法，该方法返回一个 `FileCollection` 实例。这种方法非常灵活，允许传递多个字符串、`File` 实例、字符串集合、`Files` 集合等等。如果任务已 [定义输出](https://docs.gradle.org/current/userguide/more_about_tasks.html#sec:task_inputs_outputs)，甚至可以将任务作为参数传递。
 
 
 
@@ -2153,6 +2157,377 @@ FileCollection collection = layout.files('src/file1.txt',
     ```
 
     惰性创建的关键是将闭包（在 Groovy 中）或 `Provider`（在 Kotlin 中）传递给 `files()` 方法，同时闭包中的返回值为 `files()` 类型，例如 `List<File>`，`String`，`FileCollection` 等。
+    
+    
+    
+2. 迭代
+
+    迭代文件集合可以通过*集合*的 `each()` 方法（在 Groovy 中）或在 `for` 循环中使用该集合来完成。在这两种方法中，文件集合都被视为一组 `File` 实例，即迭代变量的类型为`File`。
+
+    ```groovy
+    // Iterate over the files in the collection
+    collection.each { File file ->
+        println file.name
+    }
+    
+    Set set = collection.files
+    Set set2 = collection as Set   // 强制类型转换
+    List list = collection as List
+    String path = collection.asPath
+    File file = collection.singleFile
+    
+    // Add and subtract collections
+    def union = collection + layout.files('src/file2.txt')
+    def difference = collection - layout.files('src/file2.txt')
+    ```
+
+    
+
+3. 过滤
+
+    通过 [FileCollection.filter(org.gradle.api.specs.Spec)](https://docs.gradle.org/current/javadoc/org/gradle/api/file/FileCollection.html#filter-org.gradle.api.specs.Spec-) 方法可以确定要“保留”哪些文件：
+
+    ```groovy
+    FileCollection textFiles = collection.filter { File f ->
+        f.name.endsWith(".txt")
+    }
+    ```
+
+    
+
+4. 合并
+
+    使用 `+` 和 `-` 可以对集合进行操作
+
+
+
+##### 8.11.4 文件树
+
+与文件集合类似的是文件树，但与文件集合不同的是，文件树包含文件的目录结构，这意味着文件树中的所有路径都必须有一个共享的父目录。
+
+简而言之：==文件集合是一个平面列表/文件集，而文件树是文件和目录层次结构。==
+
+可通过 [FileTree.getFiles()](https://docs.gradle.org/current/javadoc/org/gradle/api/file/FileTree.html#getFiles--) 方法将文件树转化为文件集合。
+
+
+
+创建文件树的最简单方法是将文件或目录路径传递给 [Project.fileTree(java.lang.Object)](https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:fileTree(java.lang.Object)) 方法：
+
+```groovy
+// 基于目录创建一个文件树
+ConfigurableFileTree tree = fileTree(dir: 'src/main')
+
+// 给文件树添加包含和排除条件
+tree.include '**/*.java'
+tree.exclude '**/Abstract*'
+
+// 使用闭包创建文件树
+tree = fileTree('src') {
+    include '**/*.java'
+}
+
+// 使用 map 创建文件树
+tree = fileTree(dir: 'src', include: '**/*.java')
+tree = fileTree(dir: 'src', includes: ['**/*.java', '**/*.xml'])
+tree = fileTree(dir: 'src', include: '**/*.java', exclude: '**/*test*/**')
+```
+
+同样也可以使用文件树执行许多与文件集合相同的操作：
+
+-   迭代（深度优先）
+-   过滤（使用 [FileTree.matching(org.gradle.api.Action)](https://docs.gradle.org/current/javadoc/org/gradle/api/file/FileTree.html#matching-org.gradle.api.Action-)  和 Ant 风格的模式）
+-   合并
+
+还可以使用 [FileTree.visit(org.gradle.api.Action)](https://docs.gradle.org/current/javadoc/org/gradle/api/file/FileTree.html#visit-org.gradle.api.Action-) 方法遍历文件树，这些操作如下所示：
+
+```groovy
+// 迭代遍历
+tree.each {File file ->
+    println file
+}
+
+// 过滤文件树
+FileTree filtered = tree.matching {
+    include 'org/gradle/api/**'
+}
+
+// 文件树合并
+FileTree sum = tree + fileTree(dir: 'src/test')
+
+//使用 visit 进行遍历
+tree.visit {element ->
+    println "$element.relativePath => $element.file"
+}
+```
+
+
+
+##### 8.11.5 使用存档作为文件树
+
+存档是打包成单个文件的目录和文件层次结构。换句话说，它是==文件树的一个特例==，这正是 Gradle 对待档案的方式。因此在 Gradle 中使用 [Project.zipTree(java.lang.Object)](https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:zipTree(java.lang.Object)) 和[Project.tarTree(java.lang.Object)](https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:tarTree(java.lang.Object)) 方法来包装相应类型的存档文件（注意JAR、WAR 和 EAR 文件是 ZIP）。
+
+这两种方法都返回 `FileTree` 实例，然后可以像使用普通文件树一样使用这些实例。例如，可以通过将存档内容复制到文件系统上的某个目录来提取存档的部分或全部文件。或者，可以将一个存档合并到另一个存档中。
+
+
+
+以下是一些创建基于存档的文件树的简单示例：
+
+```groovy
+FileTree zip = zipTree('someFile.zip')
+
+FileTree tar = tarTree('someFile.tar')
+
+//tar tree 可以通过文件类型来猜测进行压缩，但如果明确类型也可以指定
+FileTree someTar = tarTree(resources.gzip('someTar.ext'))
+```
+
+
+
+##### 8.11.6 文件集合的隐式转换
+
+Gradle 中的许多对象都具有接受一组输入文件的属性。例如，[JavaCompile](https://docs.gradle.org/current/dsl/org.gradle.api.tasks.compile.JavaCompile.html) 任务具有定义要编译的源文件的 `source` 属性。这就可以使用 [files()](https://docs.gradle.org/current/userguide/working_with_files.html#sec:file_collections) 方法支持的任何类型设置此属性的值。
+
+这意味着我们可以将属性设置为 a `File`、`String`、 集合、`FileCollection` 甚至是一个闭包或 `Provider`，如下：
+
+```groovy
+tasks.register('compile', JavaCompile) {
+
+    // Use a File object to specify the source directory
+    source = file('src/main/java')
+
+    // Use a String path to specify the source directory
+    source = 'src/main/java'
+
+    // Use a collection to specify multiple source directories
+    source = ['src/main/java', '../shared/java']
+
+    // Use a FileCollection (or FileTree in this case) to specify the source files
+    source = fileTree(dir: 'src/main/java').matching { include 'org/gradle/api/**' }
+
+    // Using a closure to specify the source files.
+    source = {
+        // Use the contents of each zip file in the src dir
+        file('src').listFiles().findAll {it.name.endsWith('.zip')}.collect { zipTree(it) }
+    }
+}
+```
+
+另一件需要注意的事情是：`source` 在 Gradle 核心任务中类似的属性有相应的方法。这些方法遵循*附加*到值集合而不是替换它们的约定。同样，此方法接受 [files()](https://docs.gradle.org/current/userguide/working_with_files.html#sec:file_collections) 方法支持的任何类型，如下所示：
+
+```groovy
+// 添加一组文件
+compile {
+    // Add some source directories use String paths
+    source 'src/main/java', 'src/main/groovy'
+
+    // Add a source directory using a File object
+    source file('../shared/java')
+
+    // Add some source directories using a closure
+    source { file('src/test/').listFiles() }
+}
+```
+
+由于这是一个常见的约定，建议在自己的自定义任务中遵循它。具体来说，==如果计划添加一个方法来配置基于集合的属性，请确保该方法是附加值而不是替换值==。
+
+
+
+
+
+#### 8.12 文件深度复制
+
+Gradle中复制文件的基本过程很简单：
+
+-   定义 [复制](https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Copy.html) 类型的任务
+-   指定要复制的文件（以及可能的目录）
+-   指定复制文件的目的地
+
+
+
+##### 8.12.1 复制文件
+
+复制规范正式基于任务实现的 [CopySpec](https://docs.gradle.org/current/javadoc/org/gradle/api/file/CopySpec.html) 接口 `Copy`，并提供：
+
+-   一个 `CopySpec.from(java.lang.Object... )` 方法来定义要复制的内容
+
+    它还允许几种不同类型的参数。例如，一些最常见的类型是：
+
+    1.  A `String` —  视为文件路径，或者，如果以“file://”开头，则为文件 URI
+
+    2.  A `File` —  用作文件路径
+
+    3.  A `FileCollection` or `FileTree`  —  集合中的所有文件都包含在副本中
+
+    4.  任务 -–  包含构成任务定义输出的文件或目录
+
+        
+
+-   一个 `CopySpec.into(java.lang.Object)` 方法来定义目标 
+
+
+
+##### 8.12.2 过滤文件
+
+可以直接在 `Copy` 任务中过滤文件集合和文件树，但也可以通过 `CopySpec.include(java.lang.String… ) `和 `CopySpec.exclude(java. lang.String… )`方法，这两种方法通常与 Ant 风格的包含或排除模式一起使用：
+
+```groovy
+tasks.register('copyTaskWithPatterns', Copy) {
+    from 'src/main/webapp'
+    into layout.buildDirectory.dir('explodedWar')
+    include '**/*.html'
+    include '**/*.jsp'
+    exclude { FileTreeElement details ->
+        details.file.name.endsWith('.html') &&
+            details.file.text.contains('DRAFT')
+    }
+}
+```
+
+当包含和排除模式重叠时，以下是基本规则：
+
+-   如果没有明确的包含或排除，则包括所有内容  ------------------> 默认
+-   如果至少指定了一个包含项，则只包含与模式匹配的文件和目录
+-   任何排除模式都会覆盖任何包含内容，因此如果文件或目录至少匹配一个排除模式，则无论包含模式如何，它都不会被包含在内  -------------》排除模式优先级更高
+
+
+
+##### 8.12.3 重命名文件
+
+-   使用正则表达式
+-   使用闭包
+
+如下：
+
+```groovy
+tasks.register('rename', Copy) {
+    from 'src/main/webapp'
+    into layout.buildDirectory.dir('explodedWar')
+    // Use a closure to convert all file names to upper case
+    rename { String fileName ->
+        fileName.toUpperCase()
+    }
+    // Use a regular expression to map the file name
+    rename '(.+)-staging-(.+)', '$1$2'      // 若使用双引号，需要对 '$' 进行转义，即 "\$1\$2"
+    rename(/(.+)-staging-(.+)/, '$1$2')
+}
+```
+
+
+
+##### 8.12.4 过滤文件内容（令牌替换、模板等）
+
+*过滤文件内容*允许在复制文件时转换文件的内容，这可能涉及使用标记替换的基本模板、文本行的删除，或者使用成熟的模板引擎进行更复杂的过滤。
+
+以下示例演示了几种过滤形式，包括使用 [CopySpec.expand(java.util.Map)](https://docs.gradle.org/current/javadoc/org/gradle/api/file/CopySpec.html#expand-java.util.Map-) 方法的标记替换和另一种使用 [CopySpec.filter(java.lang.Class)](https://docs.gradle.org/current/javadoc/org/gradle/api/file/CopySpec.html#filter-java.lang.Class-) 和 [Ant 过滤器的方法](https://ant.apache.org/manual/Types/filterchain.html)：
+
+```groovy
+import org.apache.tools.ant.filters.FixCrLfFilter
+import org.apache.tools.ant.filters.ReplaceTokens
+
+tasks.register('filter', Copy) {
+    from 'src/main/webapp'
+    into layout.buildDirectory.dir('explodedWar')
+    // Substitute property tokens in files
+    expand(copyright: '2009', version: '2.3.1')
+    expand(project.properties)
+    // Use some of the filters provided by Ant
+    filter(FixCrLfFilter)
+    filter(ReplaceTokens, tokens: [copyright: '2009', version: '2.3.1'])
+    // Use a closure to filter each line
+    filter { String line ->
+        "[$line]"
+    }
+    // Use a closure to remove lines
+    filter { String line ->
+        line.startsWith('-') ? null : line
+    }
+    filteringCharset = 'UTF-8'
+}
+```
+
+
+
+##### 8.12.5 使用 `CopySpec` 类
+
+复制规范确定复制到何处，以及在复制过程中文件会发生什么。它有两个值得详细介绍的属性：
+
+1.  它们可以独立于任务
+2.  它们是有层次的
+
+
+
+第一个允许*在构建中共享副本规范*，第二个在整个复制规范中提供细粒度的控制。
+
+
+
+-   共享副本规范
+
+    Gradle 提供的 [Project.copySpec(org.gradle.api.Action)](https://docs.gradle.org/current/dsl/org.gradle.api.Project.html#org.gradle.api.Project:copySpec(org.gradle.api.Action)) 方法，允许在任务之外创建副本规范，然后可以使用 [CopySpec.with(org.gradle.api.file.CopySpec...)](https://docs.gradle.org/current/javadoc/org/gradle/api/file/CopySpec.html#with-org.gradle.api.file.CopySpec...-) 方法将其附加到适当的任务。以下示例演示了如何完成此操作：
+
+    ```groovy
+    // 创建复制规范
+    CopySpec webAssetsSpec = copySpec {
+        from 'src/main/webapp'
+        include '**/*.html', '**/*.png', '**/*.jpg'
+        rename '(.+)-staging(.+)', '$1$2'
+    }
+    
+    tasks.register('copyAssets', Copy) {
+        into layout.buildDirectory.dir("inPlaceApp")
+        with webAssetsSpec    //附加到任务
+    }
+    
+    tasks.register('distApp', Zip) {
+        archiveFileName = 'my-app-dist.zip'
+        destinationDirectory = layout.buildDirectory.dir('dists')
+    
+        from appClasses
+        with webAssetsSpec  //附加到任务
+    }
+    ```
+
+    注：最好将 `with()` 视为 `from()` 任务中的额外规范，因此，在没有定义至少一个 from() 的情况下定义一个独立的复制规范是没有意义的。
+
+    
+
+    如果遇到需要将相同的复制配置应用到*不同*的文件集的场景，那么可以直接共享配置块，无需使用 `copySpec()`。 下面是一个例子，它有两个独立的任务，碰巧只想处理图像文件：
+
+    ```groovy
+    // 仅共享复制模式
+    
+    def webAssetPatterns = {
+        include '**/*.html', '**/*.png', '**/*.jpg'
+    }
+    
+    tasks.register('copyAppAssets', Copy) {
+        into layout.buildDirectory.dir("inPlaceApp")
+        from 'src/main/webapp', webAssetPatterns
+    }
+    
+    tasks.register('archiveDistAssets', Zip) {
+        archiveFileName = 'distribution-assets.zip'
+        destinationDirectory = layout.buildDirectory.dir('dists')
+    
+        from 'distResources', webAssetPatterns
+    }
+    ```
+
+    
+
+-   同步任务
+
+    [Sync](https://docs.gradle.org/current/dsl/org.gradle.api.tasks.Sync.html) 任务，扩展了 `Copy` 任务，复制源文件到目标目录，然后删除它没有副本的目标目录中的任何文件。换句话说，它将目录的内容与其源同步。
+
+    如下是一个在 `build/libs` 目录中维护项目运行时依赖项副本的示例：
+
+    ```groovy
+    tasks.register('libs', Sync) {
+        from configurations.runtime
+        into layout.buildDirectory.dir('libs')
+    }
+    ```
+
+
 
 
 

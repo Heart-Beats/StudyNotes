@@ -1,0 +1,302 @@
+<mxfile>
+    <diagram id="J-fshPoS8V629IqFeQcE" name="第 1 页">
+        <mxGraphModel dx="3748" dy="545" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="827" pageHeight="1169" background="none" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="2" target="3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="&lt;font style=&quot;font-size: 14px&quot;&gt;Application 初始化&lt;/font&gt;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_2;whiteSpace=wrap;fillColor=#008a00;strokeColor=#005700;fontColor=#ffffff;" parent="1" vertex="1">
+                    <mxGeometry x="270" y="40" width="100" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="&lt;font face=&quot;consolas, monospace&quot; style=&quot;font-size: 14px&quot;&gt;&lt;span&gt;创建&lt;br&gt;DynamicPluginManager&lt;/span&gt;&lt;/font&gt;" style="whiteSpace=wrap;html=1;fontColor=#ffffff;strokeColor=#005700;strokeWidth=2;fillColor=#008a00;" parent="1" vertex="1">
+                    <mxGeometry x="222.5" y="205" width="195" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="&lt;font style=&quot;font-size: 14px&quot;&gt;需要传入一个&lt;br&gt;&amp;nbsp;&lt;span style=&quot;color: rgb(78 , 201 , 176) ; background-color: rgb(31 , 41 , 45) ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;PluginManagerUpdater 对象&lt;/span&gt;&lt;/font&gt;" style="html=1;" parent="1" vertex="1">
+                    <mxGeometry x="510" y="205" width="230" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="IwxKF6y3zzJ_dGnN6ZN0-16" value="&lt;font style=&quot;font-size: 14px&quot;&gt;«interface»&lt;br&gt;&lt;span style=&quot;color: rgb(78 , 201 , 176) ; font-family: &amp;#34;consolas&amp;#34; , monospace ; background-color: rgb(31 , 41 , 45)&quot;&gt;PluginManagerUpdater&lt;/span&gt;&lt;/font&gt;" style="html=1;" parent="1" vertex="1">
+                    <mxGeometry x="530" y="110" width="190" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="&lt;p style=&quot;line-height: 60%&quot;&gt;«interface»&lt;br&gt;&lt;/p&gt;&lt;pre style=&quot;background-color: #1f292d ; color: #a9b7c6 ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 12.0pt&quot;&gt;&lt;span style=&quot;color: #4ec9b0&quot;&gt;PluginManager&lt;/span&gt;&lt;/pre&gt;&lt;pre style=&quot;background-color: #1f292d ; color: #a9b7c6 ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 12.0pt&quot;&gt;&lt;pre style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 12pt&quot;&gt;&lt;span style=&quot;color: #569cd6 ; font-weight: bold&quot;&gt;void &lt;/span&gt;&lt;span style=&quot;color: #ffc66d&quot;&gt;enter&lt;/span&gt;(&lt;span style=&quot;color: #ae81ff&quot;&gt;context&lt;/span&gt;,&lt;span style=&quot;color: #ae81ff&quot;&gt;formId&lt;/span&gt;,&lt;span style=&quot;color: #ae81ff&quot;&gt;bundle&lt;/span&gt;,&lt;span style=&quot;color: #ae81ff&quot;&gt;callback&lt;/span&gt;)&lt;/pre&gt;&lt;/pre&gt;&lt;p&gt;&lt;/p&gt;" style="html=1;" parent="1" vertex="1">
+                    <mxGeometry x="-210" y="190" width="380" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="" style="endArrow=block;dashed=1;endFill=0;endSize=12;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="3" target="12" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="80" y="330" as="sourcePoint"/>
+                        <mxPoint x="240" y="330" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="15" value="" style="endArrow=block;dashed=1;endFill=0;endSize=12;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" parent="1" source="9" target="IwxKF6y3zzJ_dGnN6ZN0-16" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="602.5" y="320" as="sourcePoint"/>
+                        <mxPoint x="540" y="320" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="16" value="" style="endArrow=diamondThin;endFill=0;endSize=24;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="9" target="3">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="280" y="410" as="sourcePoint"/>
+                        <mxPoint x="440" y="410" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="20" value="" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="17" target="19">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="-220" y="30" width="970" height="260" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="&lt;font style=&quot;font-size: 14px ; background-color: rgb(0 , 153 , 0)&quot; color=&quot;#ffffff&quot;&gt;执行&amp;nbsp;&lt;span style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;enter&lt;/span&gt;&amp;nbsp;方法&lt;/font&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="19" target="21">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="&lt;font style=&quot;font-size: 14px&quot;&gt;得到全局的&lt;span style=&quot;color: rgb(78 , 201 , 176) ; background-color: rgb(31 , 41 , 45) ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;PluginManager&lt;/span&gt;&lt;/font&gt;" style="whiteSpace=wrap;html=1;rounded=0;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="265" y="380" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;shape=link;" edge="1" parent="1" source="21" target="24">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="&lt;font style=&quot;font-size: 14px ; background-color: rgb(0 , 153 , 0)&quot; color=&quot;#ffffff&quot;&gt;执行&amp;nbsp;&lt;span style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;updateManagerImpl &lt;/span&gt;&lt;span style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;方法&lt;/font&gt;&lt;/span&gt;&lt;/font&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="21" target="26">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="327.5" y="630"/>
+                            <mxPoint x="327.5" y="630"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="21" value="&lt;pre style=&quot;background-color: rgb(31 , 41 , 45) ; color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 14px&quot;&gt;&lt;span style=&quot;color: rgb(78 , 201 , 176)&quot;&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;DynamicPluginManager&lt;/font&gt;&lt;/span&gt;&lt;/pre&gt;&lt;pre style=&quot;background-color: rgb(31 , 41 , 45) ; color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 14px&quot;&gt;&lt;pre style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;&lt;pre style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 12pt&quot;&gt;&lt;span style=&quot;color: #ffc66d&quot;&gt;enter&lt;/span&gt;(&lt;span style=&quot;color: #ae81ff&quot;&gt;context&lt;/span&gt;,&lt;span style=&quot;color: #ae81ff&quot;&gt;formId&lt;/span&gt;,&lt;span style=&quot;color: #ae81ff&quot;&gt;bundle&lt;/span&gt;,&lt;span style=&quot;color: #ae81ff&quot;&gt;callback&lt;/span&gt;)&lt;/pre&gt;&lt;/pre&gt;&lt;/pre&gt;" style="whiteSpace=wrap;html=1;rounded=0;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="160" y="530" width="330" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="&lt;pre style=&quot;background-color: rgb(31 , 41 , 45) ; color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 14px&quot;&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;&lt;span style=&quot;white-space: normal ; color: rgb(86 , 156 , 214) ; font-weight: bold&quot;&gt;void &lt;/span&gt;&lt;span style=&quot;white-space: normal ; color: rgb(255 , 198 , 109)&quot;&gt;enter(){&lt;/span&gt;&lt;br&gt;&lt;/font&gt;&lt;/pre&gt;&lt;pre style=&quot;background-color: rgb(31 , 41 , 45) ; color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 14px ; line-height: 100%&quot;&gt;&lt;pre style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;&lt;pre style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;updateManagerImpl()&lt;/font&gt;&lt;/pre&gt;&lt;/pre&gt;&lt;pre style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;&lt;span style=&quot;color: #9876aa&quot;&gt;mManagerImpl&lt;/span&gt;.&lt;span style=&quot;color: #cc7833&quot;&gt;enter()&lt;/span&gt;&lt;/font&gt;&lt;/pre&gt;&lt;pre style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;&lt;pre style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;&lt;span style=&quot;color: #9876aa&quot;&gt;mUpdater&lt;/span&gt;.&lt;span style=&quot;color: #cc7833&quot;&gt;update&lt;/span&gt;()&lt;/font&gt;&lt;/pre&gt;&lt;pre style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;}&lt;/font&gt;&lt;/pre&gt;&lt;/pre&gt;&lt;/pre&gt;" style="whiteSpace=wrap;html=1;rounded=0;fillColor=#008a00;strokeColor=#005700;fontColor=#ffffff;" vertex="1" parent="1">
+                    <mxGeometry x="-200" y="492.5" width="200" height="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="36" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="26" target="35">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" value="&lt;pre style=&quot;background-color: rgb(31 , 41 , 45) ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 14px ; line-height: 100%&quot;&gt;&lt;span style=&quot;color: rgb(152 , 118 , 170)&quot;&gt; &lt;/span&gt;&lt;font color=&quot;#ffffff&quot;&gt;1.&lt;/font&gt;&lt;span style=&quot;color: rgb(152 , 118 , 170)&quot;&gt; mUpdater&lt;/span&gt;&lt;font color=&quot;#a9b7c6&quot;&gt;.&lt;/font&gt;&lt;span style=&quot;color: rgb(204 , 120 , 51)&quot;&gt;getLatest&lt;/span&gt;&lt;font color=&quot;#a9b7c6&quot;&gt;() 取本地最新的 Manager APK 文件&lt;/font&gt;&lt;/pre&gt;&lt;pre style=&quot;background-color: rgb(31 , 41 , 45) ; color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 14px ; line-height: 100%&quot;&gt;2. 获取这个 APK 文件的 MD5 &lt;br&gt;&lt;/pre&gt;" style="whiteSpace=wrap;html=1;rounded=0;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="121.88" y="680" width="411.25" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="38" value="否" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="35" target="37">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="327" y="890"/>
+                            <mxPoint x="327" y="890"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="35" value="&lt;font style=&quot;font-size: 14px&quot;&gt;MD5 是否与&amp;nbsp;&lt;span style=&quot;color: rgb(152 , 118 , 170) ; background-color: rgb(31 , 41 , 45) ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;mCurrentImplMd5&lt;/span&gt;&lt;span style=&quot;background-color: rgb(31 , 41 , 45) ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;&lt;font color=&quot;#ffffff&quot; style=&quot;font-size: 14px&quot;&gt; 一致&lt;/font&gt;&lt;/span&gt;&lt;/font&gt;" style="rhombus;whiteSpace=wrap;html=1;rounded=0;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="253.12" y="790" width="148.75" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="40" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;shape=link;" edge="1" parent="1" source="37" target="39">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="37" value="&lt;font style=&quot;font-size: 14px&quot;&gt;&lt;font style=&quot;line-height: 100% ; font-size: 14px&quot;&gt;1. 创建&amp;nbsp;&lt;span style=&quot;color: rgb(204 , 120 , 51) ; background-color: rgb(31 , 41 , 45) ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;ManagerImplLoader，&lt;/span&gt;&lt;span style=&quot;background-color: rgb(31 , 41 , 45) ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;&lt;font color=&quot;#ffffff&quot; style=&quot;font-size: 14px&quot;&gt;调用其load 方法得到&lt;/font&gt;&lt;/span&gt;&lt;span style=&quot;color: rgb(204 , 120 , 51) ; background-color: rgb(31 , 41 , 45) ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: rgb(31 , 41 , 45) ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;&lt;span style=&quot;color: rgb(78 , 201 , 176)&quot;&gt;PluginManagerImpl 对象&lt;br&gt;&lt;/span&gt;&lt;font style=&quot;font-size: 14px&quot; color=&quot;#ffffff&quot;&gt;2. 存储&amp;nbsp;&lt;/font&gt;&lt;/span&gt;&lt;/font&gt;&lt;span style=&quot;background-color: rgb(31 , 41 , 45) ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;&lt;font style=&quot;font-size: 14px&quot; color=&quot;#ffffff&quot;&gt;mManagerImpl的状态，再调用它的&amp;nbsp;&lt;/font&gt;&lt;/span&gt;&lt;/font&gt;&lt;span style=&quot;background-color: rgb(31 , 41 , 45) ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 14px&quot;&gt;&lt;font style=&quot;color: rgb(204 , 120 , 51) ; font-size: 14px&quot;&gt;onDestroy()&lt;br&gt;&lt;/font&gt;&lt;font color=&quot;#ffffff&quot;&gt;3.&amp;nbsp;&lt;/font&gt;&lt;/span&gt;&lt;span style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 12pt ; color: rgb(152 , 118 , 170)&quot;&gt;mManagerImpl &lt;/span&gt;&lt;span style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 12pt ; color: rgb(180 , 180 , 180)&quot;&gt;= &lt;/span&gt;&lt;span style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 12pt ; color: rgb(174 , 129 , 255)&quot;&gt;newImpl&lt;/span&gt;&lt;span style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 12pt ; color: rgb(220 , 220 , 220)&quot;&gt;;&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 12pt ; color: rgb(152 , 118 , 170)&quot;&gt;mCurrentImplMd5 &lt;/span&gt;&lt;span style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 12pt ; color: rgb(180 , 180 , 180)&quot;&gt;= &lt;/span&gt;&lt;span style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 12pt ; color: rgb(174 , 129 , 255)&quot;&gt;md5&lt;/span&gt;&lt;span style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 12pt ; color: rgb(220 , 220 , 220)&quot;&gt;;&lt;/span&gt;&lt;span style=&quot;color: rgb(204 , 120 , 51) ; background-color: rgb(31 , 41 , 45) ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 14px&quot;&gt;&amp;nbsp;&lt;br&gt;&lt;/span&gt;" style="whiteSpace=wrap;html=1;rounded=0;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="175" y="920" width="300" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="48" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="39" target="47">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="-240" y="985"/>
+                            <mxPoint x="-240" y="985"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="51" value="" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;elbow=vertical;" edge="1" parent="1" target="50">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-230" y="985" as="sourcePoint"/>
+                        <Array as="points">
+                            <mxPoint x="-380" y="1100"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="39" value="&lt;pre style=&quot;background-color: #1f292d ; color: #a9b7c6 ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 12.0pt&quot;&gt;&lt;pre style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 12pt&quot;&gt;&lt;span style=&quot;color: #4ec9b0&quot;&gt;ManagerImplLoader&lt;/span&gt;&lt;/pre&gt;&lt;/pre&gt;" style="whiteSpace=wrap;html=1;rounded=1;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="-190" y="965.31" width="205" height="39.37" as="geometry"/>
+                </mxCell>
+                <mxCell id="60" value="" style="edgeStyle=elbowEdgeStyle;shape=link;rounded=0;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;" edge="1" parent="1" source="42" target="59">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="42" value="ImplLoader" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;labelBackgroundColor=none;fillColor=none;sketch=0;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="-227.5" y="750" width="280" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="42">
+                    <mxGeometry y="26" width="280" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="45" value="抽象方法： getCustomWhiteList() :  String[]&#10;公共方法：loadWhiteList( installedApk ) : String[]" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="42">
+                    <mxGeometry y="34" width="280" height="46" as="geometry"/>
+                </mxCell>
+                <mxCell id="46" value="Extends" style="endArrow=block;endSize=16;endFill=0;html=1;entryX=0.498;entryY=1.1;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="39" target="45">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="-190" y="730" as="sourcePoint"/>
+                        <mxPoint x="-30" y="730" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="47" value="&lt;p style=&quot;line-height: 100%&quot;&gt;&lt;/p&gt;&lt;pre style=&quot;background-color: rgb(31 , 41 , 45) ; color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;&lt;span style=&quot;color: #dcdcdc&quot;&gt;ManagerImplLoader&lt;/span&gt;(&lt;span style=&quot;color: #4ec9b0&quot;&gt;Context &lt;/span&gt;&lt;span style=&quot;color: #ae81ff&quot;&gt;context&lt;/span&gt;, &lt;span style=&quot;color: #4ec9b0&quot;&gt;File &lt;/span&gt;&lt;span style=&quot;color: #ae81ff&quot;&gt;apk&lt;/span&gt;)：&lt;/pre&gt;&lt;pre style=&quot;background-color: rgb(31 , 41 , 45) ; color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;1. 创建文件夹(存放解压apk的.dex文件，类加载时使用)：/data/user/0/宿主包名/files/ManagerImplLoader/xxx&lt;/pre&gt;&lt;pre style=&quot;background-color: rgb(31 , 41 , 45) ; color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;2. new InstalledApk(apkPath, 创建文件夹的 path, null)&lt;/pre&gt;&lt;p&gt;&lt;/p&gt;" style="whiteSpace=wrap;html=1;rounded=0;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="-1047.5" y="920" width="660" height="97.51" as="geometry"/>
+                </mxCell>
+                <mxCell id="53" value="" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;shape=link;" edge="1" parent="1" source="50" target="52">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="74" value="" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;shape=link;exitX=1;exitY=0.818;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="50" target="70">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="-380" y="1280"/>
+                            <mxPoint x="-330" y="1330"/>
+                            <mxPoint x="-370" y="1210"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="50" value="&lt;p style=&quot;line-height: 100%&quot;&gt;&lt;/p&gt;&lt;pre style=&quot;background-color: rgb(31 , 41 , 45) ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 14px&quot;&gt;&lt;pre style=&quot;color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;&lt;span style=&quot;color: rgb(78 , 201 , 176)&quot;&gt;PluginManagerImpl &lt;/span&gt;&lt;span style=&quot;color: rgb(255 , 198 , 109)&quot;&gt;load&lt;/span&gt;()：&lt;/font&gt;&lt;/pre&gt;&lt;/pre&gt;&lt;pre style=&quot;background-color: rgb(31 , 41 , 45) ; font-size: 14px&quot;&gt;&lt;pre style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;&lt;font color=&quot;#ffffff&quot; style=&quot;font-size: 14px&quot;&gt;1. &lt;/font&gt;&lt;/font&gt;new &lt;span style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace ; color: rgb(204 , 120 , 51)&quot;&gt;ApkClassLoader&lt;/span&gt;&lt;span style=&quot;color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;(&lt;/span&gt;installedApk&lt;span style=&quot;color: rgb(169 , 183 , 198)&quot;&gt;,&lt;/span&gt;getClass&lt;span style=&quot;color: rgb(169 , 183 , 198)&quot;&gt;().&lt;/span&gt;&lt;span style=&quot;color: rgb(204 , 120 , 51)&quot;&gt;getClassLoader&lt;/span&gt;&lt;span style=&quot;color: rgb(169 , 183 , 198)&quot;&gt;()，&lt;/span&gt;loadWhiteList&lt;span style=&quot;color: rgb(169 , 183 , 198)&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;color: rgb(152 , 118 , 170)&quot;&gt;installedApk&lt;/span&gt;&lt;span style=&quot;color: rgb(169 , 183 , 198)&quot;&gt;),&lt;/span&gt; &lt;span style=&quot;color: rgb(181 , 206 , 168)&quot;&gt;1&lt;/span&gt;)&lt;/font&gt;&lt;/pre&gt;&lt;pre style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;2. new &lt;span style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace ; color: rgb(204 , 120 , 51)&quot;&gt;ChangeApkContextWrapper&lt;/span&gt;&lt;span style=&quot;color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;(&lt;/span&gt;applicationContext&lt;span style=&quot;color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;,&amp;nbsp;&lt;/span&gt;installedApk&lt;span style=&quot;color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace ; color: rgb(152 , 118 , 170)&quot;&gt;apkFilePath&lt;/span&gt;&lt;span style=&quot;color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;,&amp;nbsp;&lt;/span&gt;apkClassLoader)&lt;/font&gt;&lt;/pre&gt;&lt;pre&gt;&lt;pre style=&quot;color: rgb(169 , 183 , 198)&quot;&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;&lt;span style=&quot;color: rgb(98 , 151 , 85)&quot;&gt;&lt;font face=&quot;courier new, monospace&quot; style=&quot;font-size: 14px&quot;&gt;修改&lt;/font&gt;&lt;font face=&quot;consolas, monospace&quot; style=&quot;font-size: 14px&quot;&gt;宿主 apk &lt;/font&gt;&lt;/span&gt;&lt;span style=&quot;font-family: &amp;#34;courier new&amp;#34; , monospace ; color: rgb(98 , 151 , 85)&quot;&gt;的 &lt;/span&gt;&lt;span style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace ; color: rgb(98 , 151 , 85)&quot;&gt;Wrapper，&lt;/span&gt;&lt;span style=&quot;font-family: &amp;#34;courier new&amp;#34; , monospace ; color: rgb(98 , 151 , 85)&quot;&gt;可将原 &lt;/span&gt;&lt;span style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace ; color: rgb(98 , 151 , 85)&quot;&gt;Context &lt;/span&gt;&lt;span style=&quot;font-family: &amp;#34;courier new&amp;#34; , monospace ; color: rgb(98 , 151 , 85)&quot;&gt;的 &lt;/span&gt;&lt;span style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace ; color: rgb(98 , 151 , 85)&quot;&gt;Resource &lt;/span&gt;&lt;span style=&quot;font-family: &amp;#34;courier new&amp;#34; , monospace ; color: rgb(98 , 151 , 85)&quot;&gt;和 &lt;/span&gt;&lt;span style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace ; color: rgb(98 , 151 , 85)&quot;&gt;ClassLoader &lt;/span&gt;&lt;span style=&quot;font-family: &amp;#34;courier new&amp;#34; , monospace ; color: rgb(98 , 151 , 85)&quot;&gt;重新修改为新的&lt;/span&gt;&lt;span style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace ; color: rgb(98 , 151 , 85)&quot;&gt;Apk&lt;/span&gt;&lt;/font&gt;&lt;/pre&gt;&lt;pre&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;&lt;font style=&quot;font-size: 14px&quot; color=&quot;#ffffff&quot;&gt;&lt;span style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;3. &lt;/span&gt;&lt;/font&gt;&lt;font color=&quot;#a9b7c6&quot; style=&quot;font-size: 14px&quot;&gt;apkClassLoader&lt;/font&gt;&lt;span style=&quot;color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color: rgb(204 , 120 , 51) ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;getInterface&lt;/span&gt;&lt;span style=&quot;color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;(&lt;/span&gt;&lt;font color=&quot;#a9b7c6&quot; style=&quot;font-size: 14px&quot;&gt;ManagerFactory&lt;/font&gt;&lt;span style=&quot;color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;color: rgb(86 , 156 , 214) ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-weight: bold&quot;&gt;class&lt;/span&gt;&lt;span style=&quot;color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;, &lt;/span&gt;&lt;font style=&quot;font-size: 14px&quot; color=&quot;#9999ff&quot;&gt;MANAGER_FACTORY_CLASS_NAME&lt;/font&gt;&lt;font color=&quot;#a9b7c6&quot; style=&quot;font-size: 14px&quot;&gt;): &lt;/font&gt;&lt;/font&gt;&lt;font color=&quot;#b3b3b3&quot; style=&quot;font-size: 14px&quot;&gt;&lt;font style=&quot;font-family: &amp;#34;helvetica&amp;#34; ; font-size: 14px&quot;&gt;创建 &lt;/font&gt;&lt;span style=&quot;font-family: &amp;#34;helvetica&amp;#34;&quot;&gt;ManagerFactory &lt;/span&gt;&lt;/font&gt;&lt;/font&gt;&lt;font style=&quot;font-family: &amp;#34;helvetica&amp;#34; ; white-space: normal&quot;&gt;&lt;font color=&quot;#b3b3b3&quot;&gt;&lt;span style=&quot;font-family: &amp;#34;helvetica&amp;#34;&quot;&gt;接口的&lt;/span&gt;&lt;/font&gt;&lt;/font&gt;&lt;/pre&gt;&lt;pre&gt;&lt;font color=&quot;#b3b3b3&quot; style=&quot;font-family: &amp;#34;helvetica&amp;#34; ; white-space: normal&quot;&gt;实现类对象，&lt;/font&gt;&lt;font color=&quot;#9999ff&quot; style=&quot;font-family: &amp;#34;helvetica&amp;#34; ; white-space: normal&quot;&gt;MANAGER_FACTORY_CLASS_NAME&lt;/font&gt;&lt;span style=&quot;font-family: &amp;#34;helvetica&amp;#34; ; white-space: normal&quot;&gt;：&lt;/span&gt;&lt;font color=&quot;#b3b3b3&quot; style=&quot;font-family: &amp;#34;helvetica&amp;#34; ; white-space: normal&quot;&gt;&quot;com.tencent.shadow.dynamic.impl.ManagerFactoryImpl&quot;&lt;/font&gt;&lt;/pre&gt;&lt;pre&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;&lt;font color=&quot;#ffffff&quot; style=&quot;font-size: 14px&quot;&gt;4.&lt;/font&gt;&lt;font color=&quot;#b3b3b3&quot; style=&quot;font-size: 14px&quot;&gt; &lt;/font&gt;managerFactory&lt;span style=&quot;color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;.&lt;/span&gt;&lt;span style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace ; color: rgb(204 , 120 , 51)&quot;&gt;buildManager&lt;/span&gt;&lt;span style=&quot;color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace ; color: rgb(174 , 129 , 255)&quot;&gt;pluginManagerContext&lt;/span&gt;&lt;span style=&quot;color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;)&lt;/span&gt;&lt;/font&gt;&lt;/pre&gt;&lt;/pre&gt;&lt;/pre&gt;&lt;p&gt;&lt;/p&gt;" style="whiteSpace=wrap;html=1;rounded=0;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="-1195" y="1070" width="807.5" height="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="65" value="" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="52" target="64">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="-1690" y="1118"/>
+                            <mxPoint x="-1720" y="1118"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="67" value="" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" target="66">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-1690" y="1120" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="69" value="" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;elbow=vertical;html=1;" edge="1" parent="1" target="68">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="-1690" y="1118" as="sourcePoint"/>
+                        <Array as="points">
+                            <mxPoint x="-2020" y="1289"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="52" value="&lt;pre style=&quot;font-size: 14px ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;&lt;pre style=&quot;background-color: #1f292d ; color: #a9b7c6 ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 12.0pt&quot;&gt;&lt;pre style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 12pt&quot;&gt;&lt;span style=&quot;color: #4ec9b0&quot;&gt;ApkClassLoader&lt;/span&gt;&lt;/pre&gt;&lt;/pre&gt;&lt;/pre&gt;" style="whiteSpace=wrap;html=1;rounded=1;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="-1560" y="1090" width="150" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="54" value="DexClassLoader" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;labelBackgroundColor=none;rounded=1;" vertex="1" parent="1">
+                    <mxGeometry x="-1620" y="910" width="270" height="46" as="geometry"/>
+                </mxCell>
+                <mxCell id="62" value="主要用来加载指定压缩文件的 ClassLoader" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;" vertex="1" parent="54">
+                    <mxGeometry y="26" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="59" value="&lt;p style=&quot;line-height: 100%&quot;&gt;&lt;/p&gt;&lt;pre style=&quot;background-color: rgb(31 , 41 , 45) ; color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 14px&quot;&gt;String&lt;span style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 12pt&quot;&gt;[] &lt;/span&gt;&lt;span style=&quot;color: #ffc66d&quot;&gt;loadWhiteList&lt;/span&gt;(&lt;span style=&quot;color: rgb(78 , 201 , 176)&quot;&gt;InstalledApk &lt;/span&gt;&lt;span style=&quot;color: rgb(174 , 129 , 255)&quot;&gt;installedApk&lt;/span&gt;&lt;span&gt;)：&lt;/span&gt;&lt;/pre&gt;&lt;pre style=&quot;background-color: rgb(31 , 41 , 45) ; color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 14px&quot;&gt;&lt;span style=&quot;line-height: 100%&quot;&gt;1. 使用 &lt;/span&gt;DexClassLoader 加载 installApk 对应的 apk 文件&lt;/pre&gt;&lt;pre style=&quot;background-color: rgb(31 , 41 , 45) ; color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 14px&quot;&gt;2. 使用反射获取 &quot;com.tencent.shadow.dynamic.impl.WhiteList&quot; 该类的 sWhiteList 字段，即定义的白名单&lt;/pre&gt;&lt;pre style=&quot;background-color: rgb(31 , 41 , 45) ; color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 14px&quot;&gt;3. getCustomWhiteList() 获取自定义白名单，与 APK 中的白名单组成新的白名单，自定义白名单靠前&lt;/pre&gt;&lt;p&gt;&lt;/p&gt;" style="whiteSpace=wrap;html=1;fontStyle=1;verticalAlign=top;fillColor=none;startSize=26;" vertex="1" parent="1">
+                    <mxGeometry x="-1160" y="690" width="772.5" height="160" as="geometry"/>
+                </mxCell>
+                <mxCell id="61" value="Extends" style="endArrow=block;endSize=16;endFill=0;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="52" target="54">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="-1150" y="970" as="sourcePoint"/>
+                        <mxPoint x="-990" y="970" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="64" value="&lt;p style=&quot;line-height: 100%&quot;&gt;&lt;/p&gt;&lt;pre style=&quot;background-color: rgb(31 , 41 , 45) ; color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 14px&quot;&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;&lt;span style=&quot;color: rgb(220 , 220 , 220)&quot;&gt;ApkClassLoader&lt;/span&gt;(&lt;span style=&quot;color: rgb(78 , 201 , 176)&quot;&gt;InstalledApk &lt;/span&gt;&lt;span style=&quot;color: rgb(174 , 129 , 255)&quot;&gt;installedApk&lt;/span&gt;,&lt;br&gt;               &lt;span style=&quot;color: rgb(78 , 201 , 176)&quot;&gt;ClassLoader &lt;/span&gt;&lt;span style=&quot;color: rgb(174 , 129 , 255)&quot;&gt;parent&lt;/span&gt;, &lt;span style=&quot;color: rgb(78 , 201 , 176)&quot;&gt;String&lt;/span&gt;[] &lt;span style=&quot;color: rgb(174 , 129 , 255)&quot;&gt;mInterfacePackageNames&lt;/span&gt;, &lt;span style=&quot;color: rgb(86 , 156 , 214) ; font-weight: bold&quot;&gt;int &lt;/span&gt;&lt;span style=&quot;color: rgb(174 , 129 , 255)&quot;&gt;grandTimes&lt;/span&gt;) ：&lt;/font&gt;&lt;/pre&gt;&lt;pre style=&quot;background-color: rgb(31 , 41 , 45) ; color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 14px&quot;&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;1. installedApk：用来加载的 APK&lt;/font&gt;&lt;/pre&gt;&lt;pre style=&quot;background-color: rgb(31 , 41 , 45) ; color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 14px&quot;&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;2. mInterfacePackageNames：定义加载接口的包名，加载其中的类会默认使用父加载器加载&lt;/font&gt;&lt;/pre&gt;&lt;pre style=&quot;background-color: rgb(31 , 41 , 45) ; color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 14px&quot;&gt;3. grandTimes：指定授予加载权限的父加载器（0： parent，1：parent的parent...), 主要用来加载非 &lt;/pre&gt;&lt;pre style=&quot;background-color: rgb(31 , 41 , 45) ; color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 14px&quot;&gt;mInterfacePackageNames 其中包名下的类，同时该类又不是 加载 APK 中的&lt;/pre&gt;&lt;p&gt;&lt;/p&gt;" style="whiteSpace=wrap;html=1;rounded=0;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="-2710" y="830" width="810" height="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="66" value="&lt;p style=&quot;line-height: 100%&quot;&gt;&lt;/p&gt;&lt;pre style=&quot;background-color: rgb(31 , 41 , 45) ; color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 14px&quot;&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;&lt;span style=&quot;color: rgb(78 , 201 , 176)&quot;&gt;Class&lt;/span&gt;&lt;span style=&quot;color: rgb(180 , 180 , 180)&quot;&gt;&amp;lt;?&amp;gt; &lt;/span&gt;&lt;span style=&quot;color: rgb(255 , 198 , 109)&quot;&gt;loadClass&lt;/span&gt;(&lt;span style=&quot;color: rgb(78 , 201 , 176)&quot;&gt;String &lt;/span&gt;&lt;span style=&quot;color: rgb(174 , 129 , 255)&quot;&gt;className&lt;/span&gt;, &lt;span style=&quot;color: rgb(86 , 156 , 214) ; font-weight: bold&quot;&gt;boolean &lt;/span&gt;&lt;span style=&quot;color: rgb(174 , 129 , 255)&quot;&gt;resolve&lt;/span&gt;)：&lt;/font&gt;&lt;/pre&gt;&lt;pre style=&quot;background-color: rgb(31 , 41 , 45) ; color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 14px&quot;&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;1. 判断 className 的包名是否在 mInterfacePackageNames 中，存在直接使用父加载器加载&lt;br&gt;&lt;/font&gt;&lt;/pre&gt;&lt;pre style=&quot;background-color: rgb(31 , 41 , 45) ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 14px&quot;&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;&lt;font color=&quot;#a9b7c6&quot; style=&quot;font-size: 14px&quot;&gt;2. 若 className 为非 mInterfacePackageNames 中的类，先从自己的 &lt;/font&gt;&lt;span style=&quot;color: rgb(98 , 151 , 85) ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;dexPath &lt;/span&gt;&lt;span style=&quot;font-family: &amp;#34;courier new&amp;#34; , monospace&quot;&gt;&lt;font color=&quot;#ffffff&quot; style=&quot;font-size: 14px&quot;&gt;中查找，找不到再从&lt;/font&gt;&lt;/span&gt;&lt;font color=&quot;#a9b7c6&quot; style=&quot;font-size: 14px&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/font&gt;&lt;/pre&gt;&lt;pre style=&quot;background-color: rgb(31 , 41 , 45) ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 14px&quot;&gt;&lt;pre style=&quot;color: rgb(169 , 183 , 198) ; font-family: &amp;#34;courier new&amp;#34; , monospace&quot;&gt;&lt;font style=&quot;font-size: 14px&quot;&gt;mGrandParent &lt;span style=&quot;color: rgb(98 , 151 , 85) ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;ClassLoader&lt;/span&gt;&lt;span style=&quot;color: rgb(98 , 151 , 85)&quot;&gt;中查找&lt;/span&gt;&lt;/font&gt;&lt;/pre&gt;&lt;/pre&gt;&lt;p&gt;&lt;/p&gt;" style="whiteSpace=wrap;html=1;rounded=0;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="-2570" y="1059.5" width="670" height="122.5" as="geometry"/>
+                </mxCell>
+                <mxCell id="68" value="&lt;pre style=&quot;background-color: #1f292d ; color: #a9b7c6 ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 12.0pt&quot;&gt;&lt;span style=&quot;color: #b4b4b4&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&quot;color: #507874&quot;&gt;T&lt;/span&gt;&lt;span style=&quot;color: #b4b4b4&quot;&gt;&amp;gt; &lt;/span&gt;&lt;span style=&quot;color: #507874&quot;&gt;T &lt;/span&gt;&lt;span style=&quot;color: #ffc66d&quot;&gt;getInterface&lt;/span&gt;(&lt;span style=&quot;color: #4ec9b0&quot;&gt;Class&lt;/span&gt;&lt;span style=&quot;color: #b4b4b4&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&quot;color: #507874&quot;&gt;T&lt;/span&gt;&lt;span style=&quot;color: #b4b4b4&quot;&gt;&amp;gt; &lt;/span&gt;&lt;span style=&quot;color: #ae81ff&quot;&gt;clazz&lt;/span&gt;, &lt;span style=&quot;color: #4ec9b0&quot;&gt;String &lt;/span&gt;&lt;span style=&quot;color: #ae81ff&quot;&gt;className&lt;/span&gt;)：&lt;/pre&gt;&lt;pre style=&quot;background-color: #1f292d ; color: #a9b7c6 ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 12.0pt&quot;&gt;主要用于从 APK 中读取接口的实现，反射生成接口实现对象&lt;/pre&gt;&lt;pre style=&quot;background-color: rgb(31 , 41 , 45) ; font-size: 12pt&quot;&gt;&lt;pre style=&quot;font-size: 12pt&quot;&gt;&lt;span style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace ; color: rgb(174 , 129 , 255)&quot;&gt;clazz &lt;/span&gt;&lt;font color=&quot;#009900&quot; style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;定义的接口 ，&lt;/font&gt;className&lt;font color=&quot;#009900&quot; style=&quot;font-size: 12pt ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt; &lt;/font&gt;&lt;font style=&quot;font-size: 12pt ; font-family: &amp;#34;helvetica&amp;#34;&quot;&gt; &lt;/font&gt;&lt;span style=&quot;font-size: 12pt ; color: rgb(98 , 151 , 85) ; font-family: &amp;#34;courier new&amp;#34; , monospace&quot;&gt;实现类的类名&lt;/span&gt;&lt;/pre&gt;&lt;/pre&gt;" style="whiteSpace=wrap;html=1;rounded=0;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="-2432.5" y="1240" width="532.5" height="97.5" as="geometry"/>
+                </mxCell>
+                <mxCell id="70" value="«interface»&lt;br&gt;&lt;pre style=&quot;background-color: #1f292d ; color: #a9b7c6 ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 12.0pt&quot;&gt;&lt;span style=&quot;color: #4ec9b0&quot;&gt;ManagerFactory&lt;/span&gt;&lt;/pre&gt;&lt;pre style=&quot;background-color: #1f292d ; color: #a9b7c6 ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 12.0pt&quot;&gt;&lt;pre style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 12pt&quot;&gt;&lt;span style=&quot;color: #4ec9b0&quot;&gt;PluginManagerImpl &lt;/span&gt;&lt;span style=&quot;color: #ffc66d&quot;&gt;buildManager&lt;/span&gt;(&lt;span style=&quot;color: #4ec9b0&quot;&gt;Context &lt;/span&gt;&lt;span style=&quot;color: #ae81ff&quot;&gt;context&lt;/span&gt;)&lt;span style=&quot;color: #dcdcdc&quot;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/pre&gt;" style="html=1;labelBackgroundColor=none;fillColor=none;rounded=1;glass=0;sketch=0;" vertex="1" parent="1">
+                    <mxGeometry x="-340" y="1200" width="450" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="79" value="" style="edgeStyle=elbowEdgeStyle;shape=link;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="75" target="78">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="75" value="&lt;pre style=&quot;background-color: #1f292d ; color: #a9b7c6 ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 12.0pt&quot;&gt;&lt;span style=&quot;color: #4ec9b0&quot;&gt;ManagerFactoryImpl&lt;/span&gt;&lt;/pre&gt;&lt;pre style=&quot;background-color: rgb(31 , 41 , 45) ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 12pt&quot;&gt;&lt;pre style=&quot;font-size: 12pt ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;&lt;span style=&quot;color: rgb(255 , 198 , 109)&quot;&gt;buildManager方法&lt;/span&gt;&lt;font color=&quot;#b3b3b3&quot;&gt;返回&lt;/font&gt;&lt;span style=&quot;color: rgb(255 , 198 , 109)&quot;&gt; &lt;/span&gt;&lt;font color=&quot;#a9b7c6&quot;&gt;SamplePluginManager 对象&lt;/font&gt;&lt;/pre&gt;&lt;/pre&gt;" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="-330" y="1500" width="406" height="121" as="geometry"/>
+                </mxCell>
+                <mxCell id="76" value="" style="endArrow=block;dashed=1;endFill=0;endSize=12;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.472;entryY=1.004;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="75" target="70">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="-140" y="1420" as="sourcePoint"/>
+                        <mxPoint x="20" y="1420" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="78" value="&lt;pre style=&quot;background-color: rgb(31 , 41 , 45) ; color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 12pt&quot;&gt;&lt;span style=&quot;color: rgb(78 , 201 , 176)&quot;&gt;SamplePluginManager&lt;/span&gt;&lt;/pre&gt;&lt;pre style=&quot;background-color: rgb(31 , 41 , 45) ; color: rgb(169 , 183 , 198) ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 12pt&quot;&gt;&lt;pre style=&quot;font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 12pt&quot;&gt;&lt;span style=&quot;color: rgb(255 , 198 , 109)&quot;&gt;enter&lt;/span&gt;(&lt;span style=&quot;color: rgb(174 , 129 , 255)&quot;&gt;context&lt;/span&gt;,&lt;span style=&quot;color: rgb(174 , 129 , 255)&quot;&gt;formId&lt;/span&gt;,&lt;span style=&quot;color: rgb(174 , 129 , 255)&quot;&gt;bundle&lt;/span&gt;,&lt;span style=&quot;color: rgb(174 , 129 , 255)&quot;&gt;callback&lt;/span&gt;)&lt;/pre&gt;&lt;/pre&gt;" style="whiteSpace=wrap;html=1;rounded=1;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="200" y="1530.75" width="360" height="59.5" as="geometry"/>
+                </mxCell>
+                <mxCell id="81" value="" style="endArrow=classic;html=1;edgeStyle=elbowEdgeStyle;" edge="1" parent="1" source="37" target="78">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="250" y="1260" as="sourcePoint"/>
+                        <mxPoint x="300" y="1210" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="85" value="&lt;pre style=&quot;font-size: 14px ; font-family: &amp;#34;consolas&amp;#34; , monospace&quot;&gt;&lt;font color=&quot;#ffffff&quot;&gt;执行 mManagerImpl.enter()&lt;/font&gt;&lt;/pre&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#009900;" vertex="1" connectable="0" parent="81">
+                    <mxGeometry x="-0.2274" y="-1" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="91" value="抽象类： FastPluginManager" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;rounded=1;glass=0;labelBackgroundColor=none;sketch=0;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="700" y="1530.25" width="370" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="93" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="91">
+                    <mxGeometry y="26" width="370" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="94" value="抽象方法：getPluginProcessServiceName( partKey ) : String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="91">
+                    <mxGeometry y="34" width="370" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="95" value="抽象类：PluginManagerThatUseDynamicLoader" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;rounded=1;glass=0;labelBackgroundColor=none;sketch=0;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="1220" y="1520" width="300" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="97" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="95">
+                    <mxGeometry y="26" width="300" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="98" value="+ method(type): type" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="95">
+                    <mxGeometry y="34" width="300" height="26" as="geometry"/>
+                </mxCell>
+                <mxCell id="99" value="抽象类：BaseDynamicPluginManager" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;rounded=1;glass=0;labelBackgroundColor=none;sketch=0;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="1670" y="1526.25" width="230" height="64" as="geometry"/>
+                </mxCell>
+                <mxCell id="101" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="99">
+                    <mxGeometry y="26" width="230" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="102" value="抽象方法：" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="99">
+                    <mxGeometry y="34" width="230" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="103" value="Extends" style="endArrow=block;endSize=16;endFill=0;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" target="91">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="560" y="1560" as="sourcePoint"/>
+                        <mxPoint x="720" y="1560" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="104" value="Extends" style="endArrow=block;endSize=16;endFill=0;html=1;entryX=0;entryY=0.231;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="98">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="1070" y="1559.75" as="sourcePoint"/>
+                        <mxPoint x="1210" y="1560" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="105" value="Extends" style="endArrow=block;endSize=16;endFill=0;html=1;entryX=0.022;entryY=0.406;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="99">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="1520" y="1550" as="sourcePoint"/>
+                        <mxPoint x="1680" y="1550" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="106" value="«interface»&lt;br&gt;&lt;pre style=&quot;background-color: #1f292d ; color: #a9b7c6 ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 12.0pt&quot;&gt;&lt;span style=&quot;color: #4ec9b0&quot;&gt;PluginManagerImpl&lt;/span&gt;&lt;/pre&gt;" style="html=1;rounded=1;glass=0;labelBackgroundColor=none;sketch=0;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="1290" y="1340" width="160" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="107" value="«interface»&lt;br&gt;&lt;pre style=&quot;background-color: #1f292d ; color: #a9b7c6 ; font-family: &amp;#34;consolas&amp;#34; , monospace ; font-size: 12.0pt&quot;&gt;&lt;span style=&quot;color: #4ec9b0&quot;&gt;PluginManager&lt;/span&gt;&lt;/pre&gt;" style="html=1;rounded=1;glass=0;labelBackgroundColor=none;sketch=0;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="1270" y="1112" width="185" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="108" value="" style="endArrow=block;dashed=1;endFill=0;endSize=12;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="95" target="106">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="1210" y="1360" as="sourcePoint"/>
+                        <mxPoint x="1370" y="1410" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="110" value="" style="endArrow=block;dashed=1;endFill=0;endSize=12;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;edgeStyle=elbowEdgeStyle;entryX=0.546;entryY=1.028;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="106" target="107">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="1210" y="1360" as="sourcePoint"/>
+                        <mxPoint x="1580" y="1190" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="113" value="" style="edgeStyle=elbowEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;shape=flexArrow;" edge="1" parent="1" source="111" target="112">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="111" value="" style="rounded=0;whiteSpace=wrap;html=1;glass=0;labelBackgroundColor=none;sketch=0;fillColor=none;" vertex="1" parent="1">
+                    <mxGeometry x="-2750" y="660" width="3310" height="710" as="geometry"/>
+                </mxCell>
+                <mxCell id="112" value="&lt;font style=&quot;font-size: 16px&quot;&gt;主要实现 Manager APK 的加载&lt;/font&gt;" style="text;html=1;strokeColor=#006EAF;fillColor=#1ba1e2;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;glass=0;labelBackgroundColor=none;sketch=0;fontColor=#ffffff;" vertex="1" parent="1">
+                    <mxGeometry x="-1287.5" y="550" width="247.5" height="40" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

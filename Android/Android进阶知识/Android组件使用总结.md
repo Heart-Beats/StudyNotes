@@ -8,13 +8,15 @@
 >
 > - dpi = px/ inch（英寸）  ：   像素密度 = 斜对角像素 / 斜对角英寸
 > - density = dpi / 160   —> 密度，指每平方英寸中的像素数
-> - dp = px/ density = px / (dpi / 160)   <==>  px = dp * ( dpi /160 )
+> - ==px = **density  * dp**==          <==>  dp = px /density =  160px / dpi  = 160px / (px/inch) = 160 inch
 >
-> 所以在 Android 中 ，160 dpi 的设备上 1 px = 1 dp， 同时我们可推断出： 
+> 所以在 Android 中 ，我们可推断出： 
 >
-> ​		dp = px / (dpi / 160)  = dpi * inch / ( dpi /160) =  160 inch
+> ​		dp  =  160 inch
 >
 > 因此我们可以看出 ， 1 英寸 = 160 dp， 即 最终 dp 决定的控件大小与任何因素无关， 160 dp 在不同 Android 设备上都会是 1 英寸。
+>
+> 同时对于字体还有如下关系： ==1in  = 160sp = 160dp = 72pt==
 
 
 

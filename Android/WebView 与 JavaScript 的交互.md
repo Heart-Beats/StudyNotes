@@ -305,6 +305,16 @@ webSettings.setDefaultTextEncodingName("utf-8");//设置编码格式
 
 ```java
 webview.setWebChromeClient(new WebChromeClient(){
+    
+         /**
+         * Android7.0 开始，只有来自安全的链接如 https 才会回调此方法，不安全的来源系统将自动拒绝定位请求。
+         */
+        @Override
+        public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissionsCallback callback) {
+            callback.invoke(origin, true, false);
+            Log.d("onGeolocationPermissionsShowPrompt", origin + "---------------> 请求定位");
+            super.onGeolocationPermissionsShowPrompt(origin, callback);
+        }
 
          // 获得网页的加载进度
          @Override

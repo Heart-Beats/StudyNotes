@@ -1645,7 +1645,7 @@ BUILD FAILED in 0s
     局部变量用 `def` 关键字声明。它们只在它们被声明的范围内可见。关键字与使用的构建脚本语言有关：
 
     ```groovy
-    def dest = 'dest'
+    def dest = 'dest'  // 定义的变量仅在 task 范围中可直接访问
     
     tasks.register('copy', Copy) {
         from 'source'

@@ -468,10 +468,18 @@
         <item name="tabSelectedTextColor">@color/colorAccent</item>
         <!--设置指示器的颜色 -->
         <item name="tabIndicatorColor">@color/colorAccent</item>
-        <!--设置自定义的指示器 -->
+        <!--设置指示器的高度 -->
+     	<item name="tabIndicatorHeight">2dp</item>
+        <!--设置自定义的指示器，生效需要 tabIndicatorColor 为 null -->
         <item name="tabIndicator">@drawable/tab_indicator</item>
         <!--设置是否可横向滚动 -->
         <item name="tabMode">scrollable</item>
+        <!--设置 TabLayout 指示器的位置样式-->
+        <item name="tabIndicatorGravity">bottom</item>
+        <!--设置 tab 的 PaddingStart-->
+        <item name="tabPaddingStart">0dp</item>
+        <!--设置 tab 的 PaddingEnd-->
+        <item name="tabPaddingEnd">0dp</item>
         
         <!-- android:theme 这个属性很重要，在 material v1.1.0 之后，未将theme设置为MaterialComponents，使用MD控件可能会出现闪退-->
     	<item name="android:theme">@style/Theme.MaterialComponents.Light.NoActionBar</item>
@@ -504,6 +512,8 @@
     ```
 
     通过定义上面的样式后，在使用 TabLayout 时引用此样式就可以了。
+
+    注意：==TabLayout 的指示器是在 tab 居中的，所以需要设置 tabPaddingStart 与 tabPaddingEnd 相同，否则指示器会与 tab 上显示的 View 产生偏移。==
 
     
 
@@ -550,42 +560,73 @@
     3. 给选项卡添加点击选择监听器
 
         ```kotlin
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            //当一个选项卡进入选择状态调用
-            override fun onTabSelected(tabItem: TabLayout.Tab) {
-                //可以通过 tabItem.text、tabItem.icon、tabItem.customView 来设置选中选项卡的文字、图标、和自定义view的更改
-            }
+        fun addTabSelectedListener(){
+                tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+                //当一个选项卡进入选择状态调用
+                override fun onTabSelected(tabItem: TabLayout.Tab) {
+                    //可以通过 tabItem.text、tabItem.icon、tabItem.customView 来设置选中选项卡的文字、图标、和自定义view的更改
+                        val tabTextView = tabItem.customView as TextView
+                        tabTextView.setTabSelectStyle(true)
+                }
         
-            //当一个选项卡退出选择状态调用，能通过 tabItem 可做的处理与选中状态一致
-            override fun onTabUnselected(tabItem: TabLayout.Tab) {
-            }
+                //当一个选项卡退出选择状态调用，能通过 tabItem 可做的处理与选中状态一致
+                override fun onTabUnselected(tabItem: TabLayout.Tab) {
+                        val tabTextView = tabItem.customView as TextView
+                        tabTextView.setTabSelectStyle(true)
+                }
         
-            //当用户再次选择已经选择的选项卡时调用 ， tabItem 使用同上
-            override fun onTabReselected(tabItem: TabLayout.Tab) {
+                //当用户再次选择已经选择的选项卡时调用 ， tabItem 使用同上
+                override fun onTabReselected(tabItem: TabLayout.Tab) {
+                }
+            })
+        }
+        
+        private fun TextView.setTabSelectStyle(isSelect: Boolean) {
+            val sp9 = getPxByRes(R.dimen.sp_9).toFloat()
+            when (isSelect) {
+                true -> {
+                    setTextSize(TypedValue.COMPLEX_UNIT_PX, sp9)
+                    setTextColor(getColorByRes(R.color.color_595cca))
+                    gravity = Gravity.START
+                }
+                false -> {
+                    setTextSize(TypedValue.COMPLEX_UNIT_PX, sp9)
+                    setTextColor(getColorByRes(R.color.color_6f718f))
+                    gravity = Gravity.START
+                }
             }
-        })
+        }
         ```
-
-        注意：若在 `tabLayout.addTab(tab)` 之后设置选择监听器，那么默认选中时选择监听器是无任何事件回调的，切换选项卡时才有事件回调，若想 tabLayout 一显示就有事件回调，在 `tabLayout.addTab(tab)` 之前设置选择监听器即可，这样默认选中选项卡时就能收到监听回调。
-
         
-
-    后续代码中就可通过 TabLayout + ViewPager2 + Fragment 实现页面滑动切换效果。
-
+        注意：若在 `tabLayout.addTab(tab)` 之后设置选择监听器，那么默认选中时选择监听器是无任何事件回调的，切换选项卡时才有事件回调，若想 tabLayout 一显示就有事件回调，在 `tabLayout.addTab(tab)` 之前设置选择监听器即可，这样默认选中选项卡时就能收到监听回调。
+        
+        
     
-
+    后续代码中就可通过 TabLayout + ViewPager2 + Fragment 实现页面滑动切换效果。
+    
+    
+    
     注意：TabLayout + ViewPager2 实现页面滑动切换联动需要使用 ==TabLayoutMediator==，如下所示：
-
+    
     ```kotlin
-    //通过 TabLayoutMediator 的 attach 将 TabLayout 和 ViewPager2 联动在一起
-    TabLayoutMediator(tab_layout, view_pager) { tab, position ->
-        //TabLayout 和 ViewPager2 联动在一起后布局中设置的 tabItem 将失效，因此需要重新设置 item
-        tab.text = fragments[position].arguments?.get("title") as? String ?: ""
-    }.attach()
+    fun initTabLayoutWithViewPager(){
+        //通过 TabLayoutMediator 的 attach 将 TabLayout 和 ViewPager2 联动在一起
+        TabLayoutMediator(tab_layout, view_pager) { tab, position ->
+            //TabLayout 和 ViewPager2 联动在一起后布局中设置的 tabItem 将失效，因此需要重新设置 item
+            tab.text = fragments[position].arguments?.get("title") as? String ?: ""
+    
+            // 这里可设置 tab 默认显示的自定义 View
+            val tabTextView = TextView(this).apply {
+                text = titles[position]
+                setTabSelectStyle(false)
+            }
+            tab.customView = tabTextView
+        }.attach()
+    }
     ```
-
+    
     只有最终调用 ==`attach()`== 方法后，才会有联动效果以及 `TabLayoutMediator` 中设置的回调才会产生。
-
+    
     
 
 ------

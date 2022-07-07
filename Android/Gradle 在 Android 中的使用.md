@@ -167,7 +167,7 @@ Gradle 既然是构建工具，那么肯定是针对具体的项目的，接下�
         ```groovy
         //server-application 的  settings.gradle
         
-        // == Define locations for build logic ==
+        // Gradle 7 之后无法在 build.gradle 中声明子项目依赖仓库，需要在 settings.gradle 中使用此方式声明
         pluginManagement {
             repositories {
                 gradlePluginPortal()
@@ -270,22 +270,22 @@ Gradle 既然是构建工具，那么肯定是针对具体的项目的，接下�
 
 |                             属性                             |                             作用                             |
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
-|              org.gradle.caching = (true, false)              |                         启用构建缓存                         |
-|           org.gradle.caching.debug = (true, false)           |                    debug 模式启用构建缓存                    |
-|         org.gradle.configureondemand = (true, false)         |                启用孵化配置，仅配置必要的项目                |
-|      org.gradle.console = (auto, plain, rich, verbose)       | 自定义控制台输出颜色或详细程度，默认值取决于 Gradle 的调用方式 |
-|              org.gradle.daemon = (true, false)               |                    启用守护进程，默认开启                    |
-|      org.gradle.daemon.idletimeout = (# of idle millis)      |       守护进程在指定的空闲毫秒数后自行终止，默认三小时       |
-|               org.gradle.debug = (true, false)               | Gradle 将在启用远程调试的情况下运行构建，侦听端口 5005。会等待调试器连接 |
-|          org.gradle.java.home = (path to JDK home)           | 为 Gradle 构建过程指定 Java 主目录。该值可以设置为 `jdk` 或 `jre` 路径，使用 jdk 更安全，未设置使用 `JAVA_HOME` |
-|             org.gradle.jvmargs = (JVM arguments)             |             指定用于 Gradle 守护进程的 JVM 参数              |
-| org.gradle.logging.level = (quiet, warn, lifecycle, info, debug) |     设置 Gradle 的日志级别，不区分大小写，默认 lifecycle     |
-|             org.gradle.parallel = (true, false)              |                         任务并行执行                         |
-|             org.gradle.priority = (low, normal)              | 指定 Gradle 守护进程及其启动的所有进程的调度优先级。默认为`normal` |
-|            org.gradle.vfs.verbose = (true, false)            | 在[查看文件系统](https://docs.gradle.org/current/userguide/gradle_daemon.html#sec:daemon_watch_fs)时配置详细日志记录。 默认为关闭 |
-|             org.gradle.vfs.watch = (true, false)             | 切换[监视文件系统](https://docs.gradle.org/current/userguide/gradle_daemon.html#sec:daemon_watch_fs) |
-|     org.gradle.warning.mode = (all, fail, summary, none)     | 当设置为`all`, `summary` 或  `none` 时，Gradle 将使用不同的警告类型显示 |
-|     org.gradle.workers.max = (max # of worker processes)     |       使用最多给定数量的工作人员，默认为 cpu 处理器数        |
+|             `org.gradle.caching = (true, false)`             |                         启用构建缓存                         |
+|          `org.gradle.caching.debug = (true, false)`          |                    debug 模式启用构建缓存                    |
+|        `org.gradle.configureondemand = (true, false)`        |                启用孵化配置，仅配置必要的项目                |
+|     `org.gradle.console = (auto, plain, rich, verbose)`      | 自定义控制台输出颜色或详细程度，默认值取决于 Gradle 的调用方式 |
+|             `org.gradle.daemon = (true, false)`              |                    启用守护进程，默认开启                    |
+|     `org.gradle.daemon.idletimeout = (# of idle millis)`     |       守护进程在指定的空闲毫秒数后自行终止，默认三小时       |
+|              `org.gradle.debug = (true, false)`              | Gradle 将在启用远程调试的情况下运行构建，侦听端口 5005。会等待调试器连接 |
+|         `org.gradle.java.home = (path to JDK home)`          | 为 Gradle 构建过程指定 Java 主目录。该值可以设置为 `jdk` 或 `jre` 路径，使用 jdk 更安全，未设置使用 `JAVA_HOME` |
+|            `org.gradle.jvmargs = (JVM arguments)`            |             指定用于 Gradle 守护进程的 JVM 参数              |
+| `org.gradle.logging.level = (quiet, warn, lifecycle, info, debug)` |     设置 Gradle 的日志级别，不区分大小写，默认 lifecycle     |
+|            `org.gradle.parallel = (true, false)`             |                         任务并行执行                         |
+|            `org.gradle.priority = (low, normal)`             | 指定 Gradle 守护进程及其启动的所有进程的调度优先级。默认为`normal` |
+|           `org.gradle.vfs.verbose = (true, false)`           | 在[查看文件系统](https://docs.gradle.org/current/userguide/gradle_daemon.html#sec:daemon_watch_fs)时配置详细日志记录。 默认为关闭 |
+|            `org.gradle.vfs.watch = (true, false)`            | 切换[监视文件系统](https://docs.gradle.org/current/userguide/gradle_daemon.html#sec:daemon_watch_fs) |
+|    `org.gradle.warning.mode = (all, fail, summary, none)`    | 当设置为`all`, `summary` 或  `none` 时，Gradle 将使用不同的警告类型显示 |
+|    `org.gradle.workers.max = (max # of worker processes)`    |       使用最多给定数量的工作人员，默认为 cpu 处理器数        |
 
 
 
@@ -2854,6 +2854,131 @@ configurations.all{
 
 
 ------
+
+
+
+### 11.  Gradle 在 Android 的使用
+
+
+
+#### 11.1 配置应用模块
+
+##### 11.1.1 设置应用 ID
+
+应用 ID 是 Android App 的唯一标识，发布应用后，就不允许修改。
+
+```groovy
+android {
+    defaultConfig {
+        applicationId "com.example.myapp"  // 设置应用 ID
+        minSdkVersion 15
+        targetSdkVersion 24
+        versionCode 1
+        versionName "1.0"
+    }
+    ...
+}
+```
+
+当在 Android Studio 中创建新项目时，`applicationId` 与设置期间选择的 Java 软件包名称完全一致。除了这一点，应用 ID 和软件包名称彼此无关，可以随意更改项目代码的包名称，这并不会影响 applicationId ， 反之亦然。
+
+应用 ID 的命名规则：
+
+- 必须至少包含两段（一个或多个圆点）
+- 每段必须以字母开头
+- 所有字符必须为字母数字或下划线 `[a-zA-Z0-9_]`
+
+
+
+##### 11.1.2 更改软件包名称
+
+默认情况下，项目的软件包名称与应用 ID 匹配，但可以更改软件包名称。需要注意的是，软件包名称（由项目目录结构定义）应始终与 `AndroidManifest.xml` 文件中的 `package` 属性匹配，如下所示：
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.myapp"
+    android:versionCode="1"
+    android:versionName="1.0" >
+```
+
+Android 构建工具使用 `package` 属性来发挥两种作用：
+
+1. 将此名称用作应用生成的 `R.java` 类的命名空间
+
+2. 使用此名称解析清单文件中声明的任何相关类名
+
+   如： 对于上面的清单声明为`<activity android:name=".MainActivity">` 的 Activity 将解析为 `com.example.myapp.MainActivity`
+
+
+
+#### 11.2 添加构建依赖项
+
+##### 11.2.1 依赖项类型
+
+1. **本地库模块依赖项**
+
+   ```groovy
+   implementation project(':mylibrary')
+   ```
+
+   声明了对一个名为 “mylibrary”（此名称必须与在 [`settings.gradle`](https://docs.gradle.org/current/dsl/org.gradle.api.initialization.Settings.html) 文件中使用 `include:` 定义的库名称相符）的 [Android 库模块](https://developer.android.google.cn/studio/projects/android-library?hl=zh_cn) 的依赖关系。在构建应用时，构建系统会编译该库模块，并将生成的编译内容打包到 APK 中。
+
+   
+
+2. **本地二进制文件依赖项**
+
+   ```groovy
+   implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
+   ```
+
+   声明了对项目的 `module_name/libs/` 目录中 JAR 以及 AAR 文件的依赖关系（因为 Gradle 会读取 `build.gradle` 文件的相对路径）。
+
+   或者，也可以按如下方式指定各个文件：
+
+   ```groovy
+   implementation files('libs/foo.jar', 'libs/bar.jar')
+   ```
+
+   
+
+3. **远程二进制文件依赖项**
+
+   ```groovy
+   implementation 'com.example.android:app-magic:12.3'
+   ```
+
+   这实际上是以下代码的简写形式：
+
+   ```groovy
+   implementation group: 'com.example.android', name: 'app-magic', version: '12.3'
+   ```
+
+   声明了对  “com.example.android” 命名空间组内的 12.3 版 “app-magic” 库的依赖关系。
+
+
+
+##### 11.2.2 依赖项配置
+
+详情请见： [9.4 依赖阶段配置](#9.4 依赖阶段配置)
+
+
+
+- 其他技巧：
+
+  以上所有配置会将依赖项应用于所有构建变体。如果只想为特定的[构建变体](https://developer.android.google.cn/studio/build/build-variants?hl=zh_cn)源代码集或[测试源代码集](https://developer.android.google.cn/studio/test?hl=zh_cn#sourcesets)声明依赖项，则必须将配置名称的首字母大写，并在其前面加上构建变体或测试源代码集的名称作为前缀。
+
+  如需只向 “free” 产品变种添加 `implementation` 依赖项（使用远程二进制文件依赖项），请使用如下所示的代码：
+
+  ```groovy
+  dependencies {
+      freeImplementation 'com.google.firebase:firebase-ads:9.8.0'
+  }
+  ```
+
+- 
+
+
 
 
 

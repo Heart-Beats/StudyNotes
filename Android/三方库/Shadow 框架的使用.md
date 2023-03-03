@@ -680,136 +680,158 @@ public class SampleComponentManager extends ComponentManager {
 
     
 
-3.  plugin
+3. plugin
 
-    对应图中的 `plugin` 模块，其中存放相关的插件应用。这里的插件应用与正常的应用并无二样，是可以单独启动运行的。
+   对应图中的 `plugin` 模块，其中存放相关的插件应用。这里的插件应用与正常的应用并无二样，是可以单独启动运行的。
 
-    那么究竟它是如何能被插件化使用呢？这里就涉及到 Shadow Gradle 的插件，它会在代码编译时通过 Transform 将相关的组件转化为 Shadow 能识别的组件。
+   那么究竟它是如何能被插件化使用呢？这里就涉及到 Shadow Gradle 的插件，它会在代码编译时通过 Transform 将相关的组件转化为 Shadow 能识别的组件。
 
-    因此，插件中我们需要应用此 Gradle  插件：
+   因此，插件中我们需要应用此 Gradle  插件：
 
-    -   添加插件路径地址
+   -   添加插件路径地址
 
-        ```groovy
-        buildscript {
-        	repositories{
-        		// shadow repository，即 3.1 环境准备中 Shadow 发布到的仓库地址
-        	}
-            
-           dependencies {
-                classpath "com.tencent.shadow.core:gradle-plugin:$shadow_version"
-            }
-        }
-        ```
+       ```groovy
+       buildscript {
+       	repositories{
+       		// shadow repository，即 3.1 环境准备中 Shadow 发布到的仓库地址
+       	}
+           
+          dependencies {
+               classpath "com.tencent.shadow.core:gradle-plugin:$shadow_version"
+           }
+       }
+       ```
 
-    -   应用此插件， 这里以 [Shadow 官方 demo 插件中的构建脚本](https://github.com/Tencent/Shadow/blob/master/projects/sample/source/sample-plugin/sample-plugin-app/build.gradle) 为例：
+   -   应用此插件， 这里以 [Shadow 官方 demo 插件中的构建脚本](https://github.com/Tencent/Shadow/blob/master/projects/sample/source/sample-plugin/sample-app/build.gradle) 为例：
 
-        ```groovy
-        //app 的 build.gradle
-        android {
-            
-         	defaultConfig {
-                applicationId project.SAMPLE_HOST_APP_APPLICATION_ID // 插件的 applicationId 需要与宿主保持一致
-            }
-            
-          //  ...
-        }
-        
-        //...
-        
-        apply plugin: 'com.tencent.shadow.plugin' 
-        
-        shadow {
-            transform {
-        //        useHostContext = ['abc']
-            }
-        
-            packagePlugin {
-                pluginTypes {
-                    debug {
-                        loaderApkConfig = new Tuple2('sample-loader-debug.apk', ':sample-loader:assembleDebug')
-                        runtimeApkConfig = new Tuple2('sample-runtime-debug.apk', ':sample-runtime:assembleDebug')
-                        pluginApks {
-                            pluginApk1 {
-                                businessName = 'sample-plugin-app'
-                                partKey = 'sample-plugin-app'
-                                buildTask = ':sample-plugin-app:assembleDebug'
-                                apkName = 'sample-plugin-app-debug.apk'
-                                apkPath = 'projects/sample/source/sample-plugin/sample-plugin-app/build/outputs/apk/debug/sample-plugin-app-debug.apk'
-                                hostWhiteList = ["com.tencent.shadow.sample.host.lib"]
-                            }
-                            pluginApk2 {
-                                businessName = 'sample-plugin-app2'
-                                partKey = 'sample-plugin-app2'
-                                buildTask = ':sample-plugin-app:assembleDebug'
-                                apkName = 'sample-plugin-app-debug2.apk'
-                                apkPath = 'projects/sample/source/sample-plugin/sample-plugin-app/build/outputs/apk/debug/sample-plugin-app-debug2.apk'
-                                hostWhiteList = ["com.tencent.shadow.sample.host.lib"]
-                            }
-                        }
-                    }
-        
-                    release {
-                        loaderApkConfig = new Tuple2('sample-loader-release.apk', ':sample-loader:assembleRelease')
-                        runtimeApkConfig = new Tuple2('sample-runtime-release.apk', ':sample-runtime:assembleRelease')
-                        pluginApks {
-                            pluginApk1 {
-                                businessName = 'sample-plugin-app'
-                                partKey = 'sample-plugin-app'
-                                buildTask = ':sample-plugin-app:assembleRelease'
-                                apkName = 'sample-plugin-app-release.apk'
-                                apkPath = 'projects/sample/source/sample-plugin/sample-plugin-app/build/outputs/apk/release/sample-plugin-app-release.apk'
-                                hostWhiteList = ["com.tencent.shadow.sample.host.lib"]
-                            }
-                            pluginApk2 {
-                                businessName = 'sample-plugin-app2'
-                                partKey = 'sample-plugin-app2'
-                                buildTask = ':sample-plugin-app:assembleRelease'
-                                apkName = 'sample-plugin-app-release2.apk'
-                                apkPath = 'projects/sample/source/sample-plugin/sample-plugin-app/build/outputs/apk/release/sample-plugin-app-release2.apk'
-                                hostWhiteList = ["com.tencent.shadow.sample.host.lib"]
-                            }
-                        }
-                    }
-                }
-        
-                loaderApkProjectPath = 'projects/sample/source/sample-plugin/sample-loader'
-                runtimeApkProjectPath = 'projects/sample/source/sample-plugin/sample-runtime'
-        
-                archiveSuffix = System.getenv("PluginSuffix") ?: ""
-                archivePrefix = 'plugin'
-                destinationDir = "${getRootProject().getBuildDir()}"
-        
-                version = 4
-                compactVersion = [1, 2, 3]
-                uuidNickName = "1.1.5"
-            }
-        }
-        ```
+       ```groovy
+       //app 的 build.gradle
+       apply plugin: 'com.android.application'
+       apply plugin: 'com.tencent.shadow.plugin' 
+       
+       android {
+           
+        	defaultConfig {
+               applicationId 'com.tencent.shadow.sample.plugin.app'
+           }
+           
+           // 将插件applicationId设置为和宿主相同
+           productFlavors {
+               plugin {
+                   dimension 'Shadow'
+                   applicationId HOST_APP_APPLICATION_ID
+               }
+           }
+           
+         //  ...
+       }
+       
+       //...
+       
+       shadow {
+           transform {
+       //        useHostContext = ['abc']
+           }
+       
+           packagePlugin {
+               pluginTypes {
+                   debug {
+                       loaderApkConfig = new Tuple2('sample-loader-debug.apk', ':sample-loader:assembleDebug')
+                       runtimeApkConfig = new Tuple2('sample-runtime-debug.apk', ':sample-runtime:assembleDebug')
+                       pluginApks {
+                           pluginApk1 {
+                               businessName = 'sample-plugin-app'
+                               partKey = 'sample-plugin-app'
+                               buildTask = ':sample-app:assemblePluginDebug'
+                               apkPath = 'projects/sample/source/sample-plugin/sample-app/build/outputs/apk/plugin/debug/sample-app-plugin-debug.apk'
+                               hostWhiteList = ["com.tencent.shadow.sample.host.lib"]
+                               dependsOn = ['sample-base']
+                           }
+                           pluginApk2 {
+                               businessName = 'sample-plugin-app2'
+                               partKey = 'sample-plugin-app2'
+                               buildTask = ':sample-app:assemblePluginDebug'
+                               apkPath = 'projects/sample/source/sample-plugin/sample-app/build/outputs/apk/plugin/debug/sample-app-plugin-debug2.apk'
+                               hostWhiteList = ["com.tencent.shadow.sample.host.lib"]
+                               dependsOn = ['sample-base']
+                           }
+                           sampleBase {
+                               businessName = 'sample-plugin-app'
+                               partKey = 'sample-base'
+                               buildTask = ':sample-base:assemblePluginDebug'
+                               apkPath = 'projects/sample/source/sample-plugin/sample-base/build/outputs/apk/plugin/debug/sample-base-plugin-debug.apk'
+                               hostWhiteList = ["com.tencent.shadow.sample.host.lib"]
+                           }
+                       }
+                   }
+       
+                   release {
+                       loaderApkConfig = new Tuple2('sample-loader-release.apk', ':sample-loader:assembleRelease')
+                       runtimeApkConfig = new Tuple2('sample-runtime-release.apk', ':sample-runtime:assembleRelease')
+                       pluginApks {
+                           pluginApk1 {
+                               businessName = 'sample-plugin-app'
+                               partKey = 'sample-plugin-app'
+                               buildTask = ':sample-app:assemblePluginRelease'
+                               apkPath = 'projects/sample/source/sample-plugin/sample-app/build/outputs/apk/plugin/release/sample-app-plugin-release.apk'
+                               hostWhiteList = ["com.tencent.shadow.sample.host.lib"]
+                               dependsOn = ['sample-base']
+                           }
+                           pluginApk2 {
+                               businessName = 'sample-plugin-app2'
+                               partKey = 'sample-plugin-app2'
+                               buildTask = ':sample-app:assemblePluginRelease'
+                               apkPath = 'projects/sample/source/sample-plugin/sample-app/build/outputs/apk/plugin/release/sample-app-plugin-release2.apk'
+                               hostWhiteList = ["com.tencent.shadow.sample.host.lib"]
+                               dependsOn = ['sample-base']
+                           }
+                           sampleBase {
+                               businessName = 'sample-plugin-app'
+                               partKey = 'sample-base'
+                               buildTask = ':sample-base:assemblePluginRelease'
+                               apkPath = 'projects/sample/source/sample-plugin/sample-base/build/outputs/apk/plugin/release/sample-base-plugin-release.apk'
+                               hostWhiteList = ["com.tencent.shadow.sample.host.lib"]
+                           }
+                       }
+                   }
+               }
+       
+               loaderApkProjectPath = 'projects/sample/source/sample-plugin/sample-loader'
+               runtimeApkProjectPath = 'projects/sample/source/sample-plugin/sample-runtime'
+       
+               archiveSuffix = System.getenv("PluginSuffix") ?: ""
+               archivePrefix = 'plugin'
+               destinationDir = "${getRootProject().getBuildDir()}"
+       
+               version = 4
+               compactVersion = [1, 2, 3]
+               uuidNickName = "1.1.5"
+           }
+       ```
 
-        主要需要注意 `pluginApks{}` 中的内容：
-
-        -   pluginApk1、pluginApk2 ：表示插件1、插件2 依次类推
-        -   businessName：businessName相同的插件，context获取的Dir是相同的。businessName留空，表示和宿主相同业务，直接使用宿主的Dir
-        -   partKey：插件的唯一标识，一个 partKey 需要对应一个唯一的插件
-        -   buildTask：对应插件应用的打包任务
-        -   apkName：打成插件压缩包时插件 apk 的名字
-        -   apkPath：执行 `buildTask` 后插件 APK 所在的路径
-        -   hostWhiteList：白名单，可以用来在插件中加载宿主相关包下的类
-
-        其他的部分一般采用默认值即可，无需修改。同步之后命令行执行：
-
-        ```shell
-        ./gradlew packageDebugPlugin 
-        
-        #或
-        
-        ./gradlew packageReleasePlugin 
-        ```
-
-        即可在根项目下的 build 目录中生成对应的 `plugin-debug.zip` 或 `plugin-release.zip` 压缩包。
-
-        
+       主要需要注意 `pluginApks{}` 中的内容：
+       
+       -   pluginApk1、pluginApk2 ：表示插件1、插件2 依次类推
+       -   businessName：businessName 相同的插件，context 获取的 Dir 是相同的。businessName 留空，表示和宿主相同业务，直接使用宿主的 Dir
+       -   partKey：插件的唯一标识，一个 partKey 需要对应一个唯一的插件
+       -   buildTask：对应插件应用的打包任务
+       -   apkPath：执行 `buildTask` 后插件 APK 所在的路径
+       -   hostWhiteList：白名单，可以用来在插件中加载宿主相关包下的类
+       -   dependsOn：该插件运行之前需要依赖的插件
+       
+       其他的部分一般采用默认值即可，无需修改。同步之后命令行执行：
+       
+       ```shell
+       ./gradlew packageDebugPlugin 
+       
+       #或
+       
+       ./gradlew packageReleasePlugin 
+       ```
+       
+       即可在根项目下的 build 目录中生成对应的 `plugin-debug.zip` 或 `plugin-release.zip` 压缩包。
+       
+       
 
 4.  plugin-aidl 
 
@@ -923,37 +945,47 @@ object Constant {
 
 #### 3.3 集成使用注意点
 
-1.  插件 APP 中通过 `apply plugin: 'com.tencent.shadow.plugin'` 使用 Shadow Gradle 插件一定要在 `android{}` 之后，同时插件的 applicationId 必须与宿主保持一致。
+1. 插件 APP 中需要加入插件的 falvor，同时对应的 applicationId 必须与宿主保持一致。
 
-2.  插件中 loader 和 runtime 除了 Shadow 依赖，可以无需其他任何依赖，尤其注意不可有 `androidx.core:core` 相关的依赖，否则打包插件运行时会有异常。
+   ```groovy
+   // 将插件applicationId设置为和宿主相同
+    productFlavors {
+          plugin {
+              dimension 'Shadow'
+              applicationId HOST_APP_APPLICATION_ID
+          }
+    }
+   ```
 
-3.  启动插件中相关的四大组件时，Intent 传递的序列化对象会由于跨进程不能被插件 app 的 `PathClassLoader` 所加载而导致反序列化异常，解决方法：
+   
 
-    -   打包插件时添加宿主白名单：hostWhiteList，处于白名单中的包的类，加载时会被宿主的 PathClassLoader 加载。
+2. 插件中 loader 和 runtime 除了 Shadow 依赖，可以无需其他任何依赖，尤其注意不可有 `androidx.core:core` 相关的依赖，否则打包插件运行时会有异常。
 
-        ```groovy
-        shadow {
-            packagePlugin {
-                pluginTypes {
-                    debug {
-        				// ...
-                        pluginApks {
-                            pluginApk1 {  
-                                hostWhiteList = ["com.example.zhanglei.myapplication.fragments"]
-                            }
-                        }
-                    }
-                }
-        		// ...
-            }
-        }
-        ```
+3. 启动插件中相关的四大组件时，Intent 传递的序列化对象会由于跨进程不能被插件 app 的 `PathClassLoader` 所加载而导致反序列化异常，解决方法：
 
-    -   Intent  跨进程在不同的 app 传递数据时不要传递序列化的对象，而应该传递基本数据类型 + String 。
+   -   打包插件时添加宿主白名单：hostWhiteList，处于白名单中的包的类，加载时会被宿主的 PathClassLoader 加载。
 
-4.  宿主若想和插件实现双向通信，建议使用 AIDL 方式进行， PluginManager 中可以再添加个宿主接口白名单，用于获取 Service 绑定后的回调。
+       ```groovy
+       shadow {
+           packagePlugin {
+               pluginTypes {
+                   debug {
+       				// ...
+                       pluginApks {
+                           pluginApk1 {  
+                               hostWhiteList = ["com.example.zhanglei.myapplication.fragments"]
+                           }
+                       }
+                   }
+               }
+       		// ...
+           }
+       }
+       ```
 
-5.  四大组件在插件中是和在正常应用中一样的，都需要在 `AndroidManifest` 中注册，否则启动相关组件时会异常。
+   -   Intent  跨进程在不同的 app 传递数据时不要传递序列化的对象，而应该传递基本数据类型 + String 。
 
+4. 宿主若想和插件实现双向通信，建议使用 AIDL 方式进行， PluginManager 中可以再添加个宿主接口白名单，用于获取 Service 绑定后的回调。
 
+5. 四大组件在插件中使用是和在正常应用中一样的，都需要在 `AndroidManifest` 中注册，==同时同一插件进程中四大组件只可注册一次，并且注册的组件类需要确实存在==， 否则启动相关组件时会异常。
 

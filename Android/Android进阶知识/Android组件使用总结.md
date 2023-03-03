@@ -472,6 +472,8 @@
      	<item name="tabIndicatorHeight">2dp</item>
         <!--设置自定义的指示器，生效需要 tabIndicatorColor 为 null -->
         <item name="tabIndicator">@drawable/tab_indicator</item>
+       <!--设置自定义的指示器的动画效果 -->
+        <item name="tabIndicatorAnimationMode">linear</item>
         <!--设置是否可横向滚动 -->
         <item name="tabMode">scrollable</item>
         <!--设置 TabLayout 指示器的位置样式-->

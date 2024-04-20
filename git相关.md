@@ -738,3 +738,75 @@ $ git tag v1.1 df9294a -m "版本1.1发布"
 - 删除一个本地标签：**`git tag -d <tag-name>`**
 - 删除一个远程标签（需要删除本地标签）：**`git push origin :refs/tags/<tag-name>`**
 
+
+
+------
+
+
+
+### 9. GIT 仓库迁移
+
+开发在很多时候，会遇到一个问题。GIT 仓库的管理，特别是仓库的迁移。我需要保留已有的历史记录，而不是重新开发，重头再来。
+
+这时候就可以按如下做法：
+
+1. 先用 --bare 克隆远程裸仓库（老仓库）
+
+   ```shell
+   git clone --bare git@gitee.com:xxx/testApp1.git
+   ```
+
+2. 再把老仓库的镜像推送到新仓库
+
+   ```shell
+   cd testApp1.git
+   git push --mirror git@gitee.com:xxx/testApp2.git
+   ```
+
+
+
+#### 9.1 提示文件过大解决方案
+
+1. 使用 bfg
+
+   可搜索相关使用方法
+
+2. 通过相关命令手动删除
+
+   ==注意：因相关命令为 Linux 中的，因此需要执行在 git bash 中==
+
+   - 通过命令找出工程文件夹中的大文件
+
+     ```shell
+     find . -type f -size +64M -exec du -h {} \;
+     ```
+
+   - 删除对应的大文件
+
+   - 在工程文件夹下，执行命令找出占用空间最多的五个文件：
+
+     ```shell
+     git rev-list --objects --all | grep "$(git verify-pack -v .git/objects/pack/*.idx | sort -k 3 -n | tail -5 | awk '{print$1}')"
+     ```
+
+   - 从 git 代码记录中移除大文件，执行命令：
+
+     ```shell
+     git filter-branch --force --index-filter 'git rm -rf --cached --ignore-unmatch 大文件路径' --prune-empty --tag-name-filter cat -- --all
+     ```
+
+   - 真正删除，执行命令：
+
+     ```shell
+     rm -rf .git/refs/original/ && git reflog expire --expire=now --all && git gc --prune=now --aggressive
+     ```
+
+   - 提交修改项：
+
+     ```shell
+     git push origin master --force
+     git remote prune origin
+     ```
+
+     
+

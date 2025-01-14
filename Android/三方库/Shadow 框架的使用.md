@@ -468,28 +468,34 @@ public class SampleComponentManager extends ComponentManager {
         ./gradlew build
         ```
 
-    过程中没有出错即代表编译成功，后续即可使用 Gradle 的 task 进行发布：
+    过程中没有出错即代表编译成功。
 
-    <img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/shadow-publish.gif" alt="shadow-publish" style="zoom: 80%;" />
+    
 
-    该任务执行完成之后就可以在项目中使用 Shadow 相关的 SDK。
-
-3.  修改发布相关的配置以及查看版本号
+3.  SDK  发布以及查看版本号
 
     -   修改发布配置
 
-        `buildScripts/gradle/maven.gradle `文件中配置了Shadow的Maven发布脚本，可以修改其中的两个 GroupID 变量：`coreGroupId`、`dynamicGroupId` 以及 `setScm` 方法中的两个URL到自己的版本库地址。
-
-        还可以将 `mavenLocal()` 改为自己发布的目标 Maven 仓库，之后执行 `./gradlew publish` 即可将 Shadow SDK 发布到 Maven 仓库。
+        `buildScripts/gradle/maven.gradle ` 文件中配置了 Shadow 的 Maven 发布脚本，可以修改其中的两个 GroupID 变量：`coreGroupId`、`dynamicGroupId` 以及 `setScm` 方法中的两个 URL 到自己的版本库地址，在 `repositories{}` 中可以配置指定要发布到的 Maven 仓库
 
         
 
+    -   maven 发布
+
+        执行 `./gradlew publish` 即可将 Shadow SDK 发布到 Maven 仓库，也可按下图所示执行对应的 Gradle 任务：
+
+        <img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/shadow-publish.gif" alt="shadow-publish" style="zoom: 80%;" />
+
+        该任务执行完成之后就可以在项目中使用 Shadow 相关的 SDK。
+
+        
+    
     -   查看版本号
-
+    
         构建的版本号可以在 `build/pom` 目录中查看生成的 pom 文件中查看，如：
-
+    
         <img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/image-20210719111017658.png" alt="image-20210719111017658" style="zoom: 80%;" />
-
+    
         上图即可看出发布的构建 name 为 `activity-container`， group 为 `com.tencent.shadow.core.test`， version 为 `local-e66e0bb4-SNAPSHOT`，即后续若想依赖它，则相关的坐标就是：`com.tencent.shadow.core.test:activity-container:local-e66e0bb4-SNAPSHOT`
 
 
@@ -990,4 +996,6 @@ object Constant {
 4. 宿主若想和插件实现双向通信，建议使用 AIDL 方式进行， PluginManager 中可以再添加个宿主接口白名单，用于获取 Service 绑定后的回调。
 
 5. 四大组件在插件中使用是和在正常应用中一样的，都需要在 `AndroidManifest` 中注册，==同时同一插件进程中四大组件只可注册一次，并且注册的组件类需要确实存在==， 否则启动相关组件时会异常。
+
+6. 插件清单文件中声明的权限需要在宿主中进行声明，即==插件无法动态声明应用权限==，因为权限的解析是在宿主安装时进行的。
 

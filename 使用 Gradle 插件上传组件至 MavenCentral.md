@@ -118,19 +118,83 @@ $ gpg --version
 
 
 
-#### 2.2 生成密钥对
+#### 2.2  生成 OpenPGP 密钥对
 
 ```shell
-$ gpg --gen-key
+$ gpg --full-generate-key
 ```
 
-按照提示输入相关信息，然后设置密码，需要输入两次。
+根据提示完成以下步骤：
 
-![图片](https://s.ahzoo.cn/img/java/24/260004.webp)
+1. **选择密钥类型**
+   GPG 会提示选择密钥类型：
 
-生成密钥过程中必须提供名称和电子邮件。这些标识符至关重要，因为下载软件工件和验证签名的任何人都会看到它们。然后你可以使用密码来保护你的密钥。此密码和私钥是使用签名签署工件所需的全部内容。
+   ```shell
+   $ gpg --full-generate-key
+   gpg (GnuPG) 2.4.7; Copyright (C) 2024 g10 Code GmbH
+   This is free software: you are free to change and redistribute it.
+   There is NO WARRANTY, to the extent permitted by law.
+   
+   Please select what kind of key you want:
+      (1) RSA and RSA
+      (2) DSA and Elgamal
+      (3) DSA (sign only)
+      (4) RSA (sign only)
+      (9) ECC (sign and encrypt) *default*
+     (10) ECC (sign only)
+     (14) Existing key from card
+   Your selection?
+   ```
 
-密钥的有效期默认为 3 年（文档说是2年，可能是GnuPG更新了默认的过期策略）。密钥过期后，可以延长密钥的有效期，前提是你拥有密钥并知道密码。
+   通常选择 **1 (RSA and RSA)**，即同时支持加密和签名。
+
+2. **设置密钥长度**
+   推荐选择 **4096 位** 密钥长度（更加安全）：
+
+   ```shell
+   RSA keys may be between 1024 and 4096 bits long.
+   What keysize do you want? (3072)
+   ```
+
+   输入 `4096` 并按回车。
+
+3. **设置密钥有效期**
+   设置密钥的有效期（可以根据需求选择）：
+
+   ```shell
+   Please specify how long the key should be valid.
+         0 = key does not expire
+      <n>  = key expires in n days
+      <n>w = key expires in n weeks
+      <n>m = key expires in n months
+      <n>y = key expires in n years
+   ```
+
+   - 输入 `0` 表示密钥永不过期。
+   - 或者输入例如 `1y`（1年有效）然后回车。
+
+4. **确认设置**
+   GPG 会提示确认密钥设置：
+
+   ```shell
+   Is this correct? (y/N)
+   ```
+
+   输入 `y` 并按回车。
+
+5. **填写用户信息**
+   输入你的用户标识，包括名字、邮箱和备注信息：
+
+   ```shell
+   Real name: Your Name
+   Email address: your.email@example.com
+   Comment: Optional comment
+   ```
+
+   填写完毕后，按回车确认。
+
+6. **设置密码**
+   用户信息填写确认回车后，即提示设置密钥的密码，用于保护私钥的访问。选择一个安全的密码，并妥善保存。
 
 
 
@@ -139,16 +203,17 @@ $ gpg --gen-key
 ```shell
 $ gpg --list-keys
 
-gpg: checking the trustdb
-gpg: marginals needed: 3  completes needed: 1  trust model: pgp
-gpg: depth: 0  valid:   1  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 1u
-gpg: next trustdb check due at 2025-08-09
-C:\Users\hanxt\AppData\Roaming\gnupg\pubring.kbx
-------------------------------------------------
-pub   ed25519 2022-08-10 [SC] [expires: 2025-08-09]
-      6B4F6A477A1BE195326AEAFA0EE41461FB92CD0B
-uid           [ultimate] HanXiaotong <hanxiaotongtong@163.com>
-sub   cv25519 2022-08-10 [E] [expires: 2025-08-09]
+[keyboxd]
+---------
+pub   ed25519 2024-11-18 [SC]
+      D2A305B337C1D3206CADA87E5A34250FEF68B93D
+uid           [ultimate] ZhangLei <913305160@qq.com>
+sub   cv25519 2024-11-18 [E]
+
+pub   rsa4096 2025-01-23 [SC]
+      DBA10F0026F6C0F9399BF706052ECFA3B0DEE40F
+uid           [ultimate] ZhangLei (MavenCentral Publish Use) <913305160@qq.com>
+sub   rsa4096 2025-01-23 [E]
 ```
 
 
@@ -160,23 +225,24 @@ sub   cv25519 2022-08-10 [E] [expires: 2025-08-09]
 ```shell
 $ gpg --list-keys
 
-gpg: checking the trustdb
-gpg: marginals needed: 3  completes needed: 1  trust model: pgp
-gpg: depth: 0  valid:   1  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 1u
-gpg: next trustdb check due at 2025-08-09
-C:\Users\hanxt\AppData\Roaming\gnupg\pubring.kbx
-------------------------------------------------
-pub   ed25519/FB92CD0B 2022-08-10 [SC] [expires: 2025-08-09]
-      6B4F6A477A1BE195326AEAFA0EE41461FB92CD0B
-uid           [ultimate] HanXiaotong <hanxiaotongtong@163.com>
-sub   cv25519/20EF17CB 2022-08-10 [E] [expires: 2025-08-09]
+[keyboxd]
+---------
+pub   ed25519/EF68B93D 2024-11-18 [SC]
+      D2A305B337C1D3206CADA87E5A34250FEF68B93D
+uid         [ultimate] ZhangLei <913305160@qq.com>
+sub   cv25519/02E58925 2024-11-18 [E]
+
+pub   rsa4096/B0DEE40F 2025-01-23 [SC]
+      DBA10F0026F6C0F9399BF706052ECFA3B0DEE40F
+uid         [ultimate] ZhangLei (MavenCentral Publish Use) <913305160@qq.com>
+sub   rsa4096/323EE1BB 2025-01-23 [E]
 ```
 
 
 
 #### 2.4 更新密钥有效期
 
-前面说过密钥生成的默认有效期限为三年，但是某些情况下该期限可能不满足需求，因此需要修改它，这时可使用如下命令：
+密钥生成的默认有效期限为三年，但是某些情况下该期限可能不满足需求，因此需要修改它，这时可使用如下命令：
 
 ```shell
 $ gpg --edit-key  [密钥 ID]
@@ -224,7 +290,65 @@ gpg>$ save
 
 
 
-#### 2.5 分发公钥
+#### 2.5 导出密钥
+
+- **导出公钥**
+
+  将公钥导出到文件中，便于分发：
+
+  ```shell
+  gpg --export --armor [密钥ID] > public-key.asc
+  ```
+
+  这会生成一个名为 `public-key.asc` 的文件，其中包含你的公钥。
+
+- **导出私钥**
+
+  如果需要备份或用于其他工具（如 Gradle 签名），可以导出私钥：
+
+  ```shell
+  gpg --export-secret-keys --armor [密钥ID] > private-key.asc
+  ```
+
+
+
+#### 2.6 将密钥用于 Gradle 签名
+
+1. **将私钥导出为 `secring.gpg` 文件**（Gradle 的 `signing.secretKeyRingFile` 需要这个文件）：
+
+   ```shell
+   gpg --keyring secring.gpg --export-secret-keys [密钥ID] > ~/.gnupg/secring.gpg
+   ```
+
+2. **将文件路径配置到 `gradle.properties` 中**：
+
+   ```properties
+   signing.keyId=密钥ID
+   signing.password=密钥密码
+   signing.secretKeyRingFile=/path/to/secring.gpg
+   ```
+
+
+
+#### 2.7 测试密钥
+
+可以通过以下命令使用密钥对内容进行签名来验证生成的密钥是否有效：
+
+- **签名文件**
+
+  ```shell
+  gpg --default-key [密钥ID] --sign <文件名>
+  ```
+
+- **验证签名**
+
+  ```shell
+  gpg --verify [密钥ID] signed-file.txt
+  ```
+
+
+
+#### 2.8 分发公钥
 
 由于其他人需要公钥来验证你的文件，因此你必须将你的公钥分发给密钥服务器：
 
@@ -240,7 +364,7 @@ $ gpg --keyserver keyserver.ubuntu.com --send-keys [密钥 ID]
 
 
 
-#### 2.6 导入公钥(校验公钥分发)
+#### 2.9 导入公钥(校验公钥分发)
 
 将公钥从密钥服务器导入到本地机器中：
 

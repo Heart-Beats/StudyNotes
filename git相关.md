@@ -58,11 +58,9 @@ git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset-%C(yel
 
 ### 3. 工作区和暂存区
 
-- #### 工作区（Working Directory）
+- 工作区（Working Directory）：就是你在电脑里能看到的目录。
 
-   就是你在电脑里能看到的目录。
-
-- #### 版本库（Repository）
+- 版本库（Repository）
 
    工作区有一个隐藏目录`.git`，这个不算工作区，而是Git的版本库。
 
@@ -744,7 +742,179 @@ $ git tag v1.1 df9294a -m "版本1.1发布"
 
 
 
-### 9. GIT 仓库迁移
+### 9. Git 子仓使用
+
+> 在 Git 中使用 **子仓库**（Submodules）是一种管理项目依赖或库的一种方法，允许你将一个 Git 仓库嵌套在另一个 Git 仓库中。子仓库通常用于将外部项目或库集成到你的主项目中。
+
+
+
+#### 9.1 添加子仓库
+
+你可以通过以下步骤将一个 Git 仓库添加为子仓库：
+
+1. **进入主仓库**： 如果你还没有主仓库，先初始化一个：
+
+   ```bash
+   git init
+   ```
+
+2. **添加子仓库**： 使用 `git submodule add` 命令添加子仓库：
+
+   ```bash
+   git submodule add <子仓库的URL> <路径/子仓库目录>
+   ```
+
+   - `<子仓库的URL>` 是子仓库的 Git 地址（可以是 GitHub、GitLab、Bitbucket 等）。
+   - `<路径/子仓库目录>` 是你希望子仓库在主仓库中的存放路径。
+
+   例如：
+
+   ```bash
+   git submodule add https://github.com/example/repo.git libs/repo
+   ```
+
+   这将把 `repo.git` 添加到你的主仓库中的 `libs/repo` 目录。
+
+3. **初始化并更新子仓库**： 在添加子仓库后，需要初始化子仓库并将其内容下载到指定目录：
+
+   ```bash
+   git submodule update --init --recursive
+   ```
+
+   `--recursive` 选项用于确保子仓库中的子仓库也会被初始化。
+
+
+
+#### 9.2 克隆包含子仓库的主仓库
+
+当你克隆一个包含子仓库的仓库时，子仓库不会被自动下载，你需要手动初始化和更新子仓库。
+
+1. **克隆主仓库**：
+
+   ```bash
+   git clone <主仓库的URL>
+   ```
+
+2. **初始化和更新子仓库**： 克隆完成后，进入仓库并初始化子仓库：
+
+   ```bash
+   git submodule update --init --recursive
+   ```
+
+
+
+#### 9.3 查看和更新子仓库
+
+- **查看子仓库状态**
+
+  你可以使用以下命令查看子仓库的状态：
+
+  ```bash
+  git submodule status
+  ```
+
+  它会显示每个子仓库的当前提交 ID 和路径。
+
+- **更新子仓库**
+
+  子仓库可能会有新的更新，若要获取这些更新，可以使用以下命令：
+
+  ```bash
+  git submodule update --remote
+  ```
+
+  `--remote` 选项会将子仓库更新为其最新的远程提交。
+
+
+
+#### 9.4 提交子仓库更改
+
+如果你对子仓库的内容做了修改，子仓库本身的提交不会自动反映到主仓库。你需要手动提交子仓库的更改。
+
+1. **进入子仓库目录**：
+
+   ```bash
+   cd libs/repo
+   ```
+
+2. **提交更改**： 在子仓库目录中正常使用 `git commit` 提交你的更改。
+
+3. **回到主仓库提交更新的子仓库引用**： 在主仓库中，子仓库的更新会显示为子仓库的提交 ID 更新。你需要提交这些更改。
+
+   ```bash
+   git add libs/repo
+   git commit -m "Update submodule to latest commit"
+   ```
+
+4. **推送主仓库的更改**： 将主仓库的提交推送到远程仓库：
+
+   ```bash
+   git push
+   ```
+
+
+
+#### 9.5  删除子仓库
+
+如果你不再需要某个子仓库，可以按照以下步骤删除：
+
+1. **删除子仓库的记录**：
+
+   ```bash
+   git submodule deinit <子仓库路径>
+   git rm <子仓库路径>
+   ```
+
+2. **提交更改**： 删除子仓库后，提交这些更改：
+
+   ```bash
+   git commit -m "Remove submodule"
+   ```
+
+3. **删除子仓库的配置文件和缓存**： 删除 `.gitmodules` 文件中的相关配置，并删除 `.git/modules/<子仓库路径>` 目录：
+
+   ```bash
+   rm -rf .gitmodules
+   rm -rf .git/modules/<子仓库路径>
+   ```
+
+
+
+#### 9.6 子仓库的 `.gitmodules` 文件
+
+`git submodule` 命令会创建一个 `.gitmodules` 文件，保存有关子仓库的信息。例如，`.gitmodules` 文件内容如下：
+
+```bash
+[submodule "libs/repo"]
+    path = libs/repo
+    url = https://github.com/example/repo.git
+```
+
+每个子仓库的路径和 URL 都在这个文件中配置。如果你手动编辑 `.gitmodules` 文件，记得执行 `git submodule sync` 来同步更改。
+
+
+
+#### 9.7 子仓库的常见操作总结
+
+| 操作                   | 命令                                           |
+| ---------------------- | :--------------------------------------------- |
+| 添加子仓库             | `git submodule add <URL> <path>`               |
+| 初始化并更新所有子仓库 | `git submodule update --init --recursive`      |
+| 克隆包含子仓库的仓库   | `git clone --recurse-submodules <URL>`         |
+| 查看子仓库状态         | `git submodule status`                         |
+| 更新子仓库到最新的提交 | `git submodule update --remote`                |
+| 提交子仓库的更改       | `git commit -m "Update submodule"`             |
+| 删除子仓库             | `git submodule deinit <path> && git rm <path>` |
+
+
+
+
+
+------
+
+
+
+### 10. GIT 仓库迁移
 
 开发在很多时候，会遇到一个问题。GIT 仓库的管理，特别是仓库的迁移。我需要保留已有的历史记录，而不是重新开发，重头再来。
 
@@ -765,7 +935,7 @@ $ git tag v1.1 df9294a -m "版本1.1发布"
 
 
 
-#### 9.1 提示文件过大解决方案
+#### 10.1 提示文件过大解决方案
 
 1. 使用 bfg
 

@@ -21,6 +21,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/yaml.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/sql.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/bash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -408,6 +409,40 @@ button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
 .art-type-badge{display:inline-block;font-size:11px;padding:1px 6px;border-radius:4px;margin-left:4px;vertical-align:middle}
 .art-type-badge.img{background:#3b82f618;color:#3b82f6}
 .art-type-badge.dl{background:#f59e0b18;color:#f59e0b}
+
+/* ─── Embed Viewer (drawio / pptx iframe) ─── */
+.embed-viewer-wrap{width:100%;margin-bottom:16px}
+.embed-viewer{width:100%;height:600px;border-radius:10px;border:1px solid var(--border);background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+
+/* ─── Download Bar (replaces dl-card for embed pages) ─── */
+.dl-bar{display:flex;justify-content:center;padding:12px 0}
+.dl-link{display:inline-flex;align-items:center;gap:4px;padding:8px 20px;border-radius:8px;background:var(--accent);color:#fff !important;font-size:13px;font-weight:500;text-decoration:none !important;transition:opacity .2s}
+.dl-link:hover{opacity:.85}
+
+/* ─── XMind Tree Renderer ─── */
+.xmind-render-wrap{min-height:200px}
+.xmind-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px;color:var(--text-sec);gap:12px}
+.xmind-sheets{display:flex;flex-direction:column;gap:20px}
+.xmind-sheet{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px 20px;overflow-x:auto}
+.xmind-sheet-title{font-size:15px;font-weight:600;color:var(--text-sec);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.xmind-node{position:relative;padding-left:20px}
+.xmind-node:before{content:'';position:absolute;left:6px;top:0;bottom:0;width:1px;background:var(--border)}
+.xmind-node:last-child:before{bottom:50%}
+.xmind-node-content{display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:6px;transition:background .15s;cursor:default;position:relative}
+.xmind-node-content:before{content:'';position:absolute;left:-14px;top:50%;width:14px;height:1px;background:var(--border)}
+.xmind-node-content:hover{background:var(--c-bg3)}
+.xmind-node-toggle{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;font-size:10px;color:var(--text-sec);cursor:pointer;user-select:none;flex-shrink:0;transition:transform .2s}
+.xmind-node.collapsed>.xmind-node-content>.xmind-node-toggle{transform:rotate(-90deg)}
+.xmind-node.collapsed>.xmind-children{display:none}
+.xmind-node-leaf{display:inline-flex;width:16px;justify-content:center;color:var(--text-sec);flex-shrink:0;font-size:14px}
+.xmind-node-title{font-size:14px;color:var(--text);line-height:1.5}
+.xmind-children{margin-top:2px}
+.xmind-root>.xmind-node-content{background:var(--accent)15;border-radius:8px;padding:8px 12px;margin-bottom:4px}
+.xmind-root>.xmind-node-content:before{display:none}
+.xmind-root>.xmind-node-content .xmind-node-title{font-weight:700;font-size:15px;color:var(--accent)}
+.xmind-error{padding:32px;text-align:center;background:var(--card-bg);border-radius:8px;border:1px solid var(--border)}
+.xmind-error h3{color:#ef4444;margin-bottom:8px}
+.xmind-error p{color:var(--text-sec);font-size:13px;margin:4px 0}
 
 </style>
 <script>/**
@@ -888,12 +923,24 @@ async function loadArticle(idx){
   if(a.type==='dl'){
     renderSidebar(a.c,idx);
     const base=location.href.split('#')[0].replace(/\/[^/]*\.html.*$/,'/').replace(/\/?$/,'/');
-    const dlUrl=base+a.p;
+    const fileUrl=base+a.p;
+    const decodedUrl=decodeURIComponent(fileUrl);
+    const encodedUrl=encodeURIComponent(decodedUrl);
     const ext=(a.dlName||'').split('.').pop().toLowerCase();
     let icon='📎',desc='此文件无法在浏览器中直接预览，请下载后使用对应软件打开。';
-    if(ext==='xmind'){icon='🧠';desc='XMind 思维导图文件，请下载后使用 XMind 软件打开。';}
-    else if(ext==='pptx'){icon='📊';desc='PowerPoint 演示文稿，请下载后使用 PowerPoint 或 WPS 打开。';}
-    else if(ext==='drawio'){icon='🔀';desc='Draw.io 流程图文件，请下载后使用 draw.io 打开。';}
+    let embedHtml='';
+
+    if(ext==='drawio'){
+      icon='🔀';desc='Draw.io 流程图 — 在线渲染中';
+      embedHtml=`<div class="embed-viewer-wrap"><iframe class="embed-viewer" src="https://viewer.diagrams.net/?url=${encodedUrl}&embed=1&chrome=0&nav=1&layers=1" allowfullscreen frameborder="0"></iframe></div>`;
+    }else if(ext==='pptx'){
+      icon='📊';desc='PowerPoint 演示文稿 — 在线渲染中';
+      embedHtml=`<div class="embed-viewer-wrap"><iframe class="embed-viewer" src="https://view.officeapps.live.com/op/embed.aspx?src=${encodedUrl}" allowfullscreen frameborder="0"></iframe></div>`;
+    }else if(ext==='xmind'){
+      icon='🧠';desc='XMind 思维导图 — 正在解析渲染…';
+      embedHtml=`<div id="xmindRender" class="xmind-render-wrap"><div class="xmind-loading"><div class="spin"></div>正在解析 XMind 文件…</div></div>`;
+    }
+
     root.innerHTML=`<div class="article-wrap">
       <div class="breadcrumb"><a onclick="goHome()">首页</a><span class="sep">/</span><a onclick="nav('cat/${a.c}')">${cat.emoji} ${cat.n}</a></div>
       <div class="article-header">
@@ -901,22 +948,21 @@ async function loadArticle(idx){
         <h1>${hEsc(a.t)}</h1>
         <div class="ah-meta">
           <span class="ah-tag" style="background:${cat.color}18;color:${cat.color}">${cat.emoji} ${cat.n}</span>
-          <span>📦 下载文件</span>
+          <span>${icon} ${ext==='drawio'?'流程图':ext==='pptx'?'演示文稿':'思维导图'}</span>
         </div>
       </div>
       <div class="article-body">
-        <div class="dl-card">
-          <div class="dl-card-icon">${icon}</div>
-          <div class="dl-card-info">
-            <div class="dl-card-name">${hEsc(a.dlName||a.t)}</div>
-            <div class="dl-card-desc">${desc}</div>
-          </div>
-          <a class="dl-card-btn" href="${dlUrl}" download="${hEsc(a.dlName||'')}">⬇️ ${hEsc(a.dlLabel||'下载文件')}</a>
-        </div>
+        ${embedHtml}
+        <div class="dl-bar"><a class="dl-link" href="${fileUrl}" download="${hEsc(a.dlName||'')}">⬇️ 下载源文件 (${hEsc(a.dlName||'')})</a></div>
       </div>
     </div>`;
     document.getElementById('tocRail').classList.remove('show');
     window.scrollTo(0,0);
+
+    // XMind 异步解析渲染
+    if(ext==='xmind'&&typeof JSZip!=='undefined'){
+      renderXMind(fileUrl);
+    }
     return;
   }
 
@@ -1020,6 +1066,97 @@ async function loadArticle(idx){
       </div>
     </div>`;
   }
+}
+
+// ════════════════════════════════════════════════
+//  XMIND RENDERER — parse .xmind (ZIP) and render tree
+// ════════════════════════════════════════════════
+async function renderXMind(fileUrl){
+  const container=document.getElementById('xmindRender');
+  if(!container)return;
+  try{
+    const resp=await fetch(fileUrl);
+    if(!resp.ok)throw new Error('HTTP '+resp.status);
+    const buf=await resp.arrayBuffer();
+    const zip=await JSZip.loadAsync(buf);
+
+    // Try content.json (XMind 8+/Zen) first, then content.xml (legacy)
+    let jsonStr=null;
+    if(zip.file('content.json')){
+      jsonStr=await zip.file('content.json').async('string');
+    }else if(zip.file('content.xml')){
+      // Legacy XML format — not parsing, fallback
+      throw new Error('legacy XML format');
+    }else{
+      throw new Error('no content found');
+    }
+
+    const data=JSON.parse(jsonStr);
+    // content.json is an array of sheets; each sheet has rootTopic
+    const sheets=Array.isArray(data)?data:[data];
+    let html='<div class="xmind-sheets">';
+    sheets.forEach((sheet,si)=>{
+      const root=sheet.rootTopic;
+      if(!root)return;
+      const sheetTitle=sheet.title||('Sheet '+(si+1));
+      html+=`<div class="xmind-sheet" style="--sheet-idx:${si}">`;
+      html+=`<div class="xmind-sheet-title">${hEsc(sheetTitle)}</div>`;
+      html+=renderXMindNode(root,0);
+      html+='</div>';
+    });
+    html+='</div>';
+    container.innerHTML=html;
+
+    // Add toggle listeners
+    container.querySelectorAll('.xmind-node-toggle').forEach(btn=>{
+      btn.onclick=()=>{
+        const node=btn.closest('.xmind-node');
+        node.classList.toggle('collapsed');
+      };
+    });
+  }catch(err){
+    console.warn('[XMind] parse failed:',err);
+    container.innerHTML=`<div class="xmind-error">
+      <h3>⚠️ XMind 在线渲染失败</h3>
+      <p>原因：${hEsc(err.message)}</p>
+      <p>请使用上方下载按钮获取源文件，在 XMind 软件中打开。</p>
+    </div>`;
+  }
+}
+
+function renderXMindNode(topic,depth){
+  if(!topic)return '';
+  const title=topic.title||'(无标题)';
+  const children=[];
+  // XMind stores children in children.attached array
+  const attached=topic.children?.attached||[];
+  // Also check for detached (floating topics)
+  const detached=topic.children?.detached||[];
+  const allKids=[...attached,...detached];
+
+  const hasChildren=allKids.length>0;
+  const isRoot=depth===0;
+
+  let html=`<div class="xmind-node${isRoot?' xmind-root':''}">`;
+  html+=`<div class="xmind-node-content">`;
+  if(hasChildren){
+    html+=`<span class="xmind-node-toggle">▼</span>`;
+  }else{
+    html+=`<span class="xmind-node-leaf">•</span>`;
+  }
+  html+=`<span class="xmind-node-title">${hEsc(title)}</span>`;
+  html+=`</div>`;
+
+  if(hasChildren){
+    html+='<div class="xmind-children">';
+    allKids.forEach(child=>{
+      html+=renderXMindNode(child,depth+1);
+    });
+    html+='</div>';
+  }
+
+  html+='</div>';
+  return html;
 }
 
 // ════════════════════════════════════════════════

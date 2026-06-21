@@ -509,7 +509,9 @@ const CAT_DEF = {
   'android-adv':{n:'Android 进阶',     emoji:'⚡', color:'#059669', desc:'架构模式、Service/AIDL、组件化、插件化'},
   flutter:      {n:'Flutter',          emoji:'🦋', color:'#3b82f6', desc:'Flutter 全栈开发，共 14 篇系列教程'},
   'third-lib':  {n:'三方库解析',       emoji:'📦', color:'#8b5cf6', desc:'Glide、Hilt、Shadow、Xposed 源码解析'},
-  kotlin:       {n:'Kotlin / 编程语言',emoji:'🟣', color:'#f59e0b', desc:'Kotlin 基础、Flow、类型推断、Groovy、Python'},
+  kotlin:       {n:'Kotlin',           emoji:'🟣', color:'#f59e0b', desc:'Kotlin 基础、Flow、类型推断、Compose 作用域'},
+  groovy:       {n:'Groovy',           emoji:'🔧', color:'#16a34a', desc:'Groovy 语言相关'},
+  python:       {n:'Python',           emoji:'🐍', color:'#3b82f6', desc:'Python 语言相关'},
   rust:         {n:'Rust',             emoji:'🦀', color:'#ef4444', desc:'Rust 基础入门与开发环境搭建'},
   algorithm:    {n:'算法与数据结构',   emoji:'🧮', color:'#6366f1', desc:'数据结构、排序、动态规划、LeetCode 高频题'},
   ai:           {n:'AI 工具',          emoji:'✨', color:'#06b6d4', desc:'Terminal 入门、Claude 使用、AI 工具指南'},
@@ -520,7 +522,7 @@ const CAT_DEF = {
   foundation:   {n:'编程基础',         emoji:'💡', color:'#64748b', desc:'异或运算、浮点数等底层编程知识'},
   root:         {n:'其他',             emoji:'📋', color:'#64748b', desc:'Java 8、Git、MarkDown、历史等杂项'},
 };
-const CAT_ORDER = ['android','android-adv','flutter','third-lib','kotlin','rust','algorithm','ai','web','network','crypto','ubuntu','foundation','root'];
+const CAT_ORDER = ['android','android-adv','flutter','third-lib','kotlin','groovy','python','rust','algorithm','ai','web','network','crypto','ubuntu','foundation','root'];
 
 // ════════════════════════════════════════════════
 //  FALLBACK ARTICLE DATA (76 articles)
@@ -568,8 +570,8 @@ const FALLBACK_ART = [
   {t:'@BuilderInference 类型推断',c:'kotlin',p:'%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/Kotlin/Kotlin%20%E7%9A%84%E5%8A%A0%E5%BC%BA%E7%89%88%E7%B1%BB%E5%9E%8B%E6%8E%A8%E6%96%AD%EF%BC%9A@BuilderInference.md'},
   {t:'隐式接收器 (implicit receiver)',c:'kotlin',p:'%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/Kotlin/implicit%20receiver(%E9%9A%90%E5%BC%8F%E6%8E%A5%E6%94%B6%E5%99%A8).md'},
   {t:'函数当类用：Compose 作用域',c:'kotlin',p:'%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/Kotlin/%E6%8A%8A%E5%87%BD%E6%95%B0%E5%BD%93%E7%B1%BB%E7%94%A8%EF%BC%8CCompose%20%E9%A3%8E%E9%AA%9A%E7%9A%84%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%9C%BA%E5%88%B6.md'},
-  {t:'Groovy 相关',c:'kotlin',p:'%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/Groovy%20%E7%9B%B8%E5%85%B3.md'},
-  {t:'Python 相关',c:'kotlin',p:'%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/python%E7%9B%B8%E5%85%B3.md'},
+  {t:'Groovy 相关',c:'groovy',p:'%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/Groovy%20%E7%9B%B8%E5%85%B3.md'},
+  {t:'Python 相关',c:'python',p:'%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/python%E7%9B%B8%E5%85%B3.md'},
   {t:'Rust 基础入门',c:'rust',p:'%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/Rust/Rust%20%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8.md'},
   {t:'Rust 开发环境搭建',c:'rust',p:'%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/Rust/Rust%20%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.md'},
   {t:'常用数据结构',c:'algorithm',p:'%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/1.%20%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/1.%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.md'},

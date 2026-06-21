@@ -309,8 +309,8 @@ button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
 .article-body ul,.article-body ol{padding-left:24px;margin:12px 0}
 .article-body li{margin:5px 0}
 .article-body code{font:87%/1.4 var(--font-mono);background:var(--code-bg);color:var(--code-clr);padding:2px 7px;border-radius:5px;word-break:break-all}
-.article-body pre{background:var(--pre-bg);border-radius:10px;padding:20px 24px;overflow-x:auto;margin:18px 0;font-size:13.5px;line-height:1.7;border:1px solid var(--pre-bd);box-shadow:0 4px 20px rgba(0,0,0,.15)}
-.article-body pre code{background:none;color:var(--pre-clr);padding:0;font-size:inherit;border-radius:0;word-break:normal}
+.article-body pre{background:var(--pre-bg)!important;border-radius:10px;padding:20px 24px;overflow-x:auto;margin:18px 0;font:13.5px/1.7 var(--font-mono),monospace!important;color:var(--pre-clr)!important;border:1px solid var(--pre-bd);box-shadow:0 4px 20px rgba(0,0,0,.15);display:block!important;position:relative}
+.article-body pre code{background:none!important;color:inherit!important;padding:0;font-size:inherit;border-radius:0;word-break:normal;display:block!important}
 .article-body img{max-width:100%;border-radius:9px;margin:16px 0;border:1px solid var(--c-bd);display:block}
 .article-body table{border-collapse:collapse;width:100%;margin:18px 0;font-size:14px}
 .article-body th,.article-body td{border:1px solid var(--c-bd);padding:10px 16px;text-align:left}
@@ -829,7 +829,7 @@ async function loadArticle(idx){
     for(const m of hMatches){const lv=m.match(/^#+/)[0].length;const txt=m.replace(/^#+\s+/,'').replace(/\[TOC\]/,'').trim();if(txt)tocItems.push({lv,txt});}
 
     const tocRail=document.getElementById('tocRail');
-    if(tocItems.length>2){tocRail.innerHTML=`<div class="toc-heading">本页目录</div>`+tocItems.map(h=>`<a class="toc-link${h.lv>=3?' lv3':''}" href="#${slugify(h.txt)}">${hEsc(h.txt)}</a>`).join('');tocRail.classList.add('show');}
+    if(tocItems.length>2){tocRail.innerHTML=`<div class="toc-heading">本页目录</div>`+tocItems.map(h=>`<a class="toc-link${h.lv>=3?' lv3':''}" data-target="${slugify(h.txt)}">${hEsc(h.txt)}</a>`).join('');tocRail.classList.add('show');}
     else{tocRail.classList.remove('show');}
 
     root.innerHTML=`<div class="article-wrap">
@@ -850,8 +850,19 @@ async function loadArticle(idx){
 
     if(tocItems.length>2){
       const heads=root.querySelectorAll('.article-body h2,.article-body h3');
-      const onScroll=()=>{let cur=null;heads.forEach(h=>{if(h.getBoundingClientRect().top<=100)cur=h.id;});document.querySelectorAll('.toc-link').forEach(el=>{el.classList.toggle('active',el.getAttribute('href')==='#'+cur);});};
+      const onScroll=()=>{let cur=null;heads.forEach(h=>{if(h.getBoundingClientRect().top<=100)cur=h.id;});document.querySelectorAll('.toc-link').forEach(el=>{el.classList.toggle('active',el.getAttribute('data-target')===cur);});};
       window.removeEventListener('scroll',window.__tocScroll);window.__tocScroll=onScroll;window.addEventListener('scroll',onScroll);
+      // TOC click — scroll to heading without triggering hash route
+      tocRail.onclick=e=>{
+        const link=e.target.closest('.toc-link');
+        if(!link)return;
+        e.preventDefault();
+        const targetId=link.getAttribute('data-target');
+        const el=document.getElementById(targetId);
+        if(el){el.scrollIntoView({behavior:'smooth',block:'start'});history.replaceState(null,'',location.pathname+location.search+'#article/'+idx+'#'+targetId);}
+        document.querySelectorAll('.toc-link').forEach(l=>l.classList.remove('active'));
+        link.classList.add('active');
+      };
     }
   }catch(err){
     document.getElementById('tocRail').classList.remove('show');

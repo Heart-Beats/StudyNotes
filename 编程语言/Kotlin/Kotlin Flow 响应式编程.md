@@ -255,7 +255,7 @@ fun main() = runBlocking {
 - `take()`：只返回流中前面一定数量的元素，当数量达到时流将被取消，注意 take 与 drop 是相反的。
 - ``takeWhile()``：与 `filter` 类似，不过它是当遇到条件判断为 `false` 的时候，将会中断后续的操作。
 - `debounce()`：用于过滤掉短时间内的频繁值，只保留一段时间内最后一个值，适用于减少不必要的处理，比如搜索输入的实时查询。即使流结束，因为最新的数据也在这段时间内，也会被收集到。
-- `sample()` ：按照固定时间间隔对数据流进行采样，获取每个间隔内的最新值，适用于定期获取最新状态，比如定期更新界面数据。<font color= "red">注意：流完成时，如果下一个时间间隔还未到，则最后一个数据不会被收集。它与 debounce() 的核心区别在于，sample 专注于时刻，debounce 专于与间隔。 </font>
+- `sample()` ：按照固定时间间隔对数据流进行采样，获取每个间隔内的最新值，适用于定期获取最新状态，比如定期更新界面数据。<font color= "red">注意：流完成时，如果下一个时间间隔还未到，则最后一个数据不会被收集。它与 debounce() 的核心区别在于，sample 专注于时刻，debounce 专注于间隔。 </font>
 
 
 
@@ -828,32 +828,40 @@ Combine 3 with d
 
   ```Kotlin
   fun main() = runBlocking {
-      val flow2D = flowOf("Hello", "world", "of", "flow!")
-          .map { it.toCharArray().map { c -> " '$c' " }.asFlow() }
-          .flowOn(Dispatchers.Default)
+  	val flow2D = flowOf("Hello", "world", "of", "flow!")
+  		.map {
+  			flow {
+  				it.toCharArray().map { c ->
+  					delay(it.length*100L)
+  					emit(" '$c' " )
+  				}
+  			}
+  		}
+  		.flowOn(Dispatchers.Default)
   
-      flow2D.collect { println("Flow object before flatten: $it") } // Data in flow are Flow objects
+  	flow2D.collect { println("Flow object before flatten: $it") } // Data in flow are Flow objects
   
-      println("With flattenConcat:")
-      flow2D.flattenConcat()
-          .collect { print(it) }
+  	println("With flattenConcat:")
+  	flow2D.flattenConcat()
+  		.collect { print(it) }
   
-      println("\nWith flattenMerge:")
-      flow2D.flattenMerge()
-          .collect { print(it) }
+  	println("\nWith flattenMerge:")
+  	flow2D.flattenMerge()
+  		.collect { print(it) }
   }
   
-  //Flow object before flatten: kotlinx.coroutines.flow.FlowKt__BuildersKt$asFlow$$inlined$unsafeFlow$3@1b0375b3
-  //Flow object before flatten: kotlinx.coroutines.flow.FlowKt__BuildersKt$asFlow$$inlined$unsafeFlow$3@e580929
-  //Flow object before flatten: kotlinx.coroutines.flow.FlowKt__BuildersKt$asFlow$$inlined$unsafeFlow$3@1cd072a9
-  //Flow object before flatten: kotlinx.coroutines.flow.FlowKt__BuildersKt$asFlow$$inlined$unsafeFlow$3@7c75222b
-  //With flattenConcat:
-   //'H'  'e'  'l'  'l'  'o'  'w'  'o'  'r'  'l'  'd'  'o'  'f'  'f'  'l'  'o'  'w'  '!' 
-  //With flattenMerge:
-  // 'H'  'e'  'l'  'l'  'o'  'w'  'o'  'r'  'l'  'd'  'o'  'f'  'f'  'l'  'o'  'w'  '!'
+  
+  // Flow object before flatten: kotlinx.coroutines.flow.SafeFlow@6979e8cb
+  // Flow object before flatten: kotlinx.coroutines.flow.SafeFlow@763d9750
+  // Flow object before flatten: kotlinx.coroutines.flow.SafeFlow@5c0369c4
+  // Flow object before flatten: kotlinx.coroutines.flow.SafeFlow@2be94b0f
+  // With flattenConcat:
+  //   'H'  'e'  'l'  'l'  'o'  'w'  'o'  'r'  'l'  'd'  'o'  'f'  'f'  'l'  'o'  'w'  '!' 
+  // With flattenMerge:
+  //   'o'  'f'  'H'  'w'  'f'  'e'  'o'  'l'  'l'  'r'  'o'  'l'  'l'  'w'  'o'  'd'  '!' 
   ```
 
-  从输出中可以看出，如果不展平 Flow 里面是 Flow 对象，没法用。`flattenConcat` 是把内层的流串行的接在一起。但 `flattenMerge`  的输出似乎与文档描述不太一致，并没有并发式的混合。
+  从输出中可以看出，如果不展平 Flow 里面是 Flow 对象，没法用。<font color=red>`flattenConcat` 是把内层的流串行的接在一起，会严格按照流的顺序依次输出流中的元素，`flattenMerge` 则是支持并发特性，哪个元素先产生，则先被消费者可收集。</font>
 
   
 
@@ -954,7 +962,48 @@ Combine 3 with d
 
 #### 4.3 背压处理
 
-想象你开了一家网红冰淇淋店：
+我们先来看下一个代码：
+
+```kotlin
+fun main() {
+    runBlocking {
+        flow {
+            emit(1);
+            delay(1000);
+            emit(2);
+            delay(1000);
+            emit(3);
+        }.onEach {
+            println("$it is ready")
+        }.collect {
+            delay(1000)
+            println("$it is handled")
+        }
+    }
+}
+```
+
+这里在 flow 当中依次发送了 1、2、3 这几条数据，每条数据的发送间隔是 1 秒，然后通过 onEach 函数将它们都打印出来。
+
+在 collect 函数中，我们会逐个对这些数据进行处理，每条数据的处理耗时也是 1 秒。
+
+运行一下程序，效果如下图所示：
+
+![在这里插入图片描述](https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/cd650da1fdf13d360c64029df5ddbc71.gif)
+
+每条数据都依次被打印出来了，效果看上去非常不错。
+
+但是，不知道你有没有发现一个细节，这里每条数据都是要耗费2秒时长才能处理完。没有发现这个细节的请再仔细观察一下上图的输出。
+
+发现这个细节之后你就发现了一个惊天秘密，collect 函数中的数据处理是会对 flow 函数中的数据发送产生影响的。
+
+因为<font color=red>默认情况下，collect 函数和 flow 函数会运行在同一个协程当中，因此 collect 函数中的代码没有执行完，flow 函数中的代码也会被挂起等待</font>。
+
+也就是说，我们在 collect 函数中处理数据需要花费 1 秒，flow函数同样就要等待 1 秒。collect 函数处理完成数据之后，flow 函数恢复运行，发现又要等待 1 秒，这样 2 秒钟就过去了才能发送下一条数据。
+
+
+
+再比如想象你开了一家网红冰淇淋店：
 
 - 🍦 生产部：每秒钟制作 10 支冰淇淋（疯狂的生产力！）
 - 🚗 配送部：每秒钟只能运送 1 支冰淇淋（电动车没充电）
@@ -996,7 +1045,7 @@ public enum class BufferOverflow {
 
 
 
-默认方式，会挂起当前函数，直到执行完毕，对应 `buffer()` 方法。
+默认方式，会挂起当前函数，直到执行完毕，对应 **`buffer()` 方法。它会让 flow 函数和 collect 函数运行在不同的协程当中**，这样 flow 中的数据发送就不会受 collect 函数的影响了。
 
 ```kotlin
 fun warehouseSolution() = flow {
@@ -1020,7 +1069,21 @@ fun warehouseSolution() = flow {
 
 
 
+buffer  函数提供了一份缓存区，当 Flow 数据流速不均匀的时候，使数据发送和数据处理之间变得互不干扰了。
+
+flow 函数只管发送自己的数据，无需关心数据是否被处理，反正都缓存在buffer当中，collect 函数只需要一直从 buffer 中获取数据进行处理即可。
+
+但是，如果流速不均匀问题持续放大，缓存区的内容越来越多时又该怎么办呢？这个时候，我们就需要引入新的策略了，来适当地丢弃一些数据。
+
+
+
 ##### 4.3.2 `DROP_OLDEST` 策略 - **流量控制：快递界的"断舍离" ✂️**
+
+
+
+buffer 函数最大的问题在于：不管怎样调整它缓冲区的大小（buffer 函数可以通过传入参数来指定缓冲区大小），都无法完全地保障程度的运行效果。究其原因，主要还是因为 buffer 函数不会丢弃数据。而在某些场景下，我们可能并不需要保留所有的数据。
+
+比如拿股票软件举例，服务器端会将股票价格的实时数据源源不断地发送到客户端这边，而客户端这边只需要永远显示最新的股票价格即可，将过时的数据展示给用户是没有意义的。因此，这种场景下使用 buffer 函数来提升运行效率就完全不合理，它会缓存太多完全没有必要保留的数据。
 
 
 
@@ -1055,10 +1118,12 @@ flow {
 ```kotlin
 // 方案B：最新快递优先派送（VIP服务版）
 flow { 
-    repeat(100) {
+    var count = 100
+    while(true) {
         delay(10) // 闪电级生产速度
-        emit("包裹$it")
-        println("📦 已生产第$it 个包裹")
+        emit("包裹$count")
+        println("📦 已生产第 $it 个包裹")
+        count++
     }
 }.collectLatest { parcel ->
     cancel() // 取消当前配送
@@ -1066,6 +1131,15 @@ flow {
     delay(100)
     println("🚀 特快专送：$parcel")
 }
+
+
+// 📦 已生产第 1 个包裹
+// ⚠️ 急件处理：1
+// 📦 已生产第 2 个包裹
+// ⚠️ 急件处理：2
+// 📦 已生产第 3 个包裹
+// ⚠️ 急件处理：3
+//.....
 ```
 
 使用场景PK：
@@ -1234,7 +1308,7 @@ carman: 第二次collect :6
 
 ##### 5.2.1 Channel
 
-在讲解他们之前，我们需要了解一个 `kotlin` 中另一个概念 `Channel` (通道)，因为在后续讲解 `StateFlow` 和  `SharedFlow` 会涉及 `Channel` (通道)的相关知识。
+在讲解他们之前，我们需要了解一个 `kotlin` 中另一个概念 `Channel` (通道)，因为在后续讲解 `StateFlow` 和  `SharedFlow` 会涉及 `Channel` (通道) 的相关知识。
 
 
 

@@ -5,6 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <title>StudyNotes — Android · Kotlin · Rust · 算法</title>
+<!-- highlight.js — syntax highlighting -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/tokyo-night-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/kotlin.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/dart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/rust.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/java.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/groovy.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/shell.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/xml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/json.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/yaml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/sql.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/bash.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -72,10 +88,12 @@ body{overflow-x:hidden}
 a{text-decoration:none;color:inherit}
 button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
 
-::-webkit-scrollbar{width:6px;height:6px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--c-bd);border-radius:3px}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:var(--c-bg2)}
+::-webkit-scrollbar-thumb{background:var(--c-bd);border-radius:4px;border:2px solid var(--c-bg2)}
 ::-webkit-scrollbar-thumb:hover{background:var(--c-tm2)}
+/* Firefox */
+*{scrollbar-width:thin;scrollbar-color:var(--c-bd) var(--c-bg2)}
 
 /* ═══ TOP NAV ═══ */
 .topnav{
@@ -311,6 +329,11 @@ button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
 .article-body code{font:87%/1.4 var(--font-mono);background:var(--code-bg);color:var(--code-clr);padding:2px 7px;border-radius:5px;word-break:break-all}
 .article-body pre{background:var(--pre-bg)!important;border-radius:10px;padding:20px 24px;overflow-x:auto;margin:18px 0;font:13.5px/1.7 var(--font-mono),monospace!important;color:var(--pre-clr)!important;border:1px solid var(--pre-bd);box-shadow:0 4px 20px rgba(0,0,0,.15);display:block!important;position:relative}
 .article-body pre code{background:none!important;color:inherit!important;padding:0;font-size:inherit;border-radius:0;word-break:normal;display:block!important}
+/* hljs harmony with our pre */
+.article-body pre code.hljs{background:none!important;color:#c0caf5!important;padding:0!important}
+/* Pre language label */
+.article-body pre::before{content:attr(data-lang);position:absolute;top:8px;right:14px;font:11px/1 var(--font-mono);color:var(--c-tm2);text-transform:uppercase;letter-spacing:.04em;opacity:.5}
+[data-theme=dark] .article-body pre::before{color:#565f89}
 .article-body img{max-width:100%;border-radius:9px;margin:16px 0;border:1px solid var(--c-bd);display:block}
 .article-body table{border-collapse:collapse;width:100%;margin:18px 0;font-size:14px}
 .article-body th,.article-body td{border:1px solid var(--c-bd);padding:10px 16px;text-align:left}
@@ -764,13 +787,30 @@ async function loadArticle(idx){
     const md=await resp.text();
     const bodyHtml=parseMD(md);
 
-    // Build TOC
-    const tocItems=[];const hMatches=md.match(/^#{1,4}\s+.+/gm)||[];
-    for(const m of hMatches){const lv=m.match(/^#+/)[0].length;const txt=m.replace(/^#+\s+/,'').replace(/\[TOC\]/,'').trim();if(txt)tocItems.push({lv,txt});}
+    // ✅ Extract headings FROM rendered HTML so TOC IDs are 100% guaranteed to match
+    const tmp=document.createElement('div');
+    tmp.innerHTML=bodyHtml;
+    const allHeads=tmp.querySelectorAll('h1, h2, h3, h4');
+    const tocItems=[];
+    allHeads.forEach(h=>{
+      const lv=parseInt(h.tagName[1]);
+      const txt=h.textContent.trim();
+      let id=h.id||slugify(txt);
+      // Deduplicate
+      const sameId=tocItems.filter(t=>t.id===id).length;
+      if(sameId)id+='-'+(sameId+1);
+      h.setAttribute('id',id);
+      tocItems.push({lv,txt,id});
+    });
+    const finalBodyHtml=tmp.innerHTML;
 
+    // Build TOC using actual heading IDs
     const tocRail=document.getElementById('tocRail');
-    if(tocItems.length>2){tocRail.innerHTML=`<div class="toc-heading">本页目录</div>`+tocItems.map(h=>`<a class="toc-link${h.lv>=3?' lv3':''}" data-target="${slugify(h.txt)}">${hEsc(h.txt)}</a>`).join('');tocRail.classList.add('show');}
-    else{tocRail.classList.remove('show');}
+    if(tocItems.length>2){
+      tocRail.innerHTML=`<div class="toc-heading">本页目录</div>`+
+        tocItems.map(h=>`<a class="toc-link${h.lv>=3?' lv3':''}" data-target="${h.id}">${hEsc(h.txt)}</a>`).join('');
+      tocRail.classList.add('show');
+    }else{tocRail.classList.remove('show');}
 
     root.innerHTML=`<div class="article-wrap">
       <div class="breadcrumb"><a onclick="goHome()">首页</a><span class="sep">/</span><a onclick="nav('cat/${a.c}')">${cat.emoji} ${cat.n}</a></div>
@@ -783,301 +823,40 @@ async function loadArticle(idx){
           <span>${md.split('\\n').length} 行原文</span>
         </div>
       </div>
-      <div class="article-body">${bodyHtml}</div>
+      <div class="article-body">${finalBodyHtml}</div>
     </div>`;
 
     window.scrollTo(0,0);
 
+    // Apply syntax highlighting
+    try{if(typeof hljs!=='undefined'){hljs.highlightAll();}}catch(e){console.warn('hljs:',e);}
+
     if(tocItems.length>2){
-      const heads=root.querySelectorAll('.article-body h2,.article-body h3');
-      const onScroll=()=>{let cur=null;heads.forEach(h=>{if(h.getBoundingClientRect().top<=100)cur=h.id;});document.querySelectorAll('.toc-link').forEach(el=>{el.classList.toggle('active',el.getAttribute('data-target')===cur);});};
-      window.removeEventListener('scroll',window.__tocScroll);window.__tocScroll=onScroll;window.addEventListener('scroll',onScroll);
-      // TOC click — scroll to heading without triggering hash route
-      tocRail.onclick=e=>{
-        const link=e.target.closest('.toc-link');
-        if(!link)return;
-        e.preventDefault();
-        const targetId=link.getAttribute('data-target');
-        const el=document.getElementById(targetId);
-        if(el){el.scrollIntoView({behavior:'smooth',block:'start'});history.replaceState(null,'',location.pathname+location.search+'#article/'+idx+'#'+targetId);}
-        document.querySelectorAll('.toc-link').forEach(l=>l.classList.remove('active'));
-        link.classList.add('active');
+      const tocRailEl=document.getElementById('tocRail');
+      const scrollSpy=()=>{
+        let cur=null;
+        const hs=root.querySelectorAll('.article-body h1[id],.article-body h2[id],.article-body h3[id],.article-body h4[id]');
+        hs.forEach(h=>{if(h.getBoundingClientRect().top<=130)cur=h.id;});
+        tocRailEl.querySelectorAll('.toc-link').forEach(el=>{
+          el.classList.toggle('active',el.getAttribute('data-target')===cur);
+        });
       };
-    }
-  }catch(err){
-    document.getElementById('tocRail').classList.remove('show');
-    root.innerHTML=`<div class="article-wrap">
-      <div class="breadcrumb"><a onclick="goHome()">首页</a><span class="sep">/</span><a onclick="nav('cat/${a.c}')">${cat.emoji} ${cat.n}</a></div>
-      <div class="article-header"><div class="ah-cat-badge" style="color:${cat.color}">${cat.emoji} ${cat.n}</div><h1>${hEsc(a.t)}</h1></div>
-      <div class="error-card">
-        <h3>⚠️ 无法加载文章</h3><p>${hEsc(err.message)}</p><p>文件路径：<code>${hEsc(a.p)}</code></p>
-        <p style="font-size:13px;margin-top:8px">请确认 .md 文件已推送到 GitHub 仓库，且路径编码一致。</p>
-        <a class="back-link" onclick="goHome()"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M10 6.5H2M5 3 1.5 6.5 5 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>返回首页</a>
-      </div>
-    </div>`;
-  }
-}
-
-// ════════════════════════════════════════════════
-//  SEARCH
-// ════════════════════════════════════════════════
-function openSearch(){document.getElementById('overlay').classList.add('show');setTimeout(()=>document.getElementById('searchInput')?.focus(),60);}
-function closeSearch(){document.getElementById('overlay').classList.remove('show');const inp=document.getElementById('searchInput');if(inp)inp.value='';document.getElementById('searchResults').innerHTML='<div class="sp-empty">输入关键词开始搜索…</div>';}
-function handleOverlayClick(e){if(e.target===document.getElementById('overlay'))closeSearch();}
-
-function doSearch(q){
-  const box=document.getElementById('searchResults');
-  if(!q||!q.trim()){box.innerHTML='<div class="sp-empty">输入关键词开始搜索…</div>';return;}
-  const kw=q.trim().toLowerCase();
-  const hits=ART.map((a,i)=>({...a,_i:i})).filter(a=>a.t.toLowerCase().includes(kw)||(CAT_DEF[a.c]?.n||'').toLowerCase().includes(kw)||(CAT_DEF[a.c]?.desc||'').toLowerCase().includes(kw)).slice(0,12);
-  if(!hits.length){box.innerHTML='<div class="sp-empty">未找到匹配文章</div>';return;}
-  box.innerHTML=hits.map(a=>{
-    const c=CAT_DEF[a.c]||{n:'其他',emoji:'📋',color:'#64748b'};
-    return`<div class="sp-item" onclick="nav('article/${a._i}');closeSearch()">
-      <div class="sp-item-body"><div class="sp-item-cat" style="color:${c.color}">${c.emoji} ${c.n}</div><div class="sp-item-title">${hlMatch(hEsc(a.t),kw)}</div><div class="sp-item-meta">${c.n}</div></div>
-      <svg class="sp-item-arrow" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 6.5h8M7 3l3.5 3.5L7 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </div>`;
-  }).join('');
-}
-
-// ════════════════════════════════════════════════
-//  MOBILE SIDEBAR
-// ════════════════════════════════════════════════
-function toggleSidebar(){document.getElementById('sidebar')?.classList.toggle('open');}
-document.addEventListener('click',e=>{if(window.innerWidth<=900&&(e.target.closest('.sb-item')||e.target.closest('.sb-home')))document.getElementById('sidebar')?.classList.remove('open');});
-
-// ════════════════════════════════════════════════
-//  KEYBOARD
-// ════════════════════════════════════════════════
-document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();openSearch();}if(e.key==='Escape')closeSearch();});
-
-// ════════════════════════════════════════════════
-//  INIT
-// ════════════════════════════════════════════════
-(function init(){
-  window.addEventListener('hashchange', route);
-  route();
-})();
-</script>
-</body>
-</html>
-
-
-// ════════════════════════════════════════════════
-//  UTILS
-// ════════════════════════════════════════════════
-function hEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-function slugify(s){return s.toLowerCase().replace(/[^\w\u4e00-\u9fff]+/g,'-').replace(/^-|-$/g,'')||'h'}
-function hlMatch(t,q){
-  if(!q)return t;
-  const re=new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
-  return t.replace(re,'<mark style="background:rgba(251,191,36,.3);padding:0 2px;border-radius:2px">$1</mark>');
-}
-
-// ════════════════════════════════════════════════
-//  ROUTER
-// ════════════════════════════════════════════════
-let curIdx=-1;
-
-function goHome(){history.pushState(null,'',location.pathname);renderHome();}
-function nav(hash){history.pushState(null,'',location.pathname+'#'+hash);route();}
-
-function route(){
-  const h=location.hash.slice(1)||'/';
-  if(!h||h==='/')renderHome();
-  else if(h.startsWith('article/')){const n=parseInt(h.split('/')[1]);(n>=0&&n<ART.length)?loadArticle(n):renderHome();}
-  else if(h.startsWith('cat/'))renderCat(h.slice(4));
-  else renderHome();
-}
-
-// ════════════════════════════════════════════════
-//  SIDEBAR
-// ════════════════════════════════════════════════
-function renderSidebar(activeCat,activeIdx){
-  const sb=document.getElementById('sidebar');if(!sb)return;
-  const isHome=activeCat===null&&activeIdx===undefined;
-
-  let H=`<a class="sb-home ${isHome?'active':''}" onclick="goHome()">
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0"><path d="M1 6.5L7 1.5L13 6.5V13H9V9H5V13H1V6.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" fill="none"/></svg>
-    首页
-  </a>
-  <div class="sb-sep"></div>`;
-
-  for(const k of CAT_ORDER){
-    const cat=CAT_DEF[k];
-    const list=ART.map((a,i)=>({...a,_i:i})).filter(a=>a.c===k);
-    if(!list.length)continue;
-    const isGroupActive=activeIdx!==undefined&&ART[activeIdx]?.c===k;
-    const isExpanded=isGroupActive||activeCat===k;
-    H+=`<div class="sb-group">
-      <div class="sb-group-header" onclick="toggleGroup('${k}')">
-        <span class="arrow${isExpanded?' open':''}" id="arr-${k}">▶</span>
-        <span class="gb-name">${cat.emoji} ${cat.n}</span>
-        <span class="gb-count">${list.length}</span>
-      </div>
-      <div class="sb-items${isExpanded?'':' collapsed'}" id="grp-${k}">`;
-    for(const a of list){
-      H+=`<a class="sb-item${activeIdx===a._i?' active':''}" onclick="nav('article/${a._i}')" title="${hEsc(a.t)}">
-        <span class="si-dot" style="background:${cat.color}"></span>
-        <span class="si-name">${hEsc(a.t)}</span>
-      </a>`;
-    }
-    H+='</div></div>';
-  }
-  sb.innerHTML=H;
-  const activeEl=sb.querySelector('.sb-item.active');
-  if(activeEl)setTimeout(()=>activeEl.scrollIntoView({block:'nearest'}),50);
-}
-
-function toggleGroup(k){
-  const grp=document.getElementById('grp-'+k);
-  const arr=document.getElementById('arr-'+k);
-  if(!grp)return;
-  grp.classList.toggle('collapsed');
-  arr.classList.toggle('open');
-}
-
-// ════════════════════════════════════════════════
-//  RENDER: HOME
-// ════════════════════════════════════════════════
-function renderHome(){
-  curIdx=-1;document.title='StudyNotes — Android · Kotlin · Rust · 算法';
-  document.getElementById('navBreadcrumb').innerHTML='';
-  const tocRail=document.getElementById('tocRail');tocRail.classList.remove('show');tocRail.innerHTML='';
-
-  const catCount=CAT_ORDER.filter(k=>ART.some(a=>a.c===k)).length;
-
-  const root=document.getElementById('pageRoot');
-  let H=`<section class="hero">
-    <div class="hero-glow2"></div>
-    <div class="hero-inner">
-      <div class="hero-eyebrow"><span class="hero-eyebrow-dot"></span>Android 工程师技术知识库</div>
-      <h1>Study<em>Notes</em><span class="dim"> .</span></h1>
-      <p class="hero-desc">涵盖 Android 进阶 · Kotlin · Rust · Flutter · 数据结构与算法 · AI 工具 · 计算机网络等核心领域的系统化编程学习笔记</p>
-      <div class="hero-search" onclick="openSearch()">
-        <svg class="hs-icon" width="17" height="17" viewBox="0 0 17 17" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="1.5"/><line x1="12" y1="12" x2="16" y2="16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        <span class="hs-text">搜索文章、关键词、技术点…</span><kbd>Ctrl+K</kbd>
-      </div>
-      <div class="hero-stats">
-        <div class="hero-stat"><div class="hs-num"><span>${ART.length}</span></div><div class="hs-label">篇技术文章</div></div>
-        <div class="hero-stat"><div class="hs-num"><span>${catCount}</span></div><div class="hs-label">个知识分类</div></div>
-        <div class="hero-stat"><div class="hs-num"><span>Heart-Beats/StudyNotes</span></div><div class="hs-label">GitHub 仓库</div></div>
-      </div>
-    </div>
-  </section>`;
-
-  H+='<div class="home-body"><p class="section-title">全部分类</p><div class="cat-grid">';
-  for(const k of CAT_ORDER){
-    const cat=CAT_DEF[k];
-    const cnt=ART.filter(a=>a.c===k).length;
-    if(!cnt)continue;
-    H+=`<div class="cat-card" onclick="nav('cat/${k}')">
-      <div class="cc-top">
-        <div class="cc-icon" style="background:${cat.color}18">${cat.emoji}</div>
-        <div class="cc-body"><div class="cc-name">${cat.n}</div><span class="cc-count">${cnt} 篇</span></div>
-      </div>
-      <div class="cc-desc">${cat.desc}</div>
-      <div class="cc-footer">
-        <span class="cc-tag" style="background:${cat.color}15;color:${cat.color}">${cat.emoji} ${cat.n}</span>
-        <svg style="margin-left:auto;color:var(--c-tm2)" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 6.5h8M7 3l3.5 3.5L7 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-    </div>`;
-  }
-  H+='</div></div>';
-  root.innerHTML=H;
-  renderSidebar(null);
-}
-
-// ════════════════════════════════════════════════
-//  RENDER: CATEGORY PAGE
-// ════════════════════════════════════════════════
-function renderCat(key){
-  const cat=CAT_DEF[key];if(!cat){renderHome();return;}
-  const list=ART.map((a,i)=>({...a,_i:i})).filter(a=>a.c===key);
-  document.title=cat.n+' — StudyNotes';
-  document.getElementById('navBreadcrumb').innerHTML=`<a onclick="goHome()">首页</a><span class="sep">/</span><span class="seg">${cat.emoji} ${cat.n}</span>`;
-
-  const tocRail=document.getElementById('tocRail');tocRail.classList.remove('show');tocRail.innerHTML='';
-
-  const root=document.getElementById('pageRoot');
-  let H=`<div class="cat-page">
-    <div class="breadcrumb"><a onclick="goHome()">首页</a><span class="sep">/</span><span style="color:var(--c-t1)">${cat.emoji} ${cat.n}</span></div>
-    <div class="page-hero"><h1>${cat.emoji} ${cat.n}</h1><p>${cat.desc} · 共 ${list.length} 篇文章</p></div>
-    <div class="article-list-label">文章列表</div>`;
-  for(const a of list){
-    H+=`<div class="article-row" onclick="nav('article/${a._i}')">
-      <span class="ar-num">${String(a._i+1).padStart(2,'0')}</span>
-      <span class="ar-title">${hEsc(a.t)}</span>
-      <div class="ar-meta">
-        <svg class="ar-arrow" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 6.5h8M7 3l3.5 3.5L7 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-    </div>`;
-  }
-  H+='</div>';
-  root.innerHTML=H;renderSidebar(key);
-}
-
-// ════════════════════════════════════════════════
-//  RENDER: ARTICLE
-// ════════════════════════════════════════════════
-async function loadArticle(idx){
-  const a=ART[idx];if(!a)return;curIdx=idx;
-  const cat=CAT_DEF[a.c]||{n:'其他',emoji:'📋',color:'#64748b'};
-  document.title=a.t+' — StudyNotes';
-  document.getElementById('navBreadcrumb').innerHTML=`<a onclick="goHome()">首页</a><span class="sep">/</span><a onclick="nav('cat/${a.c}')" class="seg">${cat.emoji} ${cat.n}</a>`;
-
-  const root=document.getElementById('pageRoot');
-  root.innerHTML=`<div class="article-wrap">
-    <div class="breadcrumb"><a onclick="goHome()">首页</a><span class="sep">/</span><a onclick="nav('cat/${a.c}')">${cat.emoji} ${cat.n}</a></div>
-    <div class="article-header"><div class="ah-cat-badge" style="color:${cat.color}">${cat.emoji} ${cat.n}</div><h1>${hEsc(a.t)}</h1></div>
-    <div class="loading-state"><div class="spin"></div>正在加载文章内容…</div>
-  </div>`;
-  renderSidebar(a.c,idx);
-
-  try{
-    const base=location.href.split('#')[0].replace(/\/[^/]*\.html.*$/,'/').replace(/\/?$/,'/');
-    const resp=await fetch(base+a.p);
-    if(!resp.ok)throw new Error('HTTP '+resp.status);
-    const md=await resp.text();
-    const bodyHtml=parseMD(md);
-
-    // Build TOC
-    const tocItems=[];const hMatches=md.match(/^#{1,4}\s+.+/gm)||[];
-    for(const m of hMatches){const lv=m.match(/^#+/)[0].length;const txt=m.replace(/^#+\s+/,'').replace(/\[TOC\]/,'').trim();if(txt)tocItems.push({lv,txt});}
-
-    const tocRail=document.getElementById('tocRail');
-    if(tocItems.length>2){tocRail.innerHTML=`<div class="toc-heading">本页目录</div>`+tocItems.map(h=>`<a class="toc-link${h.lv>=3?' lv3':''}" data-target="${slugify(h.txt)}">${hEsc(h.txt)}</a>`).join('');tocRail.classList.add('show');}
-    else{tocRail.classList.remove('show');}
-
-    root.innerHTML=`<div class="article-wrap">
-      <div class="breadcrumb"><a onclick="goHome()">首页</a><span class="sep">/</span><a onclick="nav('cat/${a.c}')">${cat.emoji} ${cat.n}</a></div>
-      <div class="article-header">
-        <div class="ah-cat-badge" style="color:${cat.color}">${cat.emoji} ${cat.n}</div>
-        <h1>${hEsc(a.t)}</h1>
-        <div class="ah-meta">
-          <span class="ah-tag" style="background:${cat.color}18;color:${cat.color}">${cat.emoji} ${cat.n}</span>
-          <span>${md.length} 字符</span>
-          <span>${md.split('\\n').length} 行原文</span>
-        </div>
-      </div>
-      <div class="article-body">${bodyHtml}</div>
-    </div>`;
-
-    window.scrollTo(0,0);
-
-    if(tocItems.length>2){
-      const heads=root.querySelectorAll('.article-body h2,.article-body h3');
-      const onScroll=()=>{let cur=null;heads.forEach(h=>{if(h.getBoundingClientRect().top<=100)cur=h.id;});document.querySelectorAll('.toc-link').forEach(el=>{el.classList.toggle('active',el.getAttribute('data-target')===cur);});};
-      window.removeEventListener('scroll',window.__tocScroll);window.__tocScroll=onScroll;window.addEventListener('scroll',onScroll);
-      // TOC click — scroll to heading without triggering hash route
-      tocRail.onclick=e=>{
+      window.removeEventListener('scroll',window.__tocScroll);
+      window.__tocScroll=scrollSpy;
+      window.addEventListener('scroll',scrollSpy,{passive:true});
+      // TOC click
+      tocRailEl.onclick=e=>{
         const link=e.target.closest('.toc-link');
         if(!link)return;
         e.preventDefault();
         const targetId=link.getAttribute('data-target');
         const el=document.getElementById(targetId);
-        if(el){el.scrollIntoView({behavior:'smooth',block:'start'});history.replaceState(null,'',location.pathname+location.search+'#article/'+idx+'#'+targetId);}
-        document.querySelectorAll('.toc-link').forEach(l=>l.classList.remove('active'));
+        if(el){
+          const navH=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h'))||56;
+          const top=el.getBoundingClientRect().top+window.pageYOffset-navH-16;
+          window.scrollTo({top,behavior:'smooth'});
+        }
+        tocRailEl.querySelectorAll('.toc-link').forEach(l=>l.classList.remove('active'));
         link.classList.add('active');
       };
     }

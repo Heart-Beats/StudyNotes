@@ -22,6 +22,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/sql.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/bash.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -444,6 +445,16 @@ button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
 .xmind-error h3{color:#ef4444;margin-bottom:8px}
 .xmind-error p{color:var(--text-sec);font-size:13px;margin:4px 0}
 
+/* ─── Mermaid Diagrams ─── */
+.mermaid-wrap{margin:24px 0;padding:16px;background:var(--card-bg);border-radius:10px;border:1px solid var(--border);overflow-x:auto}
+.mermaid-wrap .mermaid{display:flex;justify-content:center}
+.mermaid-wrap .mermaid svg{max-width:100%;height:auto}
+.mermaid-fallback{margin:24px 0;padding:16px;background:var(--code-bg);border-radius:8px;overflow-x:auto;font-size:13px;line-height:1.6}
+.mermaid-fallback code{background:transparent;padding:0}
+[data-theme=dark] .mermaid-wrap{background:var(--c-bg2)}
+[data-theme=dark] .mermaid-wrap .mermaid svg .edgeLabel rect,
+[data-theme=dark] .mermaid-wrap .mermaid svg .labelBkg{fill:#1e293b!important}
+
 </style>
 <script>/**
  * marked v15.0.6 - a markdown parser
@@ -531,6 +542,16 @@ function applyTheme(mode){
   }
   localStorage.setItem('sn-theme', mode);
   updateThemeIcon(mode);
+  // Re-init mermaid for current theme and re-render if mermaid diagrams exist
+  if(typeof mermaid!=='undefined'){
+    initMermaid();
+    const existingMermaid=document.querySelectorAll('.mermaid-wrap .mermaid');
+    if(existingMermaid.length){
+      // Reset already-rendered SVGs so mermaid.run re-renders them
+      existingMermaid.forEach(el=>{el.removeAttribute('data-processed');});
+      mermaid.run({querySelector:'.mermaid-wrap .mermaid'}).catch(()=>{});
+    }
+  }
 }
 
 function cycleTheme(){
@@ -560,6 +581,60 @@ function updateThemeIcon(mode){
 }
 
 function getThemeMode(){ return localStorage.getItem('sn-theme')||'auto'; }
+
+// ════════════════════════════════════════════════
+//  MERMAID DIAGRAM RENDERER
+// ════════════════════════════════════════════════
+function initMermaid(){
+  if(typeof mermaid==='undefined') return;
+  const html=document.documentElement;
+  const isDark=html.getAttribute('data-theme')==='dark';
+  mermaid.initialize({
+    startOnLoad:false,
+    theme:'base',
+    themeVariables:{
+      primaryColor: isDark?'#334155':'#e2e8f0',
+      primaryTextColor: isDark?'#e2e8f0':'#1e293b',
+      primaryBorderColor: isDark?'#475569':'#94a3b8',
+      lineColor: isDark?'#64748b':'#64748b',
+      secondaryColor: isDark?'#1e293b':'#f1f5f9',
+      tertiaryColor: isDark?'#0f172a':'#f8fafc',
+      fontSize:'14px'
+    }
+  });
+}
+initMermaid();
+
+async function renderMermaid(){
+  if(typeof mermaid==='undefined') return;
+  const root=document.getElementById('pageRoot');
+  if(!root) return;
+  // Find mermaid code blocks that marked.js rendered as <code class="language-mermaid">
+  const mermaidBlocks=root.querySelectorAll('code.language-mermaid');
+  if(!mermaidBlocks.length) return;
+  for(const block of mermaidBlocks){
+    const pre=block.parentElement;
+    const src=block.textContent;
+    // Create a mermaid container
+    const container=document.createElement('div');
+    container.className='mermaid-wrap';
+    container.innerHTML=`<div class="mermaid">${hEsc(src)}</div>`;
+    pre.replaceWith(container);
+  }
+  try {
+    // Re-init to pick up current theme
+    initMermaid();
+    await mermaid.run({querySelector:'.mermaid'});
+  } catch(e){
+    console.warn('mermaid render error:', e);
+    // Fallback: show raw code in a pre block
+    document.querySelectorAll('.mermaid-wrap .mermaid').forEach(el=>{
+      if(el.querySelector('svg')) return; // already rendered
+      const src=el.textContent;
+      el.outerHTML=`<pre class="mermaid-fallback"><code>${hEsc(src)}</code></pre>`;
+    });
+  }
+}
 
 // ════════════════════════════════════════════════
 //  CATEGORY DEFINITIONS
@@ -1024,6 +1099,9 @@ async function loadArticle(idx){
 
     // Apply syntax highlighting
     try{if(typeof hljs!=='undefined'){hljs.highlightAll();}}catch(e){console.warn('hljs:',e);}
+
+    // Render Mermaid diagrams
+    try{renderMermaid();}catch(e){console.warn('mermaid:',e);}
 
     if(tocItems.length>2){
       const tocRailEl=document.getElementById('tocRail');

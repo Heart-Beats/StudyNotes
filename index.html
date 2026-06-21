@@ -58,6 +58,8 @@
   --sh-lg:0 24px 80px rgba(15,23,42,.15);
   /* Blockquote */
   --bq-bg:var(--c-acbg);--bq-bd:var(--c-ac);
+  /* Scrollbar — more prominent than default */
+  --sb-thumb:#c0c8d4;--sb-thumb-hover:#94a3b8;--sb-track:#f1f5f9;
   /* Misc */
   --overlay-bg:rgba(15,23,42,.25);
 }
@@ -79,6 +81,8 @@
   --sh-sm:0 1px 3px rgba(0,0,0,.25);--sh-md:0 4px 24px rgba(0,0,0,.35);
   --sh-lg:0 24px 80px rgba(0,0,0,.5);
   --bq-bg:rgba(14,165,233,.1);--bq-bd:var(--c-ac);
+  /* Scrollbar — more prominent */
+  --sb-thumb:#334155;--sb-thumb-hover:#64748b;--sb-track:#0f172a;
   --overlay-bg:rgba(0,0,0,.55);
   color-scheme:dark;
 }
@@ -88,12 +92,13 @@ body{overflow-x:hidden}
 a{text-decoration:none;color:inherit}
 button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
 
-::-webkit-scrollbar{width:8px;height:8px}
-::-webkit-scrollbar-track{background:var(--c-bg2)}
-::-webkit-scrollbar-thumb{background:var(--c-bd);border-radius:4px;border:2px solid var(--c-bg2)}
-::-webkit-scrollbar-thumb:hover{background:var(--c-tm2)}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:var(--sb-track)}
+::-webkit-scrollbar-thumb{background:var(--sb-thumb);border-radius:5px;border:2px solid var(--sb-track)}
+::-webkit-scrollbar-thumb:hover{background:var(--sb-thumb-hover)}
+::-webkit-scrollbar-thumb:active{background:var(--c-tm)}
 /* Firefox */
-*{scrollbar-width:thin;scrollbar-color:var(--c-bd) var(--c-bg2)}
+*{scrollbar-width:auto;scrollbar-color:var(--sb-thumb) var(--sb-track)}
 
 /* ═══ TOP NAV ═══ */
 .topnav{
@@ -335,12 +340,13 @@ button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
 .article-body pre::before{content:attr(data-lang);position:absolute;top:8px;right:14px;font:11px/1 var(--font-mono);color:var(--c-tm2);text-transform:uppercase;letter-spacing:.04em;opacity:.5}
 [data-theme=dark] .article-body pre::before{color:#565f89}
 .article-body img{max-width:100%;border-radius:9px;margin:16px 0;border:1px solid var(--c-bd);display:block}
+.article-body mark{background:rgba(255,213,0,.35);color:inherit;padding:1px 3px;border-radius:3px;font-weight:inherit}
+[data-theme=dark] .article-body mark{background:rgba(255,213,0,.28)}
 .article-body table{border-collapse:collapse;width:100%;margin:18px 0;font-size:14px}
 .article-body th,.article-body td{border:1px solid var(--c-bd);padding:10px 16px;text-align:left}
 .article-body th{background:var(--c-bg2);font-weight:600;font-size:13px;color:var(--c-t1)}
 .article-body tr:hover td{background:var(--c-bg2)}
 .article-body hr{border:none;border-top:1px solid var(--c-bd);margin:32px 0}
-.article-body mark{background:rgba(251,191,36,.25);color:inherit;padding:1px 5px;border-radius:3px}
 .article-body strong{font-weight:700;color:var(--c-t1)}
 .article-body del{opacity:.5}
 .article-body .empty{color:var(--c-tm2);font-style:italic}
@@ -602,6 +608,8 @@ const ART = [...FALLBACK_ART];
 function parseMD(src){
   if(!src||!src.trim()) return '<p class="empty">（本文档暂无内容）</p>';
   try {
+    // Pre-process: convert ==highlight== to <mark>highlight</mark>
+    src = src.replace(/==(.+?)==/g, '<mark>$1</mark>');
     return marked.parse(src, { gfm: true, breaks: false, async: false });
   } catch(e) {
     console.error('[parseMD] marked error:', e);

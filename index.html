@@ -384,6 +384,31 @@ button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
   .topnav,.sidebar,.toc-rail,.hero{display:none!important}
   .article-wrap{padding:0;max-width:100%!important}
 }
+
+/* ─── Image Viewer ─── */
+.img-viewer-wrap{display:flex;flex-direction:column;align-items:center;min-height:200px;position:relative}
+.img-viewer-wrap.loaded{min-height:auto}
+.img-viewer{max-width:100%;height:auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.12);cursor:zoom-in;transition:transform .2s}
+.img-viewer:hover{transform:scale(1.01)}
+.img-viewer-error{width:100%;padding:32px;text-align:center;background:var(--card-bg);border-radius:8px;border:1px solid var(--border)}
+.img-dl-bar{display:flex;justify-content:center;margin-top:16px;padding-bottom:8px}
+.img-dl-btn{display:inline-flex;align-items:center;gap:4px;padding:8px 20px;border-radius:8px;background:var(--accent);color:#fff !important;font-size:14px;font-weight:500;text-decoration:none !important;transition:opacity .2s}
+.img-dl-btn:hover{opacity:.85}
+
+/* ─── Download Card ─── */
+.dl-card{display:flex;align-items:center;gap:16px;padding:24px;background:var(--card-bg);border-radius:12px;border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.dl-card-icon{font-size:40px;flex-shrink:0;line-height:1}
+.dl-card-info{flex:1;min-width:0}
+.dl-card-name{font-size:16px;font-weight:600;color:var(--text);margin-bottom:4px;word-break:break-all}
+.dl-card-desc{font-size:13px;color:var(--text-sec);line-height:1.5}
+.dl-card-btn{display:inline-flex;align-items:center;gap:4px;padding:10px 24px;border-radius:8px;background:var(--accent);color:#fff !important;font-size:14px;font-weight:500;text-decoration:none !important;white-space:nowrap;transition:opacity .2s;flex-shrink:0}
+.dl-card-btn:hover{opacity:.85}
+
+/* ─── Article card type indicator ─── */
+.art-type-badge{display:inline-block;font-size:11px;padding:1px 6px;border-radius:4px;margin-left:4px;vertical-align:middle}
+.art-type-badge.img{background:#3b82f618;color:#3b82f6}
+.art-type-badge.dl{background:#f59e0b18;color:#f59e0b}
+
 </style>
 <script>/**
  * marked v15.0.6 - a markdown parser
@@ -505,103 +530,142 @@ function getThemeMode(){ return localStorage.getItem('sn-theme')||'auto'; }
 //  CATEGORY DEFINITIONS
 // ════════════════════════════════════════════════
 const CAT_DEF = {
-  android:      {n:'Android 开发',     emoji:'🤖', color:'#10b981', desc:'JNI、WebView、Gradle、动画、混淆等基础开发'},
-  'android-adv':{n:'Android 进阶',     emoji:'⚡', color:'#059669', desc:'架构模式、Service/AIDL、组件化、插件化'},
-  flutter:      {n:'Flutter',          emoji:'🦋', color:'#3b82f6', desc:'Flutter 全栈开发，共 14 篇系列教程'},
+  android:      {n:'Android 开发',     emoji:'🤖', color:'#10b981', desc:'JNI、WebView、Gradle、动画、混淆、VPN、键值对存储等基础开发'},
+  'android-adv':{n:'Android 进阶',     emoji:'⚡', color:'#059669', desc:'架构模式、组件化总结、Service/AIDL、插件化、App启动优化'},
+  flutter:      {n:'Flutter',          emoji:'🦋', color:'#3b82f6', desc:'Flutter 全栈开发，从基础到路由设计，共 14 篇系列教程'},
   'third-lib':  {n:'三方库解析',       emoji:'📦', color:'#8b5cf6', desc:'Glide、Hilt、Shadow、Xposed 源码解析'},
-  kotlin:       {n:'Kotlin',           emoji:'🟣', color:'#f59e0b', desc:'Kotlin 基础、Flow、类型推断、Compose 作用域'},
+  kotlin:       {n:'Kotlin',           emoji:'🟣', color:'#f59e0b', desc:'Kotlin 基础、Flow、类型推断、协程、Compose作用域'},
   groovy:       {n:'Groovy',           emoji:'🔧', color:'#16a34a', desc:'Groovy 语言相关'},
   python:       {n:'Python',           emoji:'🐍', color:'#3b82f6', desc:'Python 语言相关'},
   rust:         {n:'Rust',             emoji:'🦀', color:'#ef4444', desc:'Rust 基础入门与开发环境搭建'},
   algorithm:    {n:'算法与数据结构',   emoji:'🧮', color:'#6366f1', desc:'数据结构、排序、动态规划、LeetCode 高频题'},
-  ai:           {n:'AI 工具',          emoji:'✨', color:'#06b6d4', desc:'Terminal 入门、Claude 使用、AI 工具指南'},
+  ai:           {n:'AI 工具',          emoji:'✨', color:'#06b6d4', desc:'AI 使用说明书、Claude配置、VibeCoding、MCP、调试心法等'},
   web:          {n:'Web 开发',         emoji:'🌐', color:'#ec4899', desc:'Ajax、DOM、jQuery、JavaScript 核心知识'},
-  network:      {n:'计算机网络',       emoji:'🔌', color:'#6366f1', desc:'Netty 框架与 Socket 编程'},
+  network:      {n:'计算机网络',       emoji:'🔌', color:'#6366f1', desc:'Netty 学习与 Socket 编程'},
   crypto:       {n:'密码学',           emoji:'🔐', color:'#f97316', desc:'国密算法介绍与应用'},
   ubuntu:       {n:'运维 / Ubuntu',    emoji:'🐧', color:'#f97316', desc:'GitLab、Docker、Maven 私服运维实践'},
   foundation:   {n:'编程基础',         emoji:'💡', color:'#64748b', desc:'异或运算、浮点数等底层编程知识'},
-  root:         {n:'其他',             emoji:'📋', color:'#64748b', desc:'Java 8、Git、MarkDown、历史等杂项'},
+  root:         {n:'其他',             emoji:'📋', color:'#64748b', desc:'Java 8、Git、MarkDown、信息论、历史朝代歌等杂项'},
 };
 const CAT_ORDER = ['android','android-adv','flutter','third-lib','kotlin','groovy','python','rust','algorithm','ai','web','network','crypto','ubuntu','foundation','root'];
 
-// ════════════════════════════════════════════════
-//  FALLBACK ARTICLE DATA (76 articles)
-// ════════════════════════════════════════════════
 const FALLBACK_ART = [
-  {t:'Java 8 新特性详解',c:'root',p:'Java%208%20%E6%96%B0%E7%89%B9%E6%80%A7.md'},
+  {t:'Java 8 新特性',c:'root',p:'Java%208%20%E6%96%B0%E7%89%B9%E6%80%A7.md'},
+  {t:'MarkDown绘制时序图',c:'root',p:'MarkDown%E7%BB%98%E5%88%B6%E6%97%B6%E5%BA%8F%E5%9B%BE.md'},
   {t:'git相关',c:'root',p:'git%E7%9B%B8%E5%85%B3.md'},
   {t:'git规范',c:'root',p:'git%E8%A7%84%E8%8C%83.md'},
-  {t:'MarkDown 绘制时序图',c:'root',p:'MarkDown%E7%BB%98%E5%88%B6%E6%97%B6%E5%BA%8F%E5%9B%BE.md'},
-  {t:'使用 Gradle 插件发布组件至 MavenCentral',c:'root',p:'%E4%BD%BF%E7%94%A8%20Gradle%20%E6%8F%92%E4%BB%B6%E4%B8%8A%E4%BC%A0%E7%BB%84%E4%BB%B6%E8%87%B3%20MavenCentral.md'},
+  {t:'使用 Gradle 插件上传组件至 MavenCentral',c:'root',p:'%E4%BD%BF%E7%94%A8%20Gradle%20%E6%8F%92%E4%BB%B6%E4%B8%8A%E4%BC%A0%E7%BB%84%E4%BB%B6%E8%87%B3%20MavenCentral.md'},
+  {t:'信息论称球',c:'root',p:'%E4%BF%A1%E6%81%AF%E8%AE%BA%E7%A7%B0%E7%90%83.md'},
   {t:'历史朝代歌',c:'root',p:'%E5%8E%86%E5%8F%B2%E6%9C%9D%E4%BB%A3%E6%AD%8C.md'},
-  {t:'JNI 的使用',c:'android',p:'Android/JNI%20%E7%9A%84%E4%BD%BF%E7%94%A8.md'},
-  {t:'JSON 介绍及 Android 解析方法',c:'android',p:'Android/JSON%E4%BB%8B%E7%BB%8D%E5%8F%8AAndroid%E8%A7%A3%E6%9E%90%E6%96%B9%E6%B3%95.md'},
-  {t:'WebView 与 JavaScript 的交互',c:'android',p:'Android/WebView%20%E4%B8%8E%20JavaScript%20%E7%9A%84%E4%BA%A4%E4%BA%92.md'},
-  {t:'Gradle 在 Android 中的使用',c:'android',p:'Android/Gradle%20%E5%9C%A8%20Android%20%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8.md'},
-  {t:'Android 动画基础',c:'android',p:'Android/%E5%8A%A8%E7%94%BB%E5%9F%BA%E7%A1%80.md'},
-  {t:'Android 混淆',c:'android',p:'Android/%E6%B7%B7%E6%B7%86.md'},
-  {t:'Android 进阶知识树',c:'android-adv',p:'Android/Android%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86/Android%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%E6%A0%91.md'},
-  {t:'组件化知识点',c:'android-adv',p:'Android/Android%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86/%E7%BB%84%E4%BB%B6%E5%8C%96%E7%9F%A5%E8%AF%86%E7%82%B9.md'},
-  {t:'Service 与 AIDL 的使用',c:'android-adv',p:'Android/Android%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86/Service%20%E4%B8%8E%20AIDL%20%E7%9A%84%E4%BD%BF%E7%94%A8.md'},
-  {t:'IPC 通信方式',c:'android-adv',p:'Android/Android%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86/IPC%20%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F.md'},
-  {t:'EventBus 的使用',c:'android-adv',p:'Android/Android%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86/EventBus%20%E7%9A%84%E4%BD%BF%E7%94%A8.md'},
-  {t:'Android 架构模式',c:'android-adv',p:'Android/Android%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86/%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F.md'},
-  {t:'1. Flutter 基础',c:'flutter',p:'Android/Flutter%E7%9B%B8%E5%85%B3/1.Flutter%E5%9F%BA%E7%A1%80.md'},
-  {t:'2. Dart 基础',c:'flutter',p:'Android/Flutter%E7%9B%B8%E5%85%B3/2.Dart%E5%9F%BA%E7%A1%80.md'},
-  {t:'3. Flutter Widget',c:'flutter',p:'Android/Flutter%E7%9B%B8%E5%85%B3/3.Flutter%20Widget.md'},
-  {t:'4. Flutter 布局',c:'flutter',p:'Android/Flutter%E7%9B%B8%E5%85%B3/4.Flutter%E5%B8%83%E5%B1%80.md'},
-  {t:'5. 手势与触摸',c:'flutter',p:'Android/Flutter%E7%9B%B8%E5%85%B3/5.%E6%89%8B%E5%8A%BF%E4%B8%8E%E8%A7%A6%E6%91%B8.md'},
-  {t:'6. Flutter 动画',c:'flutter',p:'Android/Flutter%E7%9B%B8%E5%85%B3/6.Flutter%E5%8A%A8%E7%94%BB.md'},
-  {t:'7. Flutter 状态管理',c:'flutter',p:'Android/Flutter%E7%9B%B8%E5%85%B3/7.Flutter%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86.md'},
-  {t:'8. Flutter 路由',c:'flutter',p:'Android/Flutter%E7%9B%B8%E5%85%B3/8.Flutter%E8%B7%AF%E7%94%B1.md'},
-  {t:'9. Flutter 包与插件',c:'flutter',p:'Android/Flutter%E7%9B%B8%E5%85%B3/9.Flutter%E5%8C%85%E4%B8%8E%E6%8F%92%E4%BB%B6.md'},
-  {t:'10. 导航栏设计',c:'flutter',p:'Android/Flutter%E7%9B%B8%E5%85%B3/10.Flutter%E5%AF%BC%E8%88%AA%E6%A0%8F%E7%9A%84%E8%AE%BE%E8%AE%A1.md'},
-  {t:'11. 列表样式',c:'flutter',p:'Android/Flutter%E7%9B%B8%E5%85%B3/11.Flutter%E4%B8%AD%E5%88%97%E8%A1%A8%E6%A0%B7%E5%BC%8F.md'},
-  {t:'12. 刷新加载',c:'flutter',p:'Android/Flutter%E7%9B%B8%E5%85%B3/12.Flutter%E4%B8%AD%E7%9A%84%E5%88%B7%E6%96%B0%E5%8A%A0%E8%BD%BD.md'},
-  {t:'13. 红点设计',c:'flutter',p:'Android/Flutter%E7%9B%B8%E5%85%B3/13.Flutter%E4%B8%AD%E7%9A%84%E7%BA%A2%E7%82%B9%E8%AE%BE%E8%AE%A1.md'},
-  {t:'14. 常见网络协议',c:'flutter',p:'Android/Flutter%E7%9B%B8%E5%85%B3/14.Flutter%E4%B8%AD%E5%B8%B8%E8%A7%81%E7%9A%84%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE.md'},
-  {t:'Glide 解析',c:'third-lib',p:'Android/%E4%B8%89%E6%96%B9%E5%BA%93/Glide%E8%A7%A3%E6%9E%90.md'},
-  {t:'Hilt 学习',c:'third-lib',p:'Android/%E4%B8%89%E6%96%B9%E5%BA%93/Hilt%E5%AD%A6%E4%B9%A0.md'},
-  {t:'Shadow 框架的使用',c:'third-lib',p:'Android/%E4%B8%89%E6%96%B9%E5%BA%93/Shadow%20%E6%A1%86%E6%9E%B6%E7%9A%84%E4%BD%BF%E7%94%A8.md'},
-  {t:'Xposed 开发教程',c:'third-lib',p:'Android/%E4%B8%89%E6%96%B9%E5%BA%93/Xposed%E5%BC%80%E5%8F%91%E6%95%99%E7%A8%8B.md'},
-  {t:'Kotlin 基础学习',c:'kotlin',p:'%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/Kotlin/kotlin%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0.md'},
-  {t:'Kotlin Flow 响应式编程',c:'kotlin',p:'%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/Kotlin/Kotlin%20Flow%20%E5%93%8D%E5%BA%94%E5%BC%8F%E7%BC%96%E7%A8%8B.md'},
-  {t:'noinline 和 crossinline',c:'kotlin',p:'%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/Kotlin/noinline%20%E5%92%8C%20crossinline.md'},
-  {t:'@BuilderInference 类型推断',c:'kotlin',p:'%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/Kotlin/Kotlin%20%E7%9A%84%E5%8A%A0%E5%BC%BA%E7%89%88%E7%B1%BB%E5%9E%8B%E6%8E%A8%E6%96%AD%EF%BC%9A@BuilderInference.md'},
-  {t:'隐式接收器 (implicit receiver)',c:'kotlin',p:'%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/Kotlin/implicit%20receiver(%E9%9A%90%E5%BC%8F%E6%8E%A5%E6%94%B6%E5%99%A8).md'},
-  {t:'函数当类用：Compose 作用域',c:'kotlin',p:'%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/Kotlin/%E6%8A%8A%E5%87%BD%E6%95%B0%E5%BD%93%E7%B1%BB%E7%94%A8%EF%BC%8CCompose%20%E9%A3%8E%E9%AA%9A%E7%9A%84%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%9C%BA%E5%88%B6.md'},
-  {t:'Groovy 相关',c:'groovy',p:'%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/Groovy%20%E7%9B%B8%E5%85%B3.md'},
-  {t:'Python 相关',c:'python',p:'%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/python%E7%9B%B8%E5%85%B3.md'},
-  {t:'Rust 基础入门',c:'rust',p:'%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/Rust/Rust%20%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8.md'},
-  {t:'Rust 开发环境搭建',c:'rust',p:'%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/Rust/Rust%20%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.md'},
-  {t:'常用数据结构',c:'algorithm',p:'%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/1.%20%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/1.%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.md'},
-  {t:'高级数据结构',c:'algorithm',p:'%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/1.%20%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/2.%E9%AB%98%E7%BA%A7%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.md'},
-  {t:'排序',c:'algorithm',p:'%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2.%20%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/1.%E6%8E%92%E5%BA%8F.md'},
-  {t:'递归与回溯',c:'algorithm',p:'%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2.%20%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/2.%E9%80%92%E5%BD%92%E4%B8%8E%E5%9B%9E%E6%BA%AF.md'},
-  {t:'深度与广度优先搜索',c:'algorithm',p:'%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2.%20%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/3.%E6%B7%B1%E5%BA%A6%E4%B8%8E%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2.md'},
-  {t:'动态规划',c:'algorithm',p:'%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2.%20%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/4.%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92.md'},
-  {t:'二分搜索与贪婪',c:'algorithm',p:'%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/2.%20%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95/5.%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E4%B8%8E%E8%B4%AA%E5%A9%AA.md'},
-  {t:'高频真题解析 I',c:'algorithm',p:'%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/3.%20LeetCode%E9%AB%98%E9%A2%91%E7%9C%9F%E9%A2%98%E8%A7%A3%E6%9E%90/1.%E9%AB%98%E9%A2%91%E7%9C%9F%E9%A2%98%E8%A7%A3%E6%9E%90%E2%85%A0.md'},
-  {t:'高频真题解析 II',c:'algorithm',p:'%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/3.%20LeetCode%E9%AB%98%E9%A2%91%E7%9C%9F%E9%A2%98%E8%A7%A3%E6%9E%90/2.%E9%AB%98%E9%A2%91%E7%9C%9F%E9%A2%98%E8%A7%A3%E6%9E%90%E2%85%A1.md'},
-  {t:'高频真题解析 III（上）',c:'algorithm',p:'%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/3.%20LeetCode%E9%AB%98%E9%A2%91%E7%9C%9F%E9%A2%98%E8%A7%A3%E6%9E%90/3.%E9%AB%98%E9%A2%91%E7%9C%9F%E9%A2%98%E8%A7%A3%E6%9E%90%E2%85%A2%EF%BC%88%E4%B8%8A%EF%BC%89.md'},
-  {t:'高频真题解析 III（下）',c:'algorithm',p:'%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/3.%20LeetCode%E9%AB%98%E9%A2%91%E7%9C%9F%E9%A2%98%E8%A7%A3%E6%9E%90/4.%E9%AB%98%E9%A2%91%E7%9C%9F%E9%A2%98%E8%A7%A3%E6%9E%90%E2%85%A2%EF%BC%88%E4%B8%8B%EF%BC%89.md'},
-  {t:'高频真题解析 IV',c:'algorithm',p:'%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/3.%20LeetCode%E9%AB%98%E9%A2%91%E7%9C%9F%E9%A2%98%E8%A7%A3%E6%9E%90/5.%E9%AB%98%E9%A2%91%E7%9C%9F%E9%A2%98%E8%A7%A3%E6%9E%90%E2%85%A3.md'},
-  {t:'算法面试冲刺 (彩蛋)',c:'algorithm',p:'%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/%E5%BD%A9%E8%9B%8B%EF%BC%9A%E7%AE%97%E6%B3%95%E9%9D%A2%E8%AF%95%E5%86%B2%E5%88%BA.md'},
-  {t:'Terminal 终端入门',c:'ai',p:'AI/Terminal%20%E7%BB%88%E7%AB%AF%E5%85%A5%E9%97%A8.md'},
-  {t:'1. AI 使用说明书',c:'ai',p:'AI/AI%20%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E%E4%B9%A6/1.%20AI%20%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E%E4%B9%A6.md'},
-  {t:'2. Claude 安装与推荐配置',c:'ai',p:'AI/AI%20%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E%E4%B9%A6/2.%20Claude%20%E5%AE%89%E8%A3%85%E4%B8%8E%E6%8E%A8%E8%8D%90%E9%85%8D%E7%BD%AE.md'},
-  {t:'Web 相关基础',c:'web',p:'Web/%E5%89%8D%E7%AB%AF%E7%9B%B8%E5%85%B3.md'},
-  {t:'Netty 的使用',c:'network',p:'%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/Netty%20%E7%9A%84%E4%BD%BF%E7%94%A8.md'},
-  {t:'Socket 编程',c:'network',p:'%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/Socket%20%E7%BC%96%E7%A8%8B.md'},
-  {t:'国密算法介绍',c:'crypto',p:'%E5%AF%86%E7%A0%81%E5%AD%A6/%E5%9B%BD%E5%AF%86%E7%AE%97%E6%B3%95%E4%BB%8B%E7%BB%8D.md'},
-  {t:'Gitlab 的使用',c:'ubuntu',p:'Ubuntu/Gitlab%20%E7%9A%84%E4%BD%BF%E7%94%A8.md'},
-  {t:'Docker 搭建 Maven 私服',c:'ubuntu',p:'Ubuntu/Docker%20%E6%90%AD%E5%BB%BA%20maven%20%E7%A7%81%E6%9C%8D.md'},
-  {t:'Docker 搭建 GitLab 服务器',c:'ubuntu',p:'Ubuntu/Docker%E6%90%AD%E5%BB%BAGitlab%E6%9C%8D%E5%8A%A1%E5%99%A8.md'},
-  {t:'异或运算',c:'foundation',p:'%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/%E5%BC%82%E6%88%96%E8%BF%90%E7%AE%97.md'},
-  {t:'浮点数的坑',c:'foundation',p:'%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/%E6%B5%AE%E7%82%B9%E6%95%B0%E7%9A%84%E5%9D%91.md'},
+  {t:'Terminal 终端入门',c:'ai',p:'AI%2FTerminal%20%E7%BB%88%E7%AB%AF%E5%85%A5%E9%97%A8.md'},
+  {t:'1. AI 使用说明书',c:'ai',p:'AI%2FAI%20%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E%E4%B9%A6%2F1.%20AI%20%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E%E4%B9%A6.md'},
+  {t:'2. Claude 安装与推荐配置',c:'ai',p:'AI%2FAI%20%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E%E4%B9%A6%2F2.%20Claude%20%E5%AE%89%E8%A3%85%E4%B8%8E%E6%8E%A8%E8%8D%90%E9%85%8D%E7%BD%AE.md'},
+  {t:'3. AI 编程的经济学',c:'ai',p:'AI%2FAI%20%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E%E4%B9%A6%2F3.%20AI%20%E7%BC%96%E7%A8%8B%E7%9A%84%E7%BB%8F%E6%B5%8E%E5%AD%A6.md'},
+  {t:'4.  VibeCoding 工作流',c:'ai',p:'AI%2FAI%20%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E%E4%B9%A6%2F4.%20%20VibeCoding%20%E5%B7%A5%E4%BD%9C%E6%B5%81.md'},
+  {t:'5. MCP、插件与 Skills',c:'ai',p:'AI%2FAI%20%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E%E4%B9%A6%2F5.%20MCP%E3%80%81%E6%8F%92%E4%BB%B6%E4%B8%8E%20Skills.md'},
+  {t:'6. 项目规则配置',c:'ai',p:'AI%2FAI%20%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E%E4%B9%A6%2F6.%20%E9%A1%B9%E7%9B%AE%E8%A7%84%E5%88%99%E9%85%8D%E7%BD%AE.md'},
+  {t:'7. 高效调试心法',c:'ai',p:'AI%2FAI%20%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E%E4%B9%A6%2F7.%20%E9%AB%98%E6%95%88%E8%B0%83%E8%AF%95%E5%BF%83%E6%B3%95.md'},
+  {t:'Android 的键值对存储有没有最优解',c:'android',p:'Android%2FAndroid%20%E7%9A%84%E9%94%AE%E5%80%BC%E5%AF%B9%E5%AD%98%E5%82%A8%E6%9C%89%E6%B2%A1%E6%9C%89%E6%9C%80%E4%BC%98%E8%A7%A3.md'},
+  {t:'Gradle 在 Android 中的使用',c:'android',p:'Android%2FGradle%20%E5%9C%A8%20Android%20%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8.md'},
+  {t:'JNI 的使用',c:'android',p:'Android%2FJNI%20%E7%9A%84%E4%BD%BF%E7%94%A8.md'},
+  {t:'JSON介绍及Android解析方法',c:'android',p:'Android%2FJSON%E4%BB%8B%E7%BB%8D%E5%8F%8AAndroid%E8%A7%A3%E6%9E%90%E6%96%B9%E6%B3%95.md'},
+  {t:'SSL VPN 开发',c:'android',p:'Android%2FSSL%20VPN%20%E5%BC%80%E5%8F%91.md'},
+  {t:'WebView 与 JavaScript 的交互',c:'android',p:'Android%2FWebView%20%E4%B8%8E%20JavaScript%20%E7%9A%84%E4%BA%A4%E4%BA%92.md'},
+  {t:'代码混淆(ProGuard)',c:'android',p:'Android%2F%E4%BB%A3%E7%A0%81%E6%B7%B7%E6%B7%86%28ProGuard%29.md'},
+  {t:'动画基础',c:'android',p:'Android%2F%E5%8A%A8%E7%94%BB%E5%9F%BA%E7%A1%80.md'},
+  {t:'Android架构模式',c:'android-adv',p:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FAndroid%E6%9E%B6%E6%9E%84%E6%A8%A1%E5%BC%8F.md'},
+  {t:'Android组件使用总结',c:'android-adv',p:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FAndroid%E7%BB%84%E4%BB%B6%E4%BD%BF%E7%94%A8%E6%80%BB%E7%BB%93.md'},
+  {t:'App 启动背景优化',c:'android-adv',p:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FApp%20%E5%90%AF%E5%8A%A8%E8%83%8C%E6%99%AF%E4%BC%98%E5%8C%96.md'},
+  {t:'Service 与 AIDL 的使用',c:'android-adv',p:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FService%20%E4%B8%8E%20AIDL%20%E7%9A%84%E4%BD%BF%E7%94%A8.md'},
+  {t:'插件化实现原理',c:'android-adv',p:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2F%E6%8F%92%E4%BB%B6%E5%8C%96%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86.md'},
+  {t:'1.Flutter中代码是如何执行和运行',c:'flutter',p:'Android%2FFlutter%E7%9B%B8%E5%85%B3%2F1.Flutter%E4%B8%AD%E4%BB%A3%E7%A0%81%E6%98%AF%E5%A6%82%E4%BD%95%E6%89%A7%E8%A1%8C%E5%92%8C%E8%BF%90%E8%A1%8C.md'},
+  {t:'10.Flutter导航栏的设计',c:'flutter',p:'Android%2FFlutter%E7%9B%B8%E5%85%B3%2F10.Flutter%E5%AF%BC%E8%88%AA%E6%A0%8F%E7%9A%84%E8%AE%BE%E8%AE%A1.md'},
+  {t:'11.Flutter中列表样式',c:'flutter',p:'Android%2FFlutter%E7%9B%B8%E5%85%B3%2F11.Flutter%E4%B8%AD%E5%88%97%E8%A1%A8%E6%A0%B7%E5%BC%8F.md'},
+  {t:'12.Flutter中的刷新加载',c:'flutter',p:'Android%2FFlutter%E7%9B%B8%E5%85%B3%2F12.Flutter%E4%B8%AD%E7%9A%84%E5%88%B7%E6%96%B0%E5%8A%A0%E8%BD%BD.md'},
+  {t:'13.Flutter中的红点设计',c:'flutter',p:'Android%2FFlutter%E7%9B%B8%E5%85%B3%2F13.Flutter%E4%B8%AD%E7%9A%84%E7%BA%A2%E7%82%B9%E8%AE%BE%E8%AE%A1.md'},
+  {t:'14.Flutter中常见的网络协议',c:'flutter',p:'Android%2FFlutter%E7%9B%B8%E5%85%B3%2F14.Flutter%E4%B8%AD%E5%B8%B8%E8%A7%81%E7%9A%84%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE.md'},
+  {t:'2.Flutter环境搭建及运行',c:'flutter',p:'Android%2FFlutter%E7%9B%B8%E5%85%B3%2F2.Flutter%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E5%8F%8A%E8%BF%90%E8%A1%8C.md'},
+  {t:'3.Flutter中的代码规范',c:'flutter',p:'Android%2FFlutter%E7%9B%B8%E5%85%B3%2F3.Flutter%E4%B8%AD%E7%9A%84%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83.md'},
+  {t:'4.Flutter的生命周期以及应用场景',c:'flutter',p:'Android%2FFlutter%E7%9B%B8%E5%85%B3%2F4.Flutter%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%BB%A5%E5%8F%8A%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF.md'},
+  {t:'5.Flutter的有无状态组件',c:'flutter',p:'Android%2FFlutter%E7%9B%B8%E5%85%B3%2F5.Flutter%E7%9A%84%E6%9C%89%E6%97%A0%E7%8A%B6%E6%80%81%E7%BB%84%E4%BB%B6.md'},
+  {t:'6.Flutter状态管理及对比选型',c:'flutter',p:'Android%2FFlutter%E7%9B%B8%E5%85%B3%2F6.Flutter%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86%E5%8F%8A%E5%AF%B9%E6%AF%94%E9%80%89%E5%9E%8B.md'},
+  {t:'7.Flutter应用单元测试',c:'flutter',p:'Android%2FFlutter%E7%9B%B8%E5%85%B3%2F7.Flutter%E5%BA%94%E7%94%A8%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95.md'},
+  {t:'8.Flutter项目脚手架',c:'flutter',p:'Android%2FFlutter%E7%9B%B8%E5%85%B3%2F8.Flutter%E9%A1%B9%E7%9B%AE%E8%84%9A%E6%89%8B%E6%9E%B6.md'},
+  {t:'9.Flutter路由设计',c:'flutter',p:'Android%2FFlutter%E7%9B%B8%E5%85%B3%2F9.Flutter%E8%B7%AF%E7%94%B1%E8%AE%BE%E8%AE%A1.md'},
+  {t:'Glide解析',c:'third-lib',p:'Android%2F%E4%B8%89%E6%96%B9%E5%BA%93%2FGlide%E8%A7%A3%E6%9E%90.md'},
+  {t:'Hilt学习',c:'third-lib',p:'Android%2F%E4%B8%89%E6%96%B9%E5%BA%93%2FHilt%E5%AD%A6%E4%B9%A0.md'},
+  {t:'Shadow 框架的使用',c:'third-lib',p:'Android%2F%E4%B8%89%E6%96%B9%E5%BA%93%2FShadow%20%E6%A1%86%E6%9E%B6%E7%9A%84%E4%BD%BF%E7%94%A8.md'},
+  {t:'Xposed开发教程',c:'third-lib',p:'Android%2F%E4%B8%89%E6%96%B9%E5%BA%93%2FXposed%E5%BC%80%E5%8F%91%E6%95%99%E7%A8%8B.md'},
+  {t:'Docker 搭建 maven 私服',c:'ubuntu',p:'Ubuntu%2FDocker%20%E6%90%AD%E5%BB%BA%20maven%20%E7%A7%81%E6%9C%8D.md'},
+  {t:'Docker搭建Gitlab服务器',c:'ubuntu',p:'Ubuntu%2FDocker%E6%90%AD%E5%BB%BAGitlab%E6%9C%8D%E5%8A%A1%E5%99%A8.md'},
+  {t:'Gitlab 的使用',c:'ubuntu',p:'Ubuntu%2FGitlab%20%E7%9A%84%E4%BD%BF%E7%94%A8.md'},
+  {t:'Ajax基础知识点',c:'web',p:'Web%E7%9B%B8%E5%85%B3%2FAjax%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9.md'},
+  {t:'JS中的小知识点',c:'web',p:'Web%E7%9B%B8%E5%85%B3%2FJS%E4%B8%AD%E7%9A%84%E5%B0%8F%E7%9F%A5%E8%AF%86%E7%82%B9.md'},
+  {t:'JavaScript DOM编程',c:'web',p:'Web%E7%9B%B8%E5%85%B3%2FJavaScript%20DOM%E7%BC%96%E7%A8%8B.md'},
+  {t:'jQuery基础知识点',c:'web',p:'Web%E7%9B%B8%E5%85%B3%2FjQuery%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%82%B9.md'},
+  {t:'国密算法介绍',c:'crypto',p:'%E5%AF%86%E7%A0%81%E5%AD%A6%2F%E5%9B%BD%E5%AF%86%E7%AE%97%E6%B3%95%E4%BB%8B%E7%BB%8D.md'},
+  {t:'彩蛋：算法面试冲刺',c:'algorithm',p:'%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%2F%E5%BD%A9%E8%9B%8B%EF%BC%9A%E7%AE%97%E6%B3%95%E9%9D%A2%E8%AF%95%E5%86%B2%E5%88%BA.md'},
+  {t:'1.常用数据结构',c:'algorithm',p:'%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%2F1.%20%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%2F1.%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.md'},
+  {t:'2.高级数据结构',c:'algorithm',p:'%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%2F1.%20%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%2F2.%E9%AB%98%E7%BA%A7%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.md'},
+  {t:'1.排序',c:'algorithm',p:'%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%2F2.%20%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95%2F1.%E6%8E%92%E5%BA%8F.md'},
+  {t:'2.递归与回溯',c:'algorithm',p:'%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%2F2.%20%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95%2F2.%E9%80%92%E5%BD%92%E4%B8%8E%E5%9B%9E%E6%BA%AF.md'},
+  {t:'3.深度与广度优先搜索',c:'algorithm',p:'%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%2F2.%20%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95%2F3.%E6%B7%B1%E5%BA%A6%E4%B8%8E%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2.md'},
+  {t:'4.动态规划',c:'algorithm',p:'%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%2F2.%20%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95%2F4.%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92.md'},
+  {t:'5.二分搜索与贪婪',c:'algorithm',p:'%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%2F2.%20%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95%2F5.%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E4%B8%8E%E8%B4%AA%E5%A9%AA.md'},
+  {t:'1.高频真题解析Ⅰ',c:'algorithm',p:'%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%2F3.%20LeetCode%E9%AB%98%E9%A2%91%E7%9C%9F%E9%A2%98%E8%A7%A3%E6%9E%90%2F1.%E9%AB%98%E9%A2%91%E7%9C%9F%E9%A2%98%E8%A7%A3%E6%9E%90%E2%85%A0.md'},
+  {t:'2.高频真题解析Ⅱ',c:'algorithm',p:'%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%2F3.%20LeetCode%E9%AB%98%E9%A2%91%E7%9C%9F%E9%A2%98%E8%A7%A3%E6%9E%90%2F2.%E9%AB%98%E9%A2%91%E7%9C%9F%E9%A2%98%E8%A7%A3%E6%9E%90%E2%85%A1.md'},
+  {t:'3.高频真题解析Ⅲ（上）',c:'algorithm',p:'%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%2F3.%20LeetCode%E9%AB%98%E9%A2%91%E7%9C%9F%E9%A2%98%E8%A7%A3%E6%9E%90%2F3.%E9%AB%98%E9%A2%91%E7%9C%9F%E9%A2%98%E8%A7%A3%E6%9E%90%E2%85%A2%EF%BC%88%E4%B8%8A%EF%BC%89.md'},
+  {t:'4.高频真题解析Ⅲ（下）',c:'algorithm',p:'%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%2F3.%20LeetCode%E9%AB%98%E9%A2%91%E7%9C%9F%E9%A2%98%E8%A7%A3%E6%9E%90%2F4.%E9%AB%98%E9%A2%91%E7%9C%9F%E9%A2%98%E8%A7%A3%E6%9E%90%E2%85%A2%EF%BC%88%E4%B8%8B%EF%BC%89.md'},
+  {t:'5.高频真题解析Ⅳ',c:'algorithm',p:'%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%2F3.%20LeetCode%E9%AB%98%E9%A2%91%E7%9C%9F%E9%A2%98%E8%A7%A3%E6%9E%90%2F5.%E9%AB%98%E9%A2%91%E7%9C%9F%E9%A2%98%E8%A7%A3%E6%9E%90%E2%85%A3.md'},
+  {t:'异或运算',c:'foundation',p:'%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80%2F%E5%BC%82%E6%88%96%E8%BF%90%E7%AE%97.md'},
+  {t:'浮点数的坑',c:'foundation',p:'%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80%2F%E6%B5%AE%E7%82%B9%E6%95%B0%E7%9A%84%E5%9D%91.md'},
+  {t:'Groovy 相关',c:'groovy',p:'%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%2FGroovy%20%E7%9B%B8%E5%85%B3.md'},
+  {t:'python相关',c:'python',p:'%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%2Fpython%E7%9B%B8%E5%85%B3.md'},
+  {t:'Kotlin Flow 响应式编程',c:'kotlin',p:'%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%2FKotlin%2FKotlin%20Flow%20%E5%93%8D%E5%BA%94%E5%BC%8F%E7%BC%96%E7%A8%8B.md'},
+  {t:'Kotlin 的加强版类型推断：@BuilderInference',c:'kotlin',p:'%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%2FKotlin%2FKotlin%20%E7%9A%84%E5%8A%A0%E5%BC%BA%E7%89%88%E7%B1%BB%E5%9E%8B%E6%8E%A8%E6%96%AD%EF%BC%9A%40BuilderInference.md'},
+  {t:'implicit receiver(隐式接收器)',c:'kotlin',p:'%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%2FKotlin%2Fimplicit%20receiver%28%E9%9A%90%E5%BC%8F%E6%8E%A5%E6%94%B6%E5%99%A8%29.md'},
+  {t:'kotlin 中的协程',c:'kotlin',p:'%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%2FKotlin%2Fkotlin%20%E4%B8%AD%E7%9A%84%E5%8D%8F%E7%A8%8B.md'},
+  {t:'kotlin基础学习',c:'kotlin',p:'%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%2FKotlin%2Fkotlin%E5%9F%BA%E7%A1%80%E5%AD%A6%E4%B9%A0.md'},
+  {t:'noinline 和 crossinline',c:'kotlin',p:'%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%2FKotlin%2Fnoinline%20%E5%92%8C%20crossinline.md'},
+  {t:'把函数当类用，Compose 风骚的作用域机制',c:'kotlin',p:'%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%2FKotlin%2F%E6%8A%8A%E5%87%BD%E6%95%B0%E5%BD%93%E7%B1%BB%E7%94%A8%EF%BC%8CCompose%20%E9%A3%8E%E9%AA%9A%E7%9A%84%E4%BD%9C%E7%94%A8%E5%9F%9F%E6%9C%BA%E5%88%B6.md'},
+  {t:'Rust 基础入门',c:'rust',p:'%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%2FRust%2FRust%20%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8.md'},
+  {t:'Rust 开发环境搭建',c:'rust',p:'%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%2FRust%2FRust%20%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.md'},
+  {t:'Netty 学习',c:'network',p:'%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%2FNetty%20%E5%AD%A6%E4%B9%A0.md'},
+  {t:'Socket 编程',c:'network',p:'%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%2FSocket%20%E7%BC%96%E7%A8%8B.md'},
+  // ─── 非 Markdown 文件（图片/脑图/PPT/Drawio）───
+{t:'1.Activity交互时的问题',c:'android-adv',p:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FAndroid%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%2F1.Activity%E4%BA%A4%E4%BA%92%E6%97%B6%E7%9A%84%E9%97%AE%E9%A2%98.png',type:'img',dl:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FAndroid%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%2F1.Activity%E4%BA%A4%E4%BA%92%E6%97%B6%E7%9A%84%E9%97%AE%E9%A2%98.xmind',dlName:'1.Activity交互时的问题.xmind',dlLabel:'下载 XMind 源文件'},
+  {t:'2.touch事件分发时序',c:'android-adv',p:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FAndroid%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%2F2.touch%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%97%B6%E5%BA%8F.png',type:'img',dl:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FAndroid%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%2F2.touch%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E6%97%B6%E5%BA%8F.xmind',dlName:'2.touch事件分发时序.xmind',dlLabel:'下载 XMind 源文件'},
+  {t:'3.自定义View',c:'android-adv',p:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FAndroid%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%2F3.%E8%87%AA%E5%AE%9A%E4%B9%89View.png',type:'img',dl:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FAndroid%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%2F3.%E8%87%AA%E5%AE%9A%E4%B9%89View.xmind',dlName:'3.自定义View.xmind',dlLabel:'下载 XMind 源文件'},
+  {t:'4.RecyclerView解析',c:'android-adv',p:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FAndroid%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%2F4.RecyclerView%E8%A7%A3%E6%9E%90.png',type:'img',dl:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FAndroid%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%2F4.RecyclerView%E8%A7%A3%E6%9E%90.xmind',dlName:'4.RecyclerView解析.xmind',dlLabel:'下载 XMind 源文件'},
+  {t:'5.Android OkHttp解析',c:'android-adv',p:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FAndroid%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%2F5.Android%20OkHttp%E8%A7%A3%E6%9E%90.png',type:'img',dl:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FAndroid%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%2F5.Android%20OkHttp%E8%A7%A3%E6%9E%90.xmind',dlName:'5.Android OkHttp解析.xmind',dlLabel:'下载 XMind 源文件'},
+  {t:'6.Android Bitmap解析',c:'android-adv',p:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FAndroid%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%2F6.Android%20Bitmap%E8%A7%A3%E6%9E%90.png',type:'img',dl:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FAndroid%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%2F6.Android%20Bitmap%E8%A7%A3%E6%9E%90.xmind',dlName:'6.Android Bitmap解析.xmind',dlLabel:'下载 XMind 源文件'},
+  {t:'1.startActivity启动分析',c:'android-adv',p:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FAndroid%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%2F1.startActivity%E5%90%AF%E5%8A%A8%E5%88%86%E6%9E%90.png',type:'img',dl:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FAndroid%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%2F1.startActivity%E5%90%AF%E5%8A%A8%E5%88%86%E6%9E%90.xmind',dlName:'1.startActivity启动分析.xmind',dlLabel:'下载 XMind 源文件'},
+  {t:'2.Window 、Activity、 View 三者关系',c:'android-adv',p:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FAndroid%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%2F2.Window%20%E3%80%81Activity%E3%80%81%20View%20%E4%B8%89%E8%80%85%E5%85%B3%E7%B3%BB.png',type:'img',dl:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FAndroid%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%2F2.Window%20%E3%80%81Activity%E3%80%81%20View%20%E4%B8%89%E8%80%85%E5%85%B3%E7%B3%BB.xmind',dlName:'2.Window 、Activity、 View 三者关系.xmind',dlLabel:'下载 XMind 源文件'},
+  {t:'3.View的渲染',c:'android-adv',p:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FAndroid%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%2F3.View%E7%9A%84%E6%B8%B2%E6%9F%93.png',type:'img',dl:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FAndroid%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%2F3.View%E7%9A%84%E6%B8%B2%E6%9F%93.xmind',dlName:'3.View的渲染.xmind',dlLabel:'下载 XMind 源文件'},
+  {t:'4.App的安装过程',c:'android-adv',p:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FAndroid%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%2F4.App%E7%9A%84%E5%AE%89%E8%A3%85%E8%BF%87%E7%A8%8B.png',type:'img',dl:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FAndroid%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%2F4.App%E7%9A%84%E5%AE%89%E8%A3%85%E8%BF%87%E7%A8%8B.xmind',dlName:'4.App的安装过程.xmind',dlLabel:'下载 XMind 源文件'},
+  {t:'5.Handler 分析',c:'android-adv',p:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FAndroid%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%2F5.Handler%20%E5%88%86%E6%9E%90.png',type:'img',dl:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FAndroid%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90%2F5.Handler%20%E5%88%86%E6%9E%90.xmind',dlName:'5.Handler 分析.xmind',dlLabel:'下载 XMind 源文件'},
+  {t:'10.AQS 和 CAS 原理',c:'android-adv',p:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FJVM%E4%B8%8EDVM%2F10.AQS%20%E5%92%8C%20CAS%20%E5%8E%9F%E7%90%86.png',type:'img',dl:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FJVM%E4%B8%8EDVM%2F10.AQS%20%E5%92%8C%20CAS%20%E5%8E%9F%E7%90%86.xmind',dlName:'10.AQS 和 CAS 原理.xmind',dlLabel:'下载 XMind 源文件'},
+  {t:'11.线程池',c:'android-adv',p:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FJVM%E4%B8%8EDVM%2F11.%E7%BA%BF%E7%A8%8B%E6%B1%A0.png',type:'img',dl:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FJVM%E4%B8%8EDVM%2F11.%E7%BA%BF%E7%A8%8B%E6%B1%A0.xmind',dlName:'11.线程池.xmind',dlLabel:'下载 XMind 源文件'},
+  {t:'12.Dalvik',c:'android-adv',p:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FJVM%E4%B8%8EDVM%2F12.Dalvik.png',type:'img',dl:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FJVM%E4%B8%8EDVM%2F12.Dalvik.xmind',dlName:'12.Dalvik.xmind',dlLabel:'下载 XMind 源文件'},
+  {t:'4.编译插桩',c:'android-adv',p:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FJVM%E4%B8%8EDVM%2F4.%E7%BC%96%E8%AF%91%E6%8F%92%E6%A1%A9.png',type:'img',dl:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FJVM%E4%B8%8EDVM%2F4.%E7%BC%96%E8%AF%91%E6%8F%92%E6%A1%A9.xmind',dlName:'4.编译插桩.xmind',dlLabel:'下载 XMind 源文件'},
+  {t:'5.ClassLoader的加载机制',c:'android-adv',p:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FJVM%E4%B8%8EDVM%2F5.ClassLoader%E7%9A%84%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6.png',type:'img',dl:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FJVM%E4%B8%8EDVM%2F5.ClassLoader%E7%9A%84%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6.xmind',dlName:'5.ClassLoader的加载机制.xmind',dlLabel:'下载 XMind 源文件'},
+  {t:'6.Class对象的初始化',c:'android-adv',p:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FJVM%E4%B8%8EDVM%2F6.Class%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96.png',type:'img',dl:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FJVM%E4%B8%8EDVM%2F6.Class%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96.xmind',dlName:'6.Class对象的初始化.xmind',dlLabel:'下载 XMind 源文件'},
+  {t:'7.Java内存模型与线程',c:'android-adv',p:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FJVM%E4%B8%8EDVM%2F7.Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B.png',type:'img',dl:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FJVM%E4%B8%8EDVM%2F7.Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B.xmind',dlName:'7.Java内存模型与线程.xmind',dlLabel:'下载 XMind 源文件'},
+  {t:'8.Synchronized与ReentrantLock',c:'android-adv',p:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FJVM%E4%B8%8EDVM%2F8.Synchronized%E4%B8%8EReentrantLock.png',type:'img',dl:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FJVM%E4%B8%8EDVM%2F8.Synchronized%E4%B8%8EReentrantLock.xmind',dlName:'8.Synchronized与ReentrantLock.xmind',dlLabel:'下载 XMind 源文件'},
+  {t:'9.Java的线程优化',c:'android-adv',p:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FJVM%E4%B8%8EDVM%2F9.Java%E7%9A%84%E7%BA%BF%E7%A8%8B%E4%BC%98%E5%8C%96.png',type:'img',dl:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FJVM%E4%B8%8EDVM%2F9.Java%E7%9A%84%E7%BA%BF%E7%A8%8B%E4%BC%98%E5%8C%96.xmind',dlName:'9.Java的线程优化.xmind',dlLabel:'下载 XMind 源文件'},
+  {t:'自定义View',c:'android-adv',p:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2F%E8%87%AA%E5%AE%9A%E4%B9%89View.png',type:'img',dl:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2F%E8%87%AA%E5%AE%9A%E4%B9%89View.xmind',dlName:'自定义View.xmind',dlLabel:'下载 XMind 源文件'},
+  {t:'Hilt 实现依赖注入',c:'third-lib',p:'Android%2F%E4%B8%89%E6%96%B9%E5%BA%93%2FHilt%20%E5%AE%9E%E7%8E%B0%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5.xmind',type:'dl',dlName:'Hilt 实现依赖注入.xmind',dlLabel:'下载 XMind 源文件'},
+  {t:'Retrofit的介绍',c:'third-lib',p:'Android%2F%E4%B8%89%E6%96%B9%E5%BA%93%2FRetrofit%E7%9A%84%E4%BB%8B%E7%BB%8D.png',type:'img',dl:'Android%2F%E4%B8%89%E6%96%B9%E5%BA%93%2FRetrofit%E7%9A%84%E4%BB%8B%E7%BB%8D.xmind',dlName:'Retrofit的介绍.xmind',dlLabel:'下载 XMind 源文件'},
+  {t:'RxJava详解',c:'third-lib',p:'Android%2F%E4%B8%89%E6%96%B9%E5%BA%93%2FRxJava%E8%AF%A6%E8%A7%A3.png',type:'img',dl:'Android%2F%E4%B8%89%E6%96%B9%E5%BA%93%2FRxJava%E8%AF%A6%E8%A7%A3.xmind',dlName:'RxJava详解.xmind',dlLabel:'下载 XMind 源文件'},
+  {t:'HTTP',c:'network',p:'%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%2FHTTP.png',type:'img',dl:'%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%2FHTTP.xmind',dlName:'HTTP.xmind',dlLabel:'下载 XMind 源文件'},
+  {t:'Android 专家技术栈',c:'android',p:'Android%2FAndroid%20%E4%B8%93%E5%AE%B6%E6%8A%80%E6%9C%AF%E6%A0%88.png',type:'img',dlName:'Android 专家技术栈.png',dlLabel:'查看原图'},
+  {t:'Activity 启动流程图',c:'android-adv',p:'Android%2FAndroid%E8%BF%9B%E9%98%B6%E7%9F%A5%E8%AF%86%2FActivity%20%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B%E5%9B%BE.png',type:'img',dlName:'Activity 启动流程图.png',dlLabel:'查看原图'},
+  {t:'compose_动画',c:'android',p:'Android%2Fcompose%2Fcompose_%E5%8A%A8%E7%94%BB.png',type:'img',dlName:'compose_动画.png',dlLabel:'查看原图'},
+  {t:'Navigation流程图',c:'third-lib',p:'Android%2F%E4%B8%89%E6%96%B9%E5%BA%93%2FNavigation%E6%B5%81%E7%A8%8B%E5%9B%BE.png',type:'img',dlName:'Navigation流程图.png',dlLabel:'查看原图'},
+  {t:'Java注解结构图',c:'root',p:'Java%E6%B3%A8%E8%A7%A3%E7%BB%93%E6%9E%84%E5%9B%BE.png',type:'img',dlName:'Java注解结构图.png',dlLabel:'查看原图'},
+  {t:'Android 应用原生插件化实现',c:'android',p:'Android%2FAndroid%20%E5%BA%94%E7%94%A8%E5%8E%9F%E7%94%9F%E6%8F%92%E4%BB%B6%E5%8C%96%E5%AE%9E%E7%8E%B0.pptx',type:'dl',dlName:'Android 应用原生插件化实现.pptx',dlLabel:'下载 PPTX 文件'},
+  {t:'Shadow插件化流程解析',c:'third-lib',p:'Android%2F%E4%B8%89%E6%96%B9%E5%BA%93%2FShadow%E6%8F%92%E4%BB%B6%E5%8C%96%E6%B5%81%E7%A8%8B%E8%A7%A3%E6%9E%90.drawio',type:'dl',dlName:'Shadow插件化流程解析.drawio',dlLabel:'下载 Drawio 文件'}
 ];
-
-// Runtime article list (populated on init)
 const ART = [...FALLBACK_ART];
 
 // ════════════════════════════════════════════════
@@ -675,7 +739,7 @@ function renderSidebar(activeCat,activeIdx){
     for(const a of list){
       H+=`<a class="sb-item${activeIdx===a._i?' active':''}" onclick="nav('article/${a._i}')" title="${hEsc(a.t)}">
         <span class="si-dot" style="background:${cat.color}"></span>
-        <span class="si-name">${hEsc(a.t)}</span>
+        <span class="si-name">${hEsc(a.t)}${a.type==='img'?' 🖼️':a.type==='dl'?' 📦':''}</span>
       </a>`;
     }
     H+='</div></div>';
@@ -763,7 +827,7 @@ function renderCat(key){
   for(const a of list){
     H+=`<div class="article-row" onclick="nav('article/${a._i}')">
       <span class="ar-num">${String(a._i+1).padStart(2,'0')}</span>
-      <span class="ar-title">${hEsc(a.t)}</span>
+      <span class="ar-title">${hEsc(a.t)}${a.type==='img'?'<span class="art-type-badge img">图</span>':a.type==='dl'?'<span class="art-type-badge dl">下载</span>':''}</span>
       <div class="ar-meta">
         <svg class="ar-arrow" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 6.5h8M7 3l3.5 3.5L7 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
@@ -783,6 +847,80 @@ async function loadArticle(idx){
   document.getElementById('navBreadcrumb').innerHTML=`<a onclick="goHome()">首页</a><span class="sep">/</span><a onclick="nav('cat/${a.c}')" class="seg">${cat.emoji} ${cat.n}</a>`;
 
   const root=document.getElementById('pageRoot');
+
+  // ─── 非文本文件处理：图片 / 下载 ───
+  if(a.type==='img'){
+    renderSidebar(a.c,idx);
+    const base=location.href.split('#')[0].replace(/\/[^/]*\.html.*$/,'/').replace(/\/?$/,'/');
+    const imgUrl=base+a.p;
+    let dlHtml='';
+    if(a.dl){
+      dlHtml=`<a class="img-dl-btn" href="${base+a.dl}" download="${hEsc(a.dlName||'')}">📎 ${hEsc(a.dlLabel||'下载源文件')}</a>`;
+    }else{
+      dlHtml=`<a class="img-dl-btn" href="${imgUrl}" target="_blank">🔍 ${hEsc(a.dlLabel||'查看原图')}</a>`;
+    }
+    root.innerHTML=`<div class="article-wrap">
+      <div class="breadcrumb"><a onclick="goHome()">首页</a><span class="sep">/</span><a onclick="nav('cat/${a.c}')">${cat.emoji} ${cat.n}</a></div>
+      <div class="article-header">
+        <div class="ah-cat-badge" style="color:${cat.color}">${cat.emoji} ${cat.n}</div>
+        <h1>${hEsc(a.t)}</h1>
+        <div class="ah-meta">
+          <span class="ah-tag" style="background:${cat.color}18;color:${cat.color}">${cat.emoji} ${cat.n}</span>
+          <span>🖼️ 图片文件</span>
+        </div>
+      </div>
+      <div class="article-body">
+        <div class="img-viewer-wrap">
+          <img src="${imgUrl}" alt="${hEsc(a.t)}" class="img-viewer" onload="this.parentElement.classList.add('loaded')" onerror="this.parentElement.classList.add('error');this.nextElementSibling.style.display='flex'" />
+          <div class="img-viewer-error" style="display:none">
+            <h3>⚠️ 图片加载失败</h3>
+            <p>文件路径：<code>${hEsc(a.p)}</code></p>
+          </div>
+        </div>
+        <div class="img-dl-bar">${dlHtml}</div>
+      </div>
+    </div>`;
+    document.getElementById('tocRail').classList.remove('show');
+    window.scrollTo(0,0);
+    return;
+  }
+
+  if(a.type==='dl'){
+    renderSidebar(a.c,idx);
+    const base=location.href.split('#')[0].replace(/\/[^/]*\.html.*$/,'/').replace(/\/?$/,'/');
+    const dlUrl=base+a.p;
+    const ext=(a.dlName||'').split('.').pop().toLowerCase();
+    let icon='📎',desc='此文件无法在浏览器中直接预览，请下载后使用对应软件打开。';
+    if(ext==='xmind'){icon='🧠';desc='XMind 思维导图文件，请下载后使用 XMind 软件打开。';}
+    else if(ext==='pptx'){icon='📊';desc='PowerPoint 演示文稿，请下载后使用 PowerPoint 或 WPS 打开。';}
+    else if(ext==='drawio'){icon='🔀';desc='Draw.io 流程图文件，请下载后使用 draw.io 打开。';}
+    root.innerHTML=`<div class="article-wrap">
+      <div class="breadcrumb"><a onclick="goHome()">首页</a><span class="sep">/</span><a onclick="nav('cat/${a.c}')">${cat.emoji} ${cat.n}</a></div>
+      <div class="article-header">
+        <div class="ah-cat-badge" style="color:${cat.color}">${cat.emoji} ${cat.n}</div>
+        <h1>${hEsc(a.t)}</h1>
+        <div class="ah-meta">
+          <span class="ah-tag" style="background:${cat.color}18;color:${cat.color}">${cat.emoji} ${cat.n}</span>
+          <span>📦 下载文件</span>
+        </div>
+      </div>
+      <div class="article-body">
+        <div class="dl-card">
+          <div class="dl-card-icon">${icon}</div>
+          <div class="dl-card-info">
+            <div class="dl-card-name">${hEsc(a.dlName||a.t)}</div>
+            <div class="dl-card-desc">${desc}</div>
+          </div>
+          <a class="dl-card-btn" href="${dlUrl}" download="${hEsc(a.dlName||'')}">⬇️ ${hEsc(a.dlLabel||'下载文件')}</a>
+        </div>
+      </div>
+    </div>`;
+    document.getElementById('tocRail').classList.remove('show');
+    window.scrollTo(0,0);
+    return;
+  }
+
+  // ─── 常规 Markdown 文章加载 ───
   root.innerHTML=`<div class="article-wrap">
     <div class="breadcrumb"><a onclick="goHome()">首页</a><span class="sep">/</span><a onclick="nav('cat/${a.c}')">${cat.emoji} ${cat.n}</a></div>
     <div class="article-header"><div class="ah-cat-badge" style="color:${cat.color}">${cat.emoji} ${cat.n}</div><h1>${hEsc(a.t)}</h1></div>
@@ -900,7 +1038,7 @@ function doSearch(q){
   box.innerHTML=hits.map(a=>{
     const c=CAT_DEF[a.c]||{n:'其他',emoji:'📋',color:'#64748b'};
     return`<div class="sp-item" onclick="nav('article/${a._i}');closeSearch()">
-      <div class="sp-item-body"><div class="sp-item-cat" style="color:${c.color}">${c.emoji} ${c.n}</div><div class="sp-item-title">${hlMatch(hEsc(a.t),kw)}</div><div class="sp-item-meta">${c.n}</div></div>
+      <div class="sp-item-body"><div class="sp-item-cat" style="color:${c.color}">${c.emoji} ${c.n}</div><div class="sp-item-title">${hlMatch(hEsc(a.t),kw)}${a.type==='img'?' 🖼️':a.type==='dl'?' 📦':''}</div><div class="sp-item-meta">${c.n}</div></div>
       <svg class="sp-item-arrow" width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 6.5h8M7 3l3.5 3.5L7 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>`;
   }).join('');

@@ -815,7 +815,13 @@ function nav(hash){history.pushState(null,'',location.pathname+'#'+hash);route()
 function route(){
   const h=location.hash.slice(1)||'/';
   if(!h||h==='/')renderHome();
-  else if(h.startsWith('article/')){const n=parseInt(h.split('/')[1]);(n>=0&&n<ART.length)?loadArticle(n):renderHome();}
+  else if(h.startsWith('article/')){
+    const parts=h.split('/');
+    const n=parseInt(parts[1]);
+    const anchor=parts[2]||null; // e.g. #article/23/heading-id
+    if(n>=0&&n<ART.length) loadArticle(n,anchor);
+    else renderHome();
+  }
   else if(h.startsWith('cat/'))renderCat(h.slice(4));
   else renderHome();
 }
@@ -950,7 +956,7 @@ function renderCat(key){
 // ════════════════════════════════════════════════
 //  RENDER: ARTICLE
 // ════════════════════════════════════════════════
-async function loadArticle(idx){
+async function loadArticle(idx,anchor){
   const a=ART[idx];if(!a)return;curIdx=idx;
   const cat=CAT_DEF[a.c]||{n:'其他',emoji:'📋',color:'#64748b'};
   document.title=a.t+' — StudyNotes';
@@ -1095,7 +1101,21 @@ async function loadArticle(idx){
       <div class="article-body">${finalBodyHtml}</div>
     </div>`;
 
-    window.scrollTo(0,0);
+    // Scroll to anchor if provided, otherwise scroll to top
+    if(anchor){
+      // Wait for DOM paint before scrolling
+      requestAnimationFrame(()=>{
+        requestAnimationFrame(()=>{
+          const target=document.getElementById(anchor);
+          if(target){
+            const navH=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h'))||56;
+            window.scrollTo({top:target.getBoundingClientRect().top+window.pageYOffset-navH-16,behavior:'smooth'});
+          }
+        });
+      });
+    } else {
+      window.scrollTo(0,0);
+    }
 
     // Apply syntax highlighting
     try{if(typeof hljs!=='undefined'){hljs.highlightAll();}}catch(e){console.warn('hljs:',e);}
@@ -1112,11 +1132,16 @@ async function loadArticle(idx){
         tocRailEl.querySelectorAll('.toc-link').forEach(el=>{
           el.classList.toggle('active',el.getAttribute('data-target')===cur);
         });
+        // Keep URL in sync with scroll position for sharable anchor links
+        if(curIdx>=0){
+          const newHash='#article/'+curIdx+(cur?'/'+cur:'');
+          if(location.hash!==newHash) history.replaceState(null,'',location.pathname+newHash);
+        }
       };
       window.removeEventListener('scroll',window.__tocScroll);
       window.__tocScroll=scrollSpy;
       window.addEventListener('scroll',scrollSpy,{passive:true});
-      // TOC click
+      // TOC click — scroll to heading & update URL anchor
       tocRailEl.onclick=e=>{
         const link=e.target.closest('.toc-link');
         if(!link)return;
@@ -1127,6 +1152,10 @@ async function loadArticle(idx){
           const navH=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h'))||56;
           const top=el.getBoundingClientRect().top+window.pageYOffset-navH-16;
           window.scrollTo({top,behavior:'smooth'});
+          // Update URL: #article/idx/heading-id so the link is shareable
+          if(curIdx>=0){
+            history.replaceState(null,'',location.pathname+'#article/'+curIdx+'/'+targetId);
+          }
         }
         tocRailEl.querySelectorAll('.toc-link').forEach(l=>l.classList.remove('active'));
         link.classList.add('active');

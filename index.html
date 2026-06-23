@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
+<meta name="referrer" content="no-referrer">
 <title>StudyNotes — Android · Kotlin · Rust · 算法</title>
 <!-- highlight.js — syntax highlighting -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/tokyo-night-dark.min.css">
@@ -281,7 +282,7 @@ button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
 .toc-link.lv3{padding-left:22px;font-size:12px}
 
 /* ═══ HOME ═══ */
-.home-body{padding:40px 48px 72px;max-width:1080px}
+.home-body{padding:40px 48px 72px;max-width:min(1200px,calc(100vw - var(--sb-w) - 80px));margin:0 auto}
 .section-title{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--c-tm);margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--c-bd2)}
 
 .cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(272px,1fr));gap:14px;margin-bottom:16px}
@@ -297,7 +298,7 @@ button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
 .cc-tag{font-size:11px;padding:2px 8px;border-radius:5px;font-weight:500}
 
 /* ═══ CATEGORY PAGE ═══ */
-.cat-page{padding:36px 48px 64px;max-width:920px}
+.cat-page{padding:36px 48px 64px;max-width:min(1080px,calc(100vw - var(--sb-w) - 80px));margin:0 auto}
 .breadcrumb{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--c-tm);margin-bottom:28px;flex-wrap:wrap}
 .breadcrumb a{color:var(--c-ac);cursor:pointer;transition:opacity .1s}
 .breadcrumb a:hover{opacity:.75}
@@ -315,7 +316,7 @@ button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
 .article-row:hover .ar-arrow{opacity:1}
 
 /* ═══ ARTICLE ═══ */
-.article-wrap{padding:36px 48px 64px;max-width:840px}
+.article-wrap{padding:36px 48px 64px;max-width:min(920px,calc(100vw - var(--sb-w) - var(--toc-w) - 140px));margin:0 auto}
 .article-header{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--c-bd)}
 .ah-cat-badge{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:6px}
 .article-header h1{font-size:30px;font-weight:800;letter-spacing:-.025em;line-height:1.22;color:var(--c-t1);margin-bottom:14px}
@@ -371,7 +372,7 @@ button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
   .sidebar{position:fixed;left:calc(-1*var(--sb-w));top:var(--nav-h);z-index:400;width:var(--sb-w);height:calc(100vh - var(--nav-h));transition:left .24s;box-shadow:none}
   .sidebar.open{left:0;box-shadow:4px 0 24px rgba(15,23,42,.1)}
   .layout{display:block}
-  .home-body,.cat-page,.article-wrap{padding:24px 18px 48px}
+  .home-body,.cat-page,.article-wrap{padding:24px 18px 48px;max-width:100%!important}
   .toc-rail{display:none!important}
   .hero{padding:56px 24px 52px}
   .hero h1{font-size:34px}
@@ -382,6 +383,17 @@ button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
   .tn-divider,.tn-breadcrumb{display:none}
   .cat-grid{grid-template-columns:1fr}
   .overlay .search-panel{width:100%;top:0;border-radius:0 0 14px 14px}
+}
+/* Tablet: sidebar visible, no TOC — give article more room */
+@media(min-width:901px) and (max-width:1199px){
+  .article-wrap{max-width:min(860px,calc(100vw - var(--sb-w) - 80px))}
+  .home-body{max-width:min(1100px,calc(100vw - var(--sb-w) - 60px))}
+  .cat-page{max-width:min(1000px,calc(100vw - var(--sb-w) - 60px))}
+}
+/* Desktop wide: extra breathing room for long content */
+@media(min-width:1600px){
+  .article-wrap{max-width:min(1100px,calc(100vw - var(--sb-w) - var(--toc-w) - 160px))}
+  .home-body{max-width:min(1400px,calc(100vw - var(--sb-w) - 100px))}
 }
 @media(min-width:1200px){.toc-rail.show{display:block}}
 @media print{

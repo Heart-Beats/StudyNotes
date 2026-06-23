@@ -2795,9 +2795,9 @@ class Dog(Mammal, Runnable):
 - **MixIn**
 
     **MixIn的目的就是给一个类增加多个功能**，这样，在设计类的时候，我们**优先考虑通过多重继承**来组合多个MixIn的功能，而不是设计多层次的复杂的继承关系。
-
-
-
+    
+    
+    
     Python自带的很多库也使用了MixIn。举个例子，Python自带了`TCPServer`和`UDPServer`这两类网络服务，而要同时服务多个用户就必须使用多进程或多线程模型，这两种模型由`ForkingMixIn`和`ThreadingMixIn`提供。通过组合，我们就可以创造出合适的服务来。
     
     比如，编写一个多进程模式的TCP服务，定义如下：
@@ -4603,7 +4603,7 @@ Result: 5300 * 5300 = 28090000
 
 Queue对象存储在哪？注意到`task_worker.py`中根本没有创建Queue的代码，所以，Queue对象存储在`task_master.py`进程中：
 
-![PrtScr capture.png](https://i.loli.net/2018/12/10/5c0e368a474a4.png)
+![PrtScr capture.png](https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/5c0e368a474a4.png)
 
 **而`Queue`之所以能通过网络访问，就是通过`QueueManager`实现的。由于`QueueManager`管理的不止一个`Queue`，所以，要给每个`Queue`的网络调用接口起个名字，比如`get_task_queue`。**
 
@@ -5170,7 +5170,7 @@ Queue对象存储在哪？注意到`task_worker.py`中根本没有创建Queue的
 
     它对应着base64的编码表：
 
-    ![Base64编码.png](https://i.loli.net/2018/12/19/5c19c667f07ab.png)
+    ![Base64编码.png](https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/5c19c667f07ab.png)
 
     编码表的大小为2^6=64，这也是Base64名称的由来。
 
@@ -5188,7 +5188,7 @@ Queue对象存储在哪？注意到`task_worker.py`中根本没有创建Queue的
 - 其次，转换6位字节时，8-6 剩下 2 位后面需要补 `0000`
 - 最后，6位前面补 `00` 转换为对应的十进制数，在 base64 的编码表中找到对应的字符即可
 
-​		![Base64编码原理分析.png](https://i.loli.net/2018/12/19/5c19c4fb9c49e.png)
+​		![Base64编码原理分析.png](https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/5c19c4fb9c49e.png)
 
 Python内置的`base64`可以直接进行base64的编解码：
 

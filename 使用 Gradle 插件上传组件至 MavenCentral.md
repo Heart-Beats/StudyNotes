@@ -10,7 +10,7 @@
 
 首先需要注册一个sonatype的账号，用于后续我们发布，官方地址：[central.sonatype.com/](https://link.juejin.cn/?target=https%3A%2F%2Fcentral.sonatype.com%2F)
 
-<img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/68df6909840e42d798b5842ac828c7bc~tplv-k3u1fbpfcp-jj-mark:3024:0:0:0:q75.awebp#?w=1918&h=1039&s=451572&e=png&b=161c38" alt="index" style="zoom: 50%;" />
+<img src="https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/68df6909840e42d798b5842ac828c7bc%7Etplv-k3u1fbpfcp-jj-mark%3A3024%3A0%3A0%3A0%3Aq75.awebp" alt="index" style="zoom: 50%;" />
 
 点击 signin 后，有账号可以直接登陆，没有则点击 signUp 按条件注册一个。
 
@@ -92,7 +92,7 @@
 
 上面的工作准备好后，点击验证即可，验证通过如下：
 
-![图片](https://s.ahzoo.cn/img/java/24/260003.webp)
+![图片](https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/s_ahzoo_cn__260003.webp)
 
 
 

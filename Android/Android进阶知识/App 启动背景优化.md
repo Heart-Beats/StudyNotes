@@ -21,7 +21,7 @@
 
 跟寻[上一篇文章](https://www.dalvik.work/2020/11/03/launch-activity-sequence/)的脚步，找到 start point：`ActivityStarter.startActivityUnchecked`
 
-[![starting_window.jpg](https://www.dalvik.work/image/2020-11-11-starting-window/starting_window.jpg)](https://www.dalvik.work/image/2020-11-11-starting-window/starting_window.jpg)
+[![starting_window.jpg](https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/20260623105239058.jpeg)](https://www.dalvik.work/image/2020-11-11-starting-window/starting_window.jpg)
 
 <center>starting_window.jpg</center>
 

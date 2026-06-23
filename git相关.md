@@ -66,7 +66,7 @@ git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset-%C(yel
 
    Git的版本库里存了很多东西，其中最重要的就是称为**stage**（或者叫index）的暂存区，还有Git为我们自动创建的第一个分支`master`，以及指向`master`的一个指针叫`HEAD`。
 
-   ![git-repo.png](https://i.loli.net/2018/11/07/5be2fc1117554.png)
+   ![git-repo.png](https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/i_loli_net__5be2fc1117554.png)
 
    我们把文件往Git版本库里添加的时候，是分两步执行的：
 
@@ -269,7 +269,7 @@ git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset-%C(yel
 
 > 每次提交，Git都把它们串成一条时间线，这条时间线就是一个分支，在Git里，这个分支叫主分支，即`master`分支，**`master`指针始终指向主分支最新的提交，而`HEAD`指针始终指向当前的分支最新的提交**。
 >
-> ![git-br-initial.png](https://i.loli.net/2018/11/07/5be2fc36645d9.png)
+> ![git-br-initial.png](https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/i_loli_net__5be2fc36645d9.png)
 >
 > 每次提交，`master`分支都会向前移动一步，这样，随着你不断提交，`master`分支的线也越来越长。
 
@@ -279,23 +279,23 @@ git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset-%C(yel
 
 当我们创建新的分支，例如`dev`时，Git新建了一个指针叫`dev`，指向`master`相同的提交，再把`HEAD`指向`dev`，就表示当前分支在`dev`上：
 
-![git-br-create.png](https://i.loli.net/2018/11/07/5be2fc576eff5.png)
+![git-br-create.png](https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/i_loli_net__5be2fc576eff5.png)
 
 Git创建一个分支很快，因为除了增加一个`dev`指针，改改`HEAD`的指向，工作区的文件都没有任何变化！
 
 不过，从现在开始，对工作区的修改和提交就是针对`dev`分支了，比如新提交一次后，`dev`指针往前移动一步，而`master`指针不变：
 
-![git-br-dev-fd.png](https://i.loli.net/2018/11/07/5be2fc69ab62b.png)
+![git-br-dev-fd.png](https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/i_loli_net__5be2fc69ab62b.png)
 
 假如我们在`dev`上的工作完成了，就可以把`dev`合并到`master`上。Git怎么合并呢？最简单的方法，就是直接把`master`指向`dev`的当前提交，就完成了合并：
 
-![git-br-ff-merge.png](https://i.loli.net/2018/11/07/5be2fc7ab37a2.png)
+![git-br-ff-merge.png](https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/i_loli_net__5be2fc7ab37a2.png)
 
 所以Git合并分支也很快！就改改指针，工作区内容也不变！
 
 合并完分支后，甚至可以删除`dev`分支。删除`dev`分支就是把`dev`指针给删掉，删掉后，我们就剩下了一条`master`分支：
 
-![git-br-rm.png](https://i.loli.net/2018/11/07/5be2fc8f8e951.png)
+![git-br-rm.png](https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/i_loli_net__5be2fc8f8e951.png)
 
 ##### 小结 ：Git中关于branch常用命令
 
@@ -332,19 +332,19 @@ Git创建一个分支很快，因为除了增加一个`dev`指针，改改`HEAD`
 
 - ##### 使用`Fast forward`模式，merge后就像这样：
 
-![git-br-ff-merge.png](https://i.loli.net/2018/11/07/5be2fca1c122a.png)
+![git-br-ff-merge.png](https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/i_loli_net__5be2fca1c122a.png)
 
 ​	此时使用**`git log --graph`** 查看分支合并图如下：
 
-​				![1541485528675.png](https://i.loli.net/2018/11/07/5be26155311db.png)
+​				![1541485528675.png](https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/i_loli_net__5be26155311db.png)
 
 - ##### 不使用`Fast forward`模式，merge后就像这样：
 
-![git-no-ff-mode.png](https://i.loli.net/2018/11/07/5be2fcb4cc360.png)
+![git-no-ff-mode.png](https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/i_loli_net__5be2fcb4cc360.png)
 
 ​	此时使用**`git log --graph`** 查看分支合并图如下：
 
-​				![1541486481156.png](https://i.loli.net/2018/11/07/5be26152eb750.png)
+​				![1541486481156.png](https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/i_loli_net__5be26152eb750.png)
 
 
 
@@ -370,7 +370,7 @@ git merge --no-ff <branch-name> -m "Hello World"
 
   所以，团队合作的分支看起来就像这样：
 
-![0.png](https://i.loli.net/2018/11/07/5be262612f89d.png)
+![0.png](https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/i_loli_net__5be262612f89d.png)
 
 ##### 小结：
 
@@ -422,7 +422,7 @@ git merge --no-ff <branch-name> -m "Hello World"
 
 当你从远程仓库克隆时，实际上Git自动把本地的`master`分支和远程的`master`分支对应起来了，并且，远程仓库的默认名称是`origin`。要查看远程库的信息，用**`git remote`**，或者用**`git remote -v`**显示更详细的信息：
 
-![1541494485779.png](https://i.loli.net/2018/11/07/5be261541ce16.png)
+![1541494485779.png](https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/i_loli_net__5be261541ce16.png)
 
 上面显示了可以抓取和推送的`origin`的地址，如果没有推送权限，就看不到push的地址。
 
@@ -652,7 +652,7 @@ v0.1
 
 有时候，如果忘了打标签，比如，现在现在我想对四周前的提交打标签，怎么办？方法是找到历史提交的commit id，然后打上就可以了：
 
-![MINGW64cAndroidProjectCustomViewDemos.png](https://i.loli.net/2018/11/07/5be2932d5a035.png)
+![MINGW64cAndroidProjectCustomViewDemos.png](https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/i_loli_net__5be2932d5a035.png)
 
 比方说要对`Update README.md`这次提交打标签，它对应的commit id是`250affe`，敲入命令：
 
@@ -662,7 +662,7 @@ $ git tag v1.0 250affe
 
 可以用**`git show <tag-name>`**查看标签信息：
 
-![PrtScr capture.png](https://i.loli.net/2018/11/07/5be2931b45a0b.png)
+![PrtScr capture.png](https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/i_loli_net__5be2931b45a0b.png)
 
 可以看到，`v1.0`确实打在`Update README.md`这次提交上。
 
@@ -674,15 +674,15 @@ $ git tag v1.1 df9294a -m "版本1.1发布"
 
 用命令`git show <tag-name>`可以看到说明文字：
 
-![MINGW64cAndroidProjectCustomViewDemos_2.png](https://i.loli.net/2018/11/07/5be294cb0a5d9.png)
+![MINGW64cAndroidProjectCustomViewDemos_2.png](https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/i_loli_net__5be294cb0a5d9.png)
 
 **注意：**标签不是按时间顺序列出，而是按字母排序的，而且一个提交也可以给它贴上多个标签：
 
-![MINGW64cAndroidProjectCustomViewDemos_3.png](https://i.loli.net/2018/11/07/5be29b0abb39b.png)
+![MINGW64cAndroidProjectCustomViewDemos_3.png](https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/i_loli_net__5be29b0abb39b.png)
 
 **注意：**标签总是和某个commit挂钩。如果这个commit既出现在master分支，又出现在dev分支，那么在这两个分支上都可以看到这个标签：
 
-![MINGW64cAndroidProjectCustomViewDemos_4.png](https://i.loli.net/2018/11/07/5be29f95b225f.png)
+![MINGW64cAndroidProjectCustomViewDemos_4.png](https://raw.githubusercontent.com/Heart-Beats/Note-Pictures/main/images/i_loli_net__5be29f95b225f.png)
 
 如图所示，在master分支上给`hello`这个提交贴上`v2.0`的标签，切换到dev分支上，同样也有这个标签。
 

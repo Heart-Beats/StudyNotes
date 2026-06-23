@@ -342,6 +342,8 @@ button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
 .article-body pre::before{content:attr(data-lang);position:absolute;top:8px;right:14px;font:11px/1 var(--font-mono);color:var(--c-tm2);text-transform:uppercase;letter-spacing:.04em;opacity:.5}
 [data-theme=dark] .article-body pre::before{color:#565f89}
 .article-body img{max-width:100%;border-radius:9px;margin:16px 0;border:1px solid var(--c-bd);display:block}
+.img-broken{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;background:var(--card-bg);border:1px dashed var(--c-bd);border-radius:8px;color:var(--text-sec);font-size:13px;margin:12px 0;max-width:100%}
+.img-broken span:first-child{font-size:24px;flex-shrink:0}
 .article-body mark{background:rgba(255,213,0,.35);color:inherit;padding:1px 3px;border-radius:3px;font-weight:inherit}
 [data-theme=dark] .article-body mark{background:rgba(255,213,0,.28)}
 .article-body table{border-collapse:collapse;width:100%;margin:18px 0;font-size:14px}
@@ -784,9 +786,26 @@ const ART = [...FALLBACK_ART];
 function parseMD(src){
   if(!src||!src.trim()) return '<p class="empty">（本文档暂无内容）</p>';
   try {
-    // Pre-process: convert ==highlight== to <mark>highlight</mark>
+    // Pre-process 1: ==highlight== → <mark>
     src = src.replace(/==(.+?)==/g, '<mark>$1</mark>');
-    return marked.parse(src, { gfm: true, breaks: false, async: false });
+    // Pre-process 2: Fix bold/italic boundary before CJK punctuation
+    // marked.js v15 doesn't treat CJK punctuation as word-boundary, so
+    // "**text**。" is not parsed as bold. Insert zero-width space as workaround.
+    // Matches: **...** or *...* immediately followed by CJK full-width punct
+    const cjkPunct = '\u3000-\u303f\uff00-\uffef\u2018-\u201f\u2e80-\u2eff\u3400-\u4dbf\u4e00-\u9fff\u{20000}-\u{2a6df}';
+    src = src.replace(/(\*{1,2}[^*\n]+?\*{1,2})([\u3000-\u303f\uff00-\uffef\u2018-\u201f，。、；：！？「」【】《》（）…—～·])/g, '$1\u200b$2');
+    // Pre-process 3: Also fix opening bold/italic after CJK punct
+    src = src.replace(/([\u3000-\u303f\uff00-\uffef\u2018-\u201f，。、；：！？「」【】《》（）…—～·])(\*{1,2}[^*\s])/g, '$1\u200b$2');
+    const html = marked.parse(src, { gfm: true, breaks: false, async: false });
+    // Post-process: Add onerror handler to all <img> tags for broken external images
+    return html.replace(/<img(\s[^>]*?)>/g, (match, attrs) => {
+      if (attrs.includes('onerror')) return match;
+      // Extract src for alt display
+      const srcMatch = attrs.match(/src="([^"]+)"/);
+      const altMatch = attrs.match(/alt="([^"]*)"/);
+      const alt = altMatch ? altMatch[1] : '图片';
+      return `<img${attrs} onerror="this.onerror=null;this.parentNode.replaceChild((function(){const d=document.createElement('div');d.className='img-broken';d.innerHTML='<span>🖼️</span><span>${alt || '图片加载失败'}</span>';return d})(),this)">`;
+    });
   } catch(e) {
     console.error('[parseMD] marked error:', e);
     return '<p class="error">Markdown 解析错误: '+e.message+'</p>';

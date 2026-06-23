@@ -818,7 +818,7 @@ function route(){
   else if(h.startsWith('article/')){
     const parts=h.split('/');
     const n=parseInt(parts[1]);
-    const anchor=parts[2]||null; // e.g. #article/23/heading-id
+    const anchor=parts[2]?decodeURIComponent(parts[2]):null; // decode %E8%A7%A3 → 解
     if(n>=0&&n<ART.length) loadArticle(n,anchor);
     else renderHome();
   }
@@ -1101,27 +1101,29 @@ async function loadArticle(idx,anchor){
       <div class="article-body">${finalBodyHtml}</div>
     </div>`;
 
-    // Scroll to anchor if provided, otherwise scroll to top
-    if(anchor){
-      // Wait for DOM paint before scrolling
-      requestAnimationFrame(()=>{
-        requestAnimationFrame(()=>{
-          const target=document.getElementById(anchor);
-          if(target){
-            const navH=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h'))||56;
-            window.scrollTo({top:target.getBoundingClientRect().top+window.pageYOffset-navH-16,behavior:'smooth'});
-          }
-        });
-      });
-    } else {
-      window.scrollTo(0,0);
-    }
+    // Scroll to top immediately (before hljs/mermaid inflate the DOM)
+    window.scrollTo(0,0);
 
     // Apply syntax highlighting
     try{if(typeof hljs!=='undefined'){hljs.highlightAll();}}catch(e){console.warn('hljs:',e);}
 
     // Render Mermaid diagrams
     try{renderMermaid();}catch(e){console.warn('mermaid:',e);}
+
+    // Scroll to anchor AFTER hljs + mermaid have finished inflating the DOM,
+    // otherwise getBoundingClientRect() returns pre-render offsets and the
+    // scroll lands at the wrong position (or not at all on GitHub Pages).
+    if(anchor){
+      // Use setTimeout so the browser has completed layout after hljs/mermaid
+      setTimeout(()=>{
+        const target=document.getElementById(anchor);
+        if(target){
+          const navH=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h'))||56;
+          const top=target.getBoundingClientRect().top+window.pageYOffset-navH-16;
+          window.scrollTo({top,behavior:'smooth'});
+        }
+      }, 120);
+    }
 
     if(tocItems.length>2){
       const tocRailEl=document.getElementById('tocRail');
@@ -1134,7 +1136,7 @@ async function loadArticle(idx,anchor){
         });
         // Keep URL in sync with scroll position for sharable anchor links
         if(curIdx>=0){
-          const newHash='#article/'+curIdx+(cur?'/'+cur:'');
+          const newHash='#article/'+curIdx+(cur?'/'+encodeURIComponent(cur):'');
           if(location.hash!==newHash) history.replaceState(null,'',location.pathname+newHash);
         }
       };
@@ -1152,9 +1154,9 @@ async function loadArticle(idx,anchor){
           const navH=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h'))||56;
           const top=el.getBoundingClientRect().top+window.pageYOffset-navH-16;
           window.scrollTo({top,behavior:'smooth'});
-          // Update URL: #article/idx/heading-id so the link is shareable
+          // Update URL: #article/idx/heading-id (encoded for Chinese chars)
           if(curIdx>=0){
-            history.replaceState(null,'',location.pathname+'#article/'+curIdx+'/'+targetId);
+            history.replaceState(null,'',location.pathname+'#article/'+curIdx+'/'+encodeURIComponent(targetId));
           }
         }
         tocRailEl.querySelectorAll('.toc-link').forEach(l=>l.classList.remove('active'));

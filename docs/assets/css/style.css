@@ -111,7 +111,15 @@ button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
 .music-player:not(.minimized){
   overflow:visible;
 }
-[data-theme=dark] .music-player{background:rgba(20,16,40,.96)}
+[data-theme=dark] .music-player{background:rgba(20,16,40,.96);border-color:rgba(124,92,231,.18);box-shadow:0 8px 48px rgba(90,70,150,.2),0 2px 16px rgba(0,0,0,.3)}
+[data-theme=dark] .mp-artist{color:#a098c8;opacity:.9}
+[data-theme=dark] .mp-time{color:#a098c8;opacity:.85}
+[data-theme=dark] .mp-mini-artist{color:#a098c8}
+[data-theme=dark] .mp-progress-bar{background:rgba(124,92,231,.12)}
+[data-theme=dark] .mp-pl-item .pli-artist,
+[data-theme=dark] .mp-pl-item .pli-idx{color:#a098c8}
+[data-theme=dark] .mp-pl-header{border-bottom-color:rgba(124,92,231,.15)}
+[data-theme=dark] .mp-pl-list::-webkit-scrollbar-thumb{background:rgba(124,92,231,.2)}
 /* Minimized = collapsed to same footprint as mini pill */
 .music-player.minimized{
   width:320px;

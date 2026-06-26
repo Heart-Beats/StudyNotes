@@ -259,6 +259,16 @@ const FALLBACK_ART = [
 const ART = [...FALLBACK_ART];
 
 // ════════════════════════════════════════════════
+//  BASE URL — local dev vs GitHub Pages (raw)
+// ════════════════════════════════════════════════
+function getArticleBase(){
+  if(location.hostname==='localhost'||location.hostname==='127.0.0.1'){
+    return location.href.split('#')[0].replace(/\/[^/]*\.html.*$/,'/').replace(/\/?$/,'/');
+  }
+  return 'https://raw.githubusercontent.com/Heart-Beats/StudyNotes/master/';
+}
+
+// ════════════════════════════════════════════════
 //  MARKDOWN PARSER — powered by marked.js
 // ════════════════════════════════════════════════
 function parseMD(src){
@@ -470,7 +480,7 @@ async function loadArticle(idx,anchor){
   // ─── 非文本文件处理：图片 / 下载 ───
   if(a.type==='img'){
     renderSidebar(a.c,idx);
-    const base=location.href.split('#')[0].replace(/\/[^/]*\.html.*$/,'/').replace(/\/?$/,'/');
+    const base=getArticleBase();
     const imgUrl=base+a.p;
     let dlHtml='';
     if(a.dl){
@@ -506,7 +516,7 @@ async function loadArticle(idx,anchor){
 
   if(a.type==='dl'){
     renderSidebar(a.c,idx);
-    const base=location.href.split('#')[0].replace(/\/[^/]*\.html.*$/,'/').replace(/\/?$/,'/');
+    const base=getArticleBase();
     const fileUrl=base+a.p;
     const decodedUrl=decodeURIComponent(fileUrl);
     const encodedUrl=encodeURIComponent(decodedUrl);
@@ -559,7 +569,7 @@ async function loadArticle(idx,anchor){
   renderSidebar(a.c,idx);
 
   try{
-    const base=location.href.split('#')[0].replace(/\/[^/]*\.html.*$/,'/').replace(/\/?$/,'/');
+    const base=getArticleBase();
     const resp=await fetch(base+a.p);
     if(!resp.ok)throw new Error('HTTP '+resp.status);
     const md=await resp.text();

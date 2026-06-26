@@ -108,6 +108,9 @@ button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
   overflow:hidden;
   padding:0 0 14px
 }
+.music-player:not(.minimized){
+  overflow:visible;
+}
 [data-theme=dark] .music-player{background:rgba(20,16,40,.96)}
 /* Minimized = collapsed to same footprint as mini pill */
 .music-player.minimized{

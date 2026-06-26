@@ -239,6 +239,8 @@ button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
 .mp-lyric-block{margin:0 24px 6px;padding:10px 16px;background:var(--c-bg2);border-radius:12px;text-align:center;min-height:52px;display:flex;flex-direction:column;justify-content:center;gap:3px;border:1px solid var(--c-bd2);transition:all .3s;max-height:120px;overflow:hidden}.mp-lyric-block.hidden{max-height:0;min-height:0;padding:0 16px;margin:0 24px;border-width:0;opacity:0}
 [data-theme=dark] .mp-lyric-block{background:rgba(124,92,231,.06);border-color:rgba(124,92,231,.12)}
 .mp-lyric-current{font-size:14px;font-weight:650;color:var(--c-ac);line-height:1.6;transition:all .35s;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.mp-lyric-next{font-size:12px;color:var(--c-tm);opacity:.45;line-height:1.5;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+[data-theme=dark] .mp-lyric-current{color:var(--c-acl);text-shadow:0 0 12px rgba(124,92,231,.3)}
+[data-theme=dark] .mp-lyric-next{color:#a098c8;opacity:.6}
 /* Hide standalone inline lyric (moved into lyric block) */
 .mp-inline-lyric{display:none!important}
 

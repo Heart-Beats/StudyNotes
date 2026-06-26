@@ -891,12 +891,21 @@ async function fetchPlaylist(id){
 async function fetchTrackUrls(start,count){
   var ids=mpState.playlist.slice(start,start+count).map(function(t){return t.id}).filter(function(id){return typeof id==="number"});
   if(!ids.length)return;
+  // Primary: imsyy API
   try{
     var resp=await fetch("https://api.music.imsyy.top/song/url?id="+ids.join(","));
     if(!resp.ok)throw new Error("URL error");
     var data=await resp.json();
     if(data.code===200&&data.data)for(var i=0;i<data.data.length;i++){var item=data.data[i];var track=mpState.playlist.find(function(t){return t.id==item.id});if(track&&item.url)track.url=item.url.replace(/^http:/,"https:")}
-  }catch(e){console.log("[music] URL fetch failed")}
+  }catch(e){console.log("[music] primary URL fetch failed, trying backup",e.message||"")}
+  // Backup: injahow meting API (for tracks that still lack URL)
+  var stillNeed=mpState.playlist.slice(start,start+count).filter(function(t){return !t.url}).map(function(t){return t.id});
+  if(stillNeed.length){
+    try{
+      var bResp=await fetch("https://api.injahow.cn/meting/?server=netease&type=url&id="+stillNeed.join(","));
+      if(bResp.ok){var bData=await bResp.json();if(Array.isArray(bData)){for(var j=0;j<bData.length;j++){var item=bData[j];if(item.url){var track=mpState.playlist.find(function(t){return t.id==item.id||t.id==stillNeed[j]});if(track)track.url=item.url.replace(/^http:/,"https:")}}}}
+    }catch(be){console.log("[music] backup URL fetch also failed")}
+  }
 }
 
 function selectTrack(idx){if(idx>=0&&idx<mpState.playlist.length){mpState.currentIdx=idx;playTrack(idx)}}
@@ -906,7 +915,7 @@ function playTrack(idx){
   var srcChanged=false;
   if(mpAudio.src!==track.url){mpAudio.src=track.url;srcChanged=true}
   var playPromise=null;
-  if(!track.url){fetchTrackUrls(idx,1).then(function(){if(track.url){mpAudio.src=track.url;mpAudio.play().then(function(){mpState.playing=true;updateNowPlaying(idx);updatePlaylistUI()}).catch(function(){mpState.playing=false;updateNowPlaying(idx);updatePlaylistUI()})}else nextTrack()});return}
+  if(!track.url){fetchTrackUrls(idx,1).then(function(){if(track.url){mpAudio.src=track.url;mpAudio.play().then(function(){mpState.playing=true;updateNowPlaying(idx);updatePlaylistUI()}).catch(function(){mpState.playing=false;updateNowPlaying(idx);updatePlaylistUI()})}else{mpState.playing=false;updateNowPlaying(idx);updatePlaylistUI();console.log("[music] no URL available for track "+idx+", stopped")}document.getElementById("mpLyricCurrent").textContent=track.url?"":"该歌曲无可用链接"});return}
   else playPromise=mpAudio.play();
   if(playPromise){playPromise.then(function(){mpState.playing=true;updateNowPlaying(idx);updatePlaylistUI()}).catch(function(){mpState.playing=false;updateNowPlaying(idx);updatePlaylistUI()})}
 }

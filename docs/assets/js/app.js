@@ -976,7 +976,12 @@ function updateTimeDisplay(){var cur=mpAudio.currentTime||0,dur=mpAudio.duration
 function fmtTime(s){var m=Math.floor(s/60),sec=Math.floor(s%60);return m+":"+String(sec).padStart(2,"0")}
 function setVolume(v){mpState.volume=v;mpAudio.volume=v/100}
 function toggleMute(){if(mpAudio.volume>0){mpAudio.volume=0;document.getElementById("mpVolSlider").value=0}else{mpAudio.volume=mpState.volume/100;document.getElementById("mpVolSlider").value=mpState.volume}}
-function minimizePlayer(){mpState.expanded=false;mpPlayer.classList.add("minimized");document.body.classList.remove("has-player");// Snap to nearest edge after CSS transition completes
+function minimizePlayer(){mpState.expanded=false;mpPlayer.classList.add("minimized");document.body.classList.remove("has-player");
+// Close lyrics when minimizing
+var lc=document.getElementById("mpInlineLyric");
+var lb=document.getElementById("mpLyricBtn");
+if(lc&&!lc.classList.contains("hidden")){lc.classList.add("hidden");lb.style.color="";lb.style.background=""}
+// Snap to nearest edge after CSS transition completes
 setTimeout(function(){
   var el=mpPlayer;
   var pw=el.offsetWidth,ph=el.offsetHeight;
@@ -995,6 +1000,11 @@ setTimeout(function(){
   // sync playlist if open
   var pp=document.getElementById("mpPlaylistPopup");
   if(pp&&pp.classList.contains("show"))positionPlaylistPopup(pp,el);
+  // Reposition after minify animation ends
+  setTimeout(function(){
+    var pp2=document.getElementById("mpPlaylistPopup");
+    if(pp2&&pp2.classList.contains("show"))positionPlaylistPopup(pp2,mpPlayer);
+  },550);
 },150)}
 function expandPlayer(){mpState.expanded=true;mpPlayer.classList.remove("minimized");document.body.classList.add("has-player");
 setTimeout(function(){
@@ -1008,6 +1018,20 @@ setTimeout(function(){
   el.style.bottom=Math.max(GAP,Math.min(h-ph-TOPGAP,curBottom))+"px";
   var pp=document.getElementById("mpPlaylistPopup");
   if(pp&&pp.classList.contains("show"))positionPlaylistPopup(pp,el);
+  // Reposition playlist after full expansion animation ends (max-height .5s + body fade .3s + .15s)
+  setTimeout(function(){
+    var pp2=document.getElementById("mpPlaylistPopup");
+    if(pp2&&pp2.classList.contains("show"))positionPlaylistPopup(pp2,mpPlayer);
+  },550);
+  // Auto-open lyrics when expanding
+  var lc=document.getElementById("mpInlineLyric");
+  var lb=document.getElementById("mpLyricBtn");
+  if(lc&&lc.classList.contains("hidden")&&mpState.currentIdx>=0){
+    lc.classList.remove("hidden");
+    fetchLyric();
+    lb.style.color="var(--c-ac)";
+    lb.style.background="var(--c-acbg)";
+  }
 },150)}
 function expandPlayerFromMini(){expandPlayer();if(mpState.currentIdx>=0&&mpAudio.paused)mpAudio.play().catch(function(){})}
 // handlePlayerClick removed: click-to-expand handled in drag IIFE

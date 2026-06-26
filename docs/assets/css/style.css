@@ -121,17 +121,20 @@ button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
 .music-player:not(.minimized):hover{
   border-color:var(--c-ac);
   box-shadow:0 0 36px rgba(124,92,231,.18),0 12px 48px rgba(90,70,150,.12),0 2px 16px rgba(0,0,0,.04);
+  transform:translateY(-4px);
 }
 .music-player:not(.minimized):hover::after{opacity:1}
 /* Minimized pill hover — subtle purple edge glow */
 .music-player.minimized:hover{
   border-color:var(--c-acbd);
   box-shadow:0 0 18px rgba(124,92,231,.18),0 4px 20px rgba(90,70,150,.08);
+  transform:translateY(-2px);
 }
 [data-theme=dark] .music-player:not(.minimized):hover{
   border-color:var(--c-acl);
   box-shadow:0 0 40px rgba(124,92,231,.3),0 8px 32px rgba(90,70,150,.15);
   background:rgba(20,16,40,.98);
+  transform:translateY(-4px);
 }
 [data-theme=dark] .music-player:not(.minimized)::after{
   background:radial-gradient(circle at 50% 0%,rgba(124,92,231,.12),transparent 70%);
@@ -139,6 +142,7 @@ button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
 [data-theme=dark] .music-player.minimized:hover{
   border-color:rgba(124,92,231,.3);
   box-shadow:0 0 22px rgba(124,92,231,.28),0 4px 18px rgba(90,70,150,.1);
+  transform:translateY(-2px);
 }
 [data-theme=dark] .music-player{background:rgba(20,16,40,.96);border-color:rgba(124,92,231,.18);box-shadow:0 8px 48px rgba(90,70,150,.2),0 2px 16px rgba(0,0,0,.3)}
 [data-theme=dark] .mp-artist{color:#a098c8;opacity:.9}
@@ -266,6 +270,16 @@ button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
   opacity:0;pointer-events:none;z-index:860
 }
 .mp-playlist-popup.show{transform:scale(1) translateY(0);opacity:1;pointer-events:auto}
+/* Hover lift — matching player & category card floating edge effect */
+.mp-playlist-popup.show:hover{
+  transform:scale(1) translateY(-4px);
+  border-color:var(--c-ac);
+  box-shadow:0 0 36px rgba(124,92,231,.18),0 12px 48px rgba(90,70,150,.14),0 2px 12px rgba(0,0,0,.08);
+}
+[data-theme=dark] .mp-playlist-popup.show:hover{
+  border-color:var(--c-acl);
+  box-shadow:0 0 40px rgba(124,92,231,.3),0 8px 32px rgba(90,70,150,.15);
+}
 /* When player is minimized (52px), position above the mini pill */
 .mp-playlist-popup.above-mini{bottom:calc(20px + 52px + 8px)!important}
 .mp-playlist-backdrop{position:fixed;inset:0;z-index:855;background:transparent;pointer-events:none}

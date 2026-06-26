@@ -255,7 +255,7 @@ button{cursor:pointer;border:none;background:none;font:inherit;color:inherit}
 .mp-bottom-left{display:flex;align-items:center;gap:4px}
 .mp-bottom-center{display:flex;align-items:center;gap:8px;flex:1;justify-content:center}
 .mp-bottom-right{display:flex;align-items:center;gap:4px}
-.mp-vol-slider{-webkit-appearance:none;width:70px;height:4px;border-radius:2px;background:var(--c-bd2);outline:none;cursor:pointer}.mp-vol-slider::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--c-ac);cursor:pointer;box-shadow:0 0 6px rgba(124,92,231,.3)}.mp-vol-slider::-moz-range-thumb{width:12px;height:12px;border-radius:50%;background:var(--c-ac);cursor:pointer;border:none}
+.mp-vol-slider{-webkit-appearance:none;width:70px;height:4px;border-radius:2px;background:var(--c-bd2);outline:none;cursor:pointer}.mp-vol-slider::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--c-ac);cursor:pointer;box-shadow:0 0 6px rgba(124,92,231,.3)}.mp-vol-slider::-moz-range-thumb{width:12px;height:12px;border-radius:50%;background:var(--c-ac);cursor:pointer;border:none}[data-theme=dark] .mp-vol-slider{background:rgba(124,92,231,.12)}[data-theme=dark] .mp-vol-slider::-webkit-slider-thumb{box-shadow:0 0 8px rgba(124,92,231,.5)}
 .mp-time{font-size:11px;color:var(--c-tm2);font-family:var(--font-mono);opacity:.65;white-space:nowrap;min-width:72px;text-align:center}
 
 /* ═══ Playlist popup — anchored above player bottom-right ═══ */

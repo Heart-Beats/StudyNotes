@@ -875,7 +875,7 @@ async function fetchPlaylist(id){
   // Try backup API first
   try{
     var fbResp=await fetch("https://api.injahow.cn/meting/?server=netease&type=playlist&id="+id);
-    if(fbResp.ok){var fbData=await fbResp.json();if(fbData&&fbData.length>0){mpState.playlist=fbData.map(function(t,i){return{id:t.id||i,title:t.name||t.title||"",artist:t.artist||t.author||"",album:"",cover:t.pic||t.cover||"",url:t.url||t.mp3||"",idx:i}});updatePlaylistUI();if(mpState.playlist.length>0&&mpState.currentIdx===-1){mpState.currentIdx=0;playTrack(0)}return}}
+    if(fbResp.ok){var fbData=await fbResp.json();if(fbData&&fbData.length>0){mpState.playlist=fbData.map(function(t,i){var sid=t.id;if(!sid){var m=(t.lrc||t.url||"").match(/id=(\d+)/);sid=m?parseInt(m[1]):i}return{id:sid,title:t.name||t.title||"",artist:t.artist||t.author||"",album:"",cover:t.pic||t.cover||"",url:t.url||t.mp3||"",idx:i}});updatePlaylistUI();if(mpState.playlist.length>0&&mpState.currentIdx===-1){mpState.currentIdx=0;playTrack(0)}return}}
   }catch(fbE){console.log("[music] backup API also unreachable, using local fallback")}
   mpState.playlist=[
     {id:1,title:"\u6674\u5929",artist:"\u5468\u6770\u4f26",cover:"",idx:0,url:null},
@@ -988,10 +988,10 @@ setTimeout(function(){
   var posY=h-curBottom-ph;
   var snapRight=posX<w/2?(w-pw-GAP):GAP;
   var snapBottom=posY<h/2?(h-ph-TOPGAP):GAP;
-  el.style.transition="right .42s cubic-bezier(.22,.61,.36,1),bottom .42s cubic-bezier(.22,.61,.36,1)";
+  el.style.transition="right .42s cubic-bezier(.22,.61,.36,1),bottom .42s cubic-bezier(.22,.61,.36,1),max-height .5s cubic-bezier(.16,1,.3,1)";
   el.style.right=snapRight+"px";
   el.style.bottom=snapBottom+"px";
-  setTimeout(function(){el.style.transition=""},450);
+  setTimeout(function(){el.style.transition=""},500);
   // sync playlist if open
   var pp=document.getElementById("mpPlaylistPopup");
   if(pp&&pp.classList.contains("show"))positionPlaylistPopup(pp,el);
@@ -1069,10 +1069,8 @@ async function fetchLyric(){
   document.getElementById("mpLyricNext").textContent="";
   var lrc=null;
   function tFetch(url){return new Promise(function(r,j){var c=new AbortController();var t=setTimeout(function(){c.abort()},8000);fetch(url,{signal:c.signal}).then(function(v){clearTimeout(t);v.ok?r(v):j(new Error("status "+v.status))}).catch(function(e){clearTimeout(t);j(e)})})}
-  try{var r1=await tFetch("https://api.music.imsyy.top/lyric?id="+track.id);var d1=await r1.json();if(d1&&d1.lrc&&d1.lrc.lyric)lrc=d1.lrc.lyric}catch(e){console.log("[lyric] primary failed")}
-  if(!lrc){try{var r2=await tFetch("https://api.injahow.cn/meting/?server=netease&type=lrc&id="+track.id);var d2=await r2.json();if(d2){lrc=d2.lrc||d2.lyric||(typeof d2==="string"?d2:null)}}catch(e2){console.log("[lyric] backup1 failed")}}
-  if(!lrc){try{var r3=await tFetch("https://api.vvhan.com/api/netease-lyric?id="+track.id);var d3=await r3.json();if(d3){lrc=d3.lrc||d3.lyric||d3.data||(typeof d3==="string"?d3:null)}}catch(e3){console.log("[lyric] backup2 failed")}}
-  if(!lrc){try{var r4=await tFetch("https://api-music.imsyy.top/lyric?id="+track.id);var d4=await r4.json();if(d4&&d4.lrc&&d4.lrc.lyric)lrc=d4.lrc.lyric}catch(e4){console.log("[lyric] backup3 failed")}}
+  try{var r1=await tFetch("https://neteasecloudmusicapi-main-api.vercel.app/lyric?id="+track.id);var d1=await r1.json();if(d1&&d1.lrc&&d1.lrc.lyric)lrc=d1.lrc.lyric}catch(e){console.log("[lyric] primary failed")}
+  if(!lrc){try{var r2=await tFetch("https://api.injahow.cn/meting/?server=netease&type=lrc&id="+track.id);var txt=await r2.text();if(txt&&txt.indexOf("[")===0)lrc=txt}catch(e2){console.log("[lyric] backup failed")}}
   if(lrc){lyricCache[track.id]=lrc;renderLyric(lrc)}else{document.getElementById("mpLyricCurrent").textContent="获取歌词失败";document.getElementById("mpLyricNext").textContent=""}
 }
 function renderLyric(lrc){

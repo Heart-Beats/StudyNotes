@@ -832,6 +832,12 @@ var DEFAULT_PLAYLIST=((function(){
   var p=new URLSearchParams(window.location.search);
   return p.get("playlist")||"149638780";
 })());
+// ════════════════════════════════════════════════════
+//  通过 Vercel 部署的 NeteaseCloudMusicApiEnhanced 调用网易云 API
+//  vercel.app 域名被墙，已绑定 dpdns.org 免费域名 heartbeats.dpdns.org
+//  将下方 PRIVATE_API 替换为你的自定义域名
+var PRIVATE_API="https://heartbeats.dpdns.org";
+var PRIVATE_COOKIE="MUSIC_U=0033ED28C60FED9119A910FEE36216C9151796941DC831E87E86692DA582EFC2F3CCF800C83F869AFD8535A8173F0705642D9DAC6E87EC1C3932EC8D01D5B33D476E1704C0BCDF8F30CBDF4D0E3A8AD8570B766A6F33FDD9285FCA4C95B1648CB4B7FCE1942822CBBDF01CA82A73B17B80C1666E36F2C78980AB7AEB683346672C5583563D6E2B18A02686B38D78B80412B6B25CF8DE441373E2606AF681F2D1FE053E1D04A24A43E236502A0E744BE908C21BE25A92EA724B6BD31F7642827DACEBCD08B2A4D86007B429B358A0680CFC0D2ADDC07457192306A6D1010C8BF481C1972C73D9B2E6BE4E73C7C615DB0A864280919D85C49A22E5B20684B5147F6255361E9C24E2E9F9B0F17B4BAB59B8BDC5B48D061DE80E584F7D440ACC3AE21D922DDDFD3D351F045863858A2668916B7B2A863DB0CC55327AB3EFD60891EC8AEBADA18B0C2C2DB578C9F3939ED557E551ABFF4024F14109ED05F9CD4BA64D1E9836E947498DB145D8F7B049F7FB96666D1A9C534E27AC2C0B06E8AD1F37F0ABCDF12DDDD82770104647ACA7B1C6249B; __csrf=4553bb154eb63e6cb02e0a2ffe281c98";
 
 function initMusicPlayer(){
   mpAudio=document.getElementById("mpAudio");
@@ -859,8 +865,9 @@ function initMusicPlayer(){
 }
 
 async function fetchPlaylist(id){
+  // Primary: private API with cookie
   try{
-    var resp=await fetch("https://api.music.imsyy.top/playlist/detail?id="+id);
+    var resp=await fetch(PRIVATE_API+"/playlist/detail?id="+id+"&cookie="+encodeURIComponent(PRIVATE_COOKIE));
     if(!resp.ok)throw new Error("API");
     var data=await resp.json();
     if(data.code===200&&data.playlist){
@@ -871,7 +878,12 @@ async function fetchPlaylist(id){
       if(mpState.playlist.length>0&&mpState.currentIdx===-1){mpState.currentIdx=0;playTrack(0)}
       return
     }
-  }catch(e){console.log("[music] primary API unreachable, using backup",e.message||"")}
+  }catch(e){console.log("[music] private API unreachable, trying public",e.message||"")}
+  // Fallback: public API
+  try{
+    var pubResp=await fetch("https://api.music.imsyy.top/playlist/detail?id="+id);
+    if(pubResp.ok){var pubData=await pubResp.json();if(pubData.code===200&&pubData.playlist){var t2=pubData.playlist.tracks||[];mpState.playlist=t2.map(function(t,i){return{id:t.id,title:t.name,artist:(t.ar||[]).map(function(a){return a.name}).join(" / "),album:t.al?t.al.name:"",cover:(t.al?(t.al.picUrl||""):"").replace(/^http:/,"https:")+"?param=200y200",url:null,idx:i}});updatePlaylistUI();fetchTrackUrls(0,5);if(mpState.playlist.length>0&&mpState.currentIdx===-1){mpState.currentIdx=0;playTrack(0)}return}}
+  }catch(e2){console.log("[music] public API also failed",e2.message||"")}
   // Try backup API first
   try{
     var fbResp=await fetch("https://api.injahow.cn/meting/?server=netease&type=playlist&id="+id);
@@ -893,7 +905,7 @@ async function fetchTrackUrls(start,count){
   if(!ids.length)return;
   // Primary: imsyy API
   try{
-    var resp=await fetch("https://api.music.imsyy.top/song/url?id="+ids.join(","));
+    var resp=await fetch(PRIVATE_API+"/song/url/v1?id="+ids.join(",")+"&level=exhigh&cookie="+encodeURIComponent(PRIVATE_COOKIE));
     if(!resp.ok)throw new Error("URL error");
     var data=await resp.json();
     if(data.code===200&&data.data)for(var i=0;i<data.data.length;i++){var item=data.data[i];var track=mpState.playlist.find(function(t){return t.id==item.id});if(track&&item.url)track.url=item.url.replace(/^http:/,"https:")}
@@ -1093,7 +1105,7 @@ async function fetchLyric(){
   document.getElementById("mpLyricNext").textContent="";
   var lrc=null;
   function tFetch(url){return new Promise(function(r,j){var c=new AbortController();var t=setTimeout(function(){c.abort()},8000);fetch(url,{signal:c.signal}).then(function(v){clearTimeout(t);v.ok?r(v):j(new Error("status "+v.status))}).catch(function(e){clearTimeout(t);j(e)})})}
-  try{var r1=await tFetch("https://neteasecloudmusicapi-main-api.vercel.app/lyric?id="+track.id);var d1=await r1.json();if(d1&&d1.lrc&&d1.lrc.lyric)lrc=d1.lrc.lyric}catch(e){console.log("[lyric] primary failed")}
+  try{var r1=await tFetch(PRIVATE_API+"/lyric?id="+track.id+"&cookie="+encodeURIComponent(PRIVATE_COOKIE));var d1=await r1.json();if(d1&&d1.lrc&&d1.lrc.lyric)lrc=d1.lrc.lyric}catch(e){console.log("[lyric] primary failed")}
   if(!lrc){try{var r2=await tFetch("https://api.injahow.cn/meting/?server=netease&type=lrc&id="+track.id);var txt=await r2.text();if(txt&&txt.indexOf("[")===0)lrc=txt}catch(e2){console.log("[lyric] backup failed")}}
   if(lrc){lyricCache[track.id]=lrc;renderLyric(lrc)}else{document.getElementById("mpLyricCurrent").textContent="获取歌词失败";document.getElementById("mpLyricNext").textContent=""}
 }
